@@ -1,0 +1,1463 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="DS-Agent: ask anything about The Doon School, Dehradun.">
+<style>:root{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>DS-Agent</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&display=swap">
+<style>
+/* Layout: one dark, vivid "liquid glass" world over a living wallpaper (aurora + Doon-valley contour lines).
+   Home: hero (headline, glass ask box, macOS-style topic dock) → tilting example window → question marquee → topic bento → facts → closing call.
+   Asking folds the home away into a reading column; the composer glides into a glass dock at the bottom. */
+:root{
+  color-scheme:dark;
+  --bg:#141416;
+  --fg:#F5F5F7; --fg-2:rgba(245,245,247,.74); --fg-3:rgba(245,245,247,.55);
+  --glass:rgba(255,255,255,.075); --glass-top:rgba(255,255,255,.16); --glass-hover:rgba(255,255,255,.12);
+  --blue:#0A84FF; --me-a:rgba(10,132,255,.62); --me-b:rgba(10,132,255,.38);
+  --white:#FFFFFF; --black:#000000; --warn:#FFB4A2;
+  --sans:-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Geist", "Segoe UI", system-ui, sans-serif;
+  --serif:"Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --spring:cubic-bezier(.34,1.56,.64,1);
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+html{scroll-behavior:smooth}
+html,body{min-height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:17px;line-height:1.47;letter-spacing:-.011em;
+  padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px));padding-block:0;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+*{box-sizing:border-box}
+::selection{background:rgba(10,132,255,.45);color:#fff}
+button,input{font:inherit;color:inherit;letter-spacing:inherit}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+a{color:var(--fg)}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ───────── wallpaper ───────── */
+.wp{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+#aurora{image-rendering:auto}
+.grain{position:fixed;inset:-50%;z-index:0;pointer-events:none;opacity:.09;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.shade{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(130% 90% at 50% 20%, transparent 45%, rgba(18,18,18,.72) 100%)}
+
+/* ───────── liquid glass ───────── */
+.g{position:relative;isolation:isolate;border:none;
+  background:linear-gradient(180deg,var(--glass-top),var(--glass) 55%);
+  -webkit-backdrop-filter:blur(22px) saturate(185%);backdrop-filter:blur(22px) saturate(185%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.32), inset 0 -1px 0 rgba(255,255,255,.06), 0 10px 34px rgba(0,0,0,.28), 0 2px 6px rgba(0,0,0,.16)}
+.g::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.2px;pointer-events:none;z-index:-1;
+  background:linear-gradient(140deg,rgba(255,255,255,.62),rgba(255,255,255,.12) 24%,rgba(255,255,255,0) 46%,rgba(255,255,255,0) 58%,rgba(255,255,255,.12) 78%,rgba(255,255,255,.4));
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.g::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;opacity:var(--spec,0);transition:opacity .35s ease;
+  background:radial-gradient(260px circle at var(--mx,50%) var(--my,0%),rgba(255,255,255,.16),rgba(255,255,255,0) 62%)}
+.g.soft{-webkit-backdrop-filter:blur(12px) saturate(160%);backdrop-filter:blur(12px) saturate(160%)}
+.press{transition:transform .45s var(--spring), background .25s ease}
+.press:active{transform:scale(.95)}
+
+/* ───────── motion primitives ───────── */
+@keyframes blurIn{from{opacity:0;filter:blur(18px);transform:translateY(38%) scale(.96)}to{opacity:1;filter:none;transform:none}}
+@keyframes riseIn{from{opacity:0;filter:blur(10px);transform:translateY(24px) scale(.97)}to{opacity:1;filter:none;transform:none}}
+.w{display:inline-block;animation:blurIn 1.1s var(--ease) backwards}
+.intro{animation:riseIn 1s var(--ease) backwards}
+.js [data-reveal]{opacity:0;filter:blur(14px);transform:translateY(36px) scale(.97);
+  transition:opacity 1s var(--ease), filter 1s var(--ease), transform 1.1s var(--ease);transition-delay:var(--d,0s)}
+.js [data-reveal].in{opacity:1;filter:none;transform:none}
+@property --ang{syntax:"<angle>";inherits:false;initial-value:0deg}
+@keyframes spin{to{--ang:360deg}}
+
+/* ───────── nav ───────── */
+.nav{position:fixed;z-index:40;left:50%;top:calc(14px + env(safe-area-inset-top,0px));transform:translateX(-50%);
+  display:flex;align-items:center;gap:4px;padding:6px;border-radius:999px;transition:padding .5s var(--spring), top .5s var(--spring);
+  max-width:calc(100% - 32px)}
+.nav.compact{padding:4px;top:calc(10px + env(safe-area-inset-top,0px))}
+.logo{display:flex;align-items:center;gap:9px;white-space:nowrap;height:40px;padding:0 14px 0 5px;border:none;background:none;border-radius:999px;font-weight:600;font-size:15px;color:var(--fg)}
+.mark{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-family:var(--serif);font-style:italic;font-size:17px;
+  background:conic-gradient(from 210deg,#64D2FF,#5E5CE6,#BF5AF2,#FF375F,#FF9F0A,#64D2FF);box-shadow:inset 0 0 0 1px rgba(255,255,255,.35), inset 0 6px 10px rgba(255,255,255,.35)}
+.links{position:relative;display:flex;align-items:center}
+.links a{position:relative;z-index:1;height:40px;display:flex;align-items:center;padding:0 15px;font-size:14px;font-weight:500;color:var(--fg-2);text-decoration:none;border-radius:999px;transition:color .25s}
+.links a:hover,.links a:focus-visible{color:var(--fg)}
+.links .lensdot{position:absolute;z-index:0;top:0;height:40px;border-radius:999px;background:rgba(255,255,255,.12);box-shadow:inset 0 1px 0 rgba(255,255,255,.25);
+  opacity:0;transition:left .5s var(--spring), width .5s var(--spring), opacity .25s}
+.cta{height:40px;padding:0 16px;border:none;border-radius:999px;background:var(--white);color:var(--black);font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.cta:hover{background:rgba(255,255,255,.88)}
+.edge{position:fixed;left:0;right:0;z-index:30;pointer-events:none;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.edge.top{top:0;height:calc(80px + env(safe-area-inset-top,0px));-webkit-mask:linear-gradient(#000 30%,transparent);mask:linear-gradient(#000 30%,transparent);background:linear-gradient(rgba(35,35,35,.6),transparent)}
+
+/* ───────── hero ───────── */
+main{position:relative;z-index:1}
+.hero{--p:0;min-height:100svh;display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:clamp(116px,17vh,170px);padding-bottom:48px}
+.badge{display:inline-flex;align-items:center;gap:10px;height:36px;padding:0 16px 0 6px;border-radius:999px;font-size:14px;font-weight:500;color:var(--fg)}
+.badge .live{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;background:var(--white);color:var(--black);font-size:12px;font-weight:700}
+.badge .live i{width:7px;height:7px;border-radius:50%;background:#30D158;box-shadow:0 0 0 0 rgba(48,209,88,.6);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(48,209,88,.55)}70%{box-shadow:0 0 0 8px rgba(48,209,88,0)}100%{box-shadow:0 0 0 0 rgba(48,209,88,0)}}
+.hero h1{margin:26px 0 0;font-weight:700;font-size:clamp(52px,9.2vw,124px);line-height:.95;letter-spacing:-.052em;text-wrap:balance;
+  opacity:calc(1 - var(--p) * 1.3);filter:blur(calc(var(--p) * 10px));transform:translateY(calc(var(--p) * -50px)) scale(calc(1 - var(--p) * .05))}
+.hero h1 .line{display:block}
+.hero h1 .accent{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.025em;padding-right:.08em;
+  background:linear-gradient(100deg,#7CC4FF 0%,#B79CFF 25%,#FF8FC7 45%,#FFC979 60%,#7CC4FF 80%,#B79CFF 100%);background-size:250% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;animation:blurIn 1.1s var(--ease) backwards, shimmer 9s linear infinite}
+@keyframes shimmer{to{background-position:-250% 0}}
+.lead{margin:24px 0 0;max-width:40ch;font-size:clamp(17px,1.7vw,21px);line-height:1.45;color:var(--fg-2);font-weight:400;text-wrap:pretty;
+  opacity:calc(1 - var(--p) * 1.5);transform:translateY(calc(var(--p) * -36px))}
+.hero .cwrap{margin-top:38px;transform:translateY(calc(var(--p) * -24px)) scale(calc(1 - var(--p) * .04))}
+.hero .cwrap>.composer{opacity:calc(1 - var(--p) * 1.4)}
+
+/* composer */
+.cwrap{position:relative;width:100%;max-width:740px;border-radius:30px}
+.halo,.ring{position:absolute;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .5s ease;
+  background:conic-gradient(from var(--ang),#64D2FF,#5E5CE6,#BF5AF2,#FF375F,#FF9F0A,#FFD60A,#64D2FF)}
+.halo{inset:-6px;filter:blur(18px)}
+.ring{inset:-1.5px;padding:1.5px;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.cwrap.focus .halo{opacity:.35}.cwrap.focus .ring{opacity:.55}
+.cwrap.busy .halo{opacity:.85;animation:spin 3s linear infinite}
+.cwrap.busy .ring{opacity:1;animation:spin 3s linear infinite}
+.composer{border-radius:30px;padding:10px;display:flex;flex-direction:column;gap:6px;text-align:left}
+.composer .row{display:flex;align-items:center;gap:8px;padding-left:16px}
+.composer input{flex:1;min-width:0;height:54px;border:none;background:transparent;outline:none;font-size:18px;color:var(--fg)}
+.composer input::placeholder{color:var(--fg-3)}
+.send{width:46px;height:46px;flex:none;border:none;border-radius:50%;display:grid;place-items:center;
+  background:rgba(255,255,255,.14);color:rgba(255,255,255,.6);box-shadow:inset 0 1px 0 rgba(255,255,255,.25);
+  transition:transform .5s var(--spring), background .3s ease, color .3s ease}
+.send.ready,.send.stop{background:var(--white);color:var(--black)}
+.send.ready:hover{transform:scale(1.06)}
+.send:active{transform:scale(.9)}
+.tools{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:0 4px 2px 4px;flex-wrap:wrap}
+.seg{position:relative;display:flex;padding:3px;border-radius:999px;background:rgba(0,0,0,.22);box-shadow:inset 0 1px 2px rgba(0,0,0,.25)}
+.seg .thumb{position:absolute;top:3px;bottom:3px;left:3px;width:60px;border-radius:999px;
+  background:linear-gradient(180deg,rgba(255,255,255,.26),rgba(255,255,255,.12));box-shadow:inset 0 1px 0 rgba(255,255,255,.45), 0 2px 8px rgba(0,0,0,.25);
+  transition:left .55s var(--spring), width .55s var(--spring)}
+.seg .thumb.squish{animation:squish .55s var(--ease)}
+@keyframes squish{0%{transform:scaleY(1)}35%{transform:scale(1.12,.86)}100%{transform:none}}
+.seg button{position:relative;z-index:1;height:32px;padding:0 14px;border:none;border-radius:999px;background:transparent;font-size:13px;font-weight:600;color:var(--fg-3);transition:color .3s}
+.seg button[aria-pressed="true"]{color:var(--fg)}
+.hint{font-size:12px;color:var(--fg-3);padding-right:10px}
+.hint kbd{font-family:inherit;font-size:11px;padding:2px 6px;border-radius:6px;background:rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}
+
+/* dock */
+.dockwrap{margin-top:44px;display:flex;flex-direction:column;align-items:center;gap:12px;transform:translateY(calc(var(--p) * -16px))}
+.dockwrap>*{opacity:calc(1 - var(--p) * 1.6)}
+.dock-label{font-size:13px;color:var(--fg-3);font-weight:500}
+.dock{display:flex;align-items:flex-end;gap:10px;padding:10px 12px;border-radius:26px;height:78px}
+.app{position:relative;--s:1;width:calc(56px * var(--s));height:calc(56px * var(--s));flex:none;border:none;background:none;padding:0;
+  transition:width .18s ease-out, height .18s ease-out;align-self:flex-end}
+.dock.idle .app{transition:width .5s var(--spring), height .5s var(--spring)}
+.icon{width:100%;height:100%;border-radius:23%;display:grid;place-items:center;position:relative;overflow:hidden;
+  background:linear-gradient(160deg,var(--c1),var(--c2));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5), inset 0 -2px 6px rgba(0,0,0,.18), 0 6px 14px rgba(0,0,0,.35)}
+.icon::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.38),rgba(255,255,255,0) 48%);pointer-events:none}
+.icon svg{width:46%;height:46%;position:relative;z-index:1;filter:drop-shadow(0 1px 1px rgba(0,0,0,.2))}
+.app .tip{position:absolute;left:50%;bottom:calc(100% + 12px);transform:translate(-50%,6px) scale(.9);opacity:0;pointer-events:none;white-space:nowrap;
+  padding:6px 12px;border-radius:10px;font-size:13px;font-weight:600;transition:opacity .2s, transform .35s var(--spring)}
+.app:hover .tip,.app:focus-visible .tip{opacity:1;transform:translate(-50%,0) scale(1)}
+.app .name{display:none}
+.app .icon{transition:transform .5s var(--spring)}
+.app:active .icon{transform:scale(.88)}
+.app.bounce .icon{animation:bounce .7s var(--ease)}
+@keyframes bounce{0%,100%{transform:none}30%{transform:translateY(-16px)}55%{transform:translateY(0)}70%{transform:translateY(-6px)}}
+.scrollcue{margin-top:auto;padding-top:40px;font-size:13px;color:var(--fg-3);display:flex;flex-direction:column;align-items:center;gap:8px;opacity:calc(1 - var(--p) * 3)}
+.scrollcue span{width:22px;height:34px;border-radius:12px;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.35);position:relative}
+.scrollcue span::after{content:"";position:absolute;left:50%;top:7px;width:3px;height:7px;margin-left:-1.5px;border-radius:2px;background:#fff;animation:wheel 1.8s var(--ease) infinite}
+@keyframes wheel{0%{opacity:0;transform:translateY(-3px)}30%{opacity:1}100%{opacity:0;transform:translateY(10px)}}
+
+/* ───────── sections ───────── */
+.section{max-width:1160px;margin:0 auto;padding:120px 0 20px}
+.eyebrow{display:inline-flex;align-items:center;height:30px;padding:0 14px;border-radius:999px;font-size:13px;font-weight:600;color:var(--fg)}
+.head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px}
+h2{margin:0;font-weight:700;font-size:clamp(40px,6.2vw,76px);line-height:1;letter-spacing:-.045em;text-wrap:balance;max-width:16ch}
+h2 em{font-family:var(--serif);font-weight:400;letter-spacing:-.02em;background:linear-gradient(100deg,#7CC4FF,#B79CFF 45%,#FF8FC7);-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.06em}
+.head p{margin:0;max-width:46ch;color:var(--fg-2);font-size:clamp(17px,1.6vw,20px);text-wrap:pretty}
+
+/* showcase window */
+.stage{margin-top:64px;perspective:1600px;display:flex;justify-content:center}
+.window{--t:1;width:100%;max-width:980px;border-radius:28px;overflow:hidden;transform-origin:50% 0%;
+  transform:rotateX(calc((1 - var(--t)) * 30deg)) scale(calc(.84 + var(--t) * .16)) translateY(calc((1 - var(--t)) * 30px));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.32), 0 50px 120px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.06)}
+.wbar{display:flex;align-items:center;gap:8px;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.08)}
+.wbar i{width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.22)}
+.wbar i:nth-child(1){background:#FF5F57}.wbar i:nth-child(2){background:#FEBC2E}.wbar i:nth-child(3){background:#28C840}
+.wbar b{flex:1;text-align:center;font-size:13px;font-weight:600;color:var(--fg-2);margin-right:52px}
+.wbar small{position:absolute;right:18px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--fg-3);padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.08)}
+.wbody{padding:clamp(20px,4vw,44px);display:flex;flex-direction:column;gap:22px;min-height:360px}
+.wfoot{width:calc(100% - 2 * clamp(20px,4vw,44px));margin:0 clamp(20px,4vw,44px) clamp(20px,4vw,32px);border-radius:999px;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 8px 0 20px;
+  background:rgba(0,0,0,.2);box-shadow:inset 0 1px 2px rgba(0,0,0,.3), inset 0 0 0 1px rgba(255,255,255,.08);color:var(--fg-3);font-size:15px;border:none;text-align:left}
+.wfoot span.go{width:38px;height:38px;border-radius:50%;background:var(--white);color:var(--black);display:grid;place-items:center}
+
+/* marquee */
+.marquee{margin-top:56px;display:flex;flex-direction:column;gap:14px;width:100vw;position:relative;left:50%;transform:translateX(-50%);overflow:hidden;padding-block:6px}
+.track{display:flex;gap:12px;width:max-content;animation:marq var(--dur,70s) linear infinite}
+.track.rev{animation-direction:reverse}
+.marquee:hover .track{animation-play-state:paused}
+@keyframes marq{to{transform:translateX(-50%)}}
+.qchip{flex:none;height:48px;padding:0 20px;border-radius:999px;font-size:15px;font-weight:500;color:var(--fg);display:inline-flex;align-items:center;gap:10px;white-space:nowrap}
+.qchip i{width:8px;height:8px;border-radius:50%;background:var(--c,#64D2FF);box-shadow:0 0 10px var(--c,#64D2FF)}
+.qchip:hover{background:linear-gradient(180deg,rgba(255,255,255,.24),rgba(255,255,255,.1) 55%)}
+
+/* bento */
+.bento{margin-top:64px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.card{border-radius:28px;padding:24px 22px 14px;display:flex;flex-direction:column;gap:14px;min-width:0;
+  transition:transform .6s var(--spring), opacity 1s var(--ease), filter 1s var(--ease);transition-delay:var(--d,0s)}
+.js .card[data-reveal]{transition:transform 1.1s var(--ease), opacity 1s var(--ease), filter 1s var(--ease);transition-delay:var(--d,0s)}
+.js .card[data-reveal].in{transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}
+.js .card[data-reveal].in.live{transition:transform .5s var(--ease), opacity 1s, filter 1s;transition-delay:0s}
+.card .top{display:flex;align-items:center;gap:14px}
+.card .icon{width:48px;height:48px;flex:none}
+.card h3{margin:0;font-size:22px;font-weight:700;letter-spacing:-.03em;line-height:1.1}
+.card .meta{display:block;font-size:13px;color:var(--fg-3);margin-top:2px;font-weight:500}
+.card ul{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-direction:column}
+.card li button{width:100%;text-align:left;background:none;border:none;border-top:1px solid rgba(255,255,255,.08);padding:12px 2px;font-size:14.5px;line-height:1.4;color:var(--fg-2);
+  display:flex;justify-content:space-between;gap:10px;align-items:center;transition:color .2s}
+.card li button:hover{color:var(--fg)}
+.card li button svg{flex:none;opacity:.45;transition:transform .35s var(--spring), opacity .2s}
+.card li button:hover svg{opacity:1;transform:translateX(4px)}
+
+/* facts */
+.facts{margin-top:56px;border-radius:30px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.fact{padding:30px 28px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.fact+.fact{box-shadow:inset 1px 0 0 rgba(255,255,255,.08)}
+.fact b{font-size:clamp(30px,3.4vw,44px);font-weight:700;letter-spacing:-.045em;line-height:1.05}
+.fact b em{font-family:var(--serif);font-weight:400;letter-spacing:-.02em}
+.fact span{font-size:14px;color:var(--fg-3)}
+
+.closing{padding:140px 0 40px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:28px}
+.big-cta{height:56px;padding:0 28px;border:none;border-radius:999px;background:var(--white);color:var(--black);font-size:17px;font-weight:600;display:inline-flex;align-items:center;gap:10px;
+  box-shadow:0 10px 40px rgba(124,160,255,.4)}
+footer{max-width:1160px;margin:0 auto;padding:60px 0 calc(32px + env(safe-area-inset-bottom,0px));display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:space-between;color:var(--fg-3);font-size:13px}
+footer a{color:var(--fg-2)}
+
+/* ───────── sheet (app window) ───────── */
+dialog.sheet{position:fixed;width:min(560px,calc(100vw - 32px));max-height:min(640px,calc(100svh - 48px));padding:0;border:none;border-radius:32px;color:var(--fg);overflow:auto;
+  background:linear-gradient(180deg,rgba(58,58,58,.72),rgba(45,45,45,.66))}
+dialog.sheet::backdrop{background:rgba(18,18,18,.45);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.sh-head{display:flex;align-items:center;gap:16px;padding:26px 26px 10px}
+.sh-head .icon{width:60px;height:60px;flex:none}
+.sh-head h2{font-size:30px;max-width:none;letter-spacing:-.035em}
+.sh-head p{margin:2px 0 0;color:var(--fg-3);font-size:14px}
+.sh-close{margin-left:auto;align-self:flex-start;width:36px;height:36px;border-radius:50%;border:none;display:grid;place-items:center;color:var(--fg)}
+.sh-list{list-style:none;margin:0;padding:10px 18px 8px;display:flex;flex-direction:column;gap:8px}
+.sh-list button{width:100%;min-height:56px;border-radius:18px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;font-size:16px;font-weight:500;color:var(--fg)}
+.sh-list button:hover{background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,.1) 55%)}
+.sh-list li{animation:riseIn .6s var(--ease) backwards}
+.sh-note{margin:6px 26px 24px;font-size:13px;color:var(--fg-3)}
+
+/* ───────── chat ───────── */
+#thread{display:none;max-width:780px;margin:0 auto;padding:110px 0 230px;flex-direction:column;gap:22px}
+body.chatting #home{display:none}
+body.chatting #thread{display:flex}
+.t-head{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;padding:10px 0 12px}
+.t-head h2{font-size:clamp(34px,5vw,52px)}
+.msg{animation:msgIn .7s var(--spring) backwards}
+@keyframes msgIn{from{opacity:0;transform:translateY(18px) scale(.94);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
+.me{align-self:flex-end;max-width:min(80%,560px);padding:12px 18px;border-radius:24px 24px 8px 24px;color:#fff;white-space:pre-wrap;overflow-wrap:anywhere;font-weight:500;
+  background:linear-gradient(180deg,var(--me-a),var(--me-b))}
+.bot{border-radius:28px;padding:20px 24px 22px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.who{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600}
+.who small{font-weight:500;color:var(--fg-3)}
+.orb{width:28px;height:28px;border-radius:50%;flex:none;position:relative;
+  background:conic-gradient(from var(--ang),#64D2FF,#5E5CE6,#BF5AF2,#FF375F,#FF9F0A,#64D2FF);box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
+.orb::after{content:"";position:absolute;inset:3px;border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.85),rgba(255,255,255,.1) 45%,transparent 60%)}
+.bot.thinking .orb{animation:spin 1.6s linear infinite, orbPulse 1.6s ease-in-out infinite}
+@keyframes orbPulse{50%{transform:scale(1.15)}}
+.answer{font-size:17px;line-height:1.65;color:rgba(245,245,247,.92);overflow-wrap:anywhere}
+.answer p{margin:0 0 12px}.answer>:last-child{margin-bottom:0}
+.answer ul,.answer ol{margin:0 0 12px;padding-left:22px}
+.answer li{margin:5px 0}
+.answer li::marker{color:var(--fg-3)}
+.answer strong{font-weight:650;color:#fff}
+.answer a{color:#8EC5FF;text-underline-offset:3px}
+.answer p.src{margin-top:16px;font-size:13px;color:var(--fg-3);display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center}
+.answer p.src a{color:var(--fg-2);text-decoration:none;padding:3px 10px;border-radius:999px;background:rgba(255,255,255,.08);box-shadow:inset 0 1px 0 rgba(255,255,255,.14)}
+.answer p.src a:hover{background:rgba(255,255,255,.16);color:var(--fg)}
+.shine{background:linear-gradient(90deg,rgba(255,255,255,.35) 0%,#fff 50%,rgba(255,255,255,.35) 100%);background-size:200% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;animation:shineMove 1.5s linear infinite;font-weight:500}
+@keyframes shineMove{from{background-position:200% 0}to{background-position:-200% 0}}
+.note{font-size:13px;color:var(--fg-3)}
+.note.err{color:var(--warn)}
+.follow{display:flex;flex-wrap:wrap;gap:8px}
+.fchip{min-height:38px;padding:8px 14px;border-radius:999px;font-size:14px;font-weight:500;color:var(--fg);text-align:left}
+.fchip:hover{background:linear-gradient(180deg,rgba(255,255,255,.24),rgba(255,255,255,.1) 55%)}
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:35;display:none;flex-direction:column;align-items:center;gap:8px;
+  padding:40px max(16px, env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px, env(safe-area-inset-left,0px))}
+.bar::before{content:"";position:absolute;inset:0;z-index:-1;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  -webkit-mask:linear-gradient(transparent,#000 45%);mask:linear-gradient(transparent,#000 45%);background:linear-gradient(transparent,rgba(35,35,35,.65))}
+body.chatting .bar{display:flex}
+.bar .fine{margin:0;font-size:11.5px;color:var(--fg-3);text-align:center}
+::view-transition-group(composer){animation-duration:.7s;animation-timing-function:cubic-bezier(.32,1.2,.5,1)}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.4s}
+
+/* ───────── responsive ───────── */
+@media (max-width:1020px){ .bento{grid-template-columns:repeat(2,minmax(0,1fr))} .facts{grid-template-columns:repeat(2,minmax(0,1fr))} .fact:nth-child(3){box-shadow:inset 0 1px 0 rgba(255,255,255,.08)} .fact:nth-child(4){box-shadow:inset 1px 0 0 rgba(255,255,255,.08), inset 0 1px 0 rgba(255,255,255,.08)} }
+@media (max-width:720px){
+  .links{display:none}
+  .logo{padding-right:10px}
+  .hint{display:none}
+  .tools{justify-content:center}
+  .dock{height:auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px 14px;padding:16px 14px;border-radius:30px}
+  .app{width:auto;height:auto;display:flex;flex-direction:column;align-items:center;gap:6px}
+  .app .icon{width:56px;height:56px}
+  .app .tip{display:none}
+  .app .name{display:block;font-size:12px;font-weight:500;color:var(--fg-2)}
+  .bento{grid-template-columns:minmax(0,1fr)}
+  .facts{grid-template-columns:minmax(0,1fr)}
+  .fact+.fact,.fact:nth-child(3),.fact:nth-child(4){box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+  .composer input{font-size:17px}
+  .wbar b{margin-right:0;text-align:left}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .w,.intro,.hero h1 .accent,.msg,.sh-list li{animation:none!important}
+  .js [data-reveal]{opacity:1;filter:none;transform:none;transition:none}
+  .track{animation:none}
+  .marquee{overflow-x:auto}
+  .cwrap.busy .halo,.cwrap.busy .ring,.bot.thinking .orb,.badge .live i,.scrollcue span::after{animation:none}
+  .window{--t:1!important}
+}
+</style>
+
+<script>document.documentElement.classList.add('js')</script>
+<canvas class="wp" id="aurora" aria-hidden="true"></canvas>
+<canvas class="wp" id="contours" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div class="shade" aria-hidden="true"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs id="lensDefs"></defs></svg>
+
+<div class="edge top" aria-hidden="true"></div>
+<header class="nav g" id="nav" data-lens="nav">
+  <button class="logo press" id="homeBtn" type="button" aria-label="DS-Agent, back to start"><span class="mark" aria-hidden="true">D</span>DS-Agent</button>
+  <nav class="links" id="links" aria-label="Sections">
+    <span class="lensdot" aria-hidden="true"></span>
+    <a href="#ask">Ask</a><a href="#preview">How it works</a><a href="#topics">Topics</a><a href="#about">About</a>
+  </nav>
+  <button class="cta press" id="newChat" type="button">New chat
+    <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+  </button>
+</header>
+
+<main>
+  <div id="home">
+    <section class="hero" id="ask">
+      <p class="badge g intro" style="animation-delay:.05s"><span class="live"><i></i>Live</span>Your AI guide to Chandbagh</p>
+      <h1 aria-label="Ask anything about Doon.">
+        <span class="line" aria-hidden="true"><span class="w" style="animation-delay:.15s">Ask</span> <span class="w" style="animation-delay:.27s">anything</span></span>
+        <span class="line" aria-hidden="true"><span class="w" style="animation-delay:.39s">about</span> <span class="w accent" style="animation-delay:.51s">Doon.</span></span>
+      </h1>
+      <p class="lead intro" style="animation-delay:.75s">Admissions, houses, sport, ninety years of tradition. Ask in plain words and get a clear answer, straight from the school’s own information.</p>
+
+      <div class="cwrap intro" id="cwrap" style="animation-delay:.95s">
+        <div class="halo" aria-hidden="true"></div>
+        <div class="ring" aria-hidden="true"></div>
+        <form class="composer g" id="form" autocomplete="off" data-lens="composer">
+          <div class="row">
+            <label for="q" class="sr">Your question</label>
+            <input id="q" type="text" placeholder="Ask anything about The Doon School…" maxlength="1000" enterkeyhint="send">
+            <button class="send" id="send" type="submit" aria-label="Send"></button>
+          </div>
+          <div class="tools">
+            <div class="seg" id="seg" role="group" aria-label="Answer style">
+              <span class="thumb" aria-hidden="true"></span>
+              <button type="button" data-mode="quick" aria-pressed="false">Quick</button>
+              <button type="button" data-mode="detailed" aria-pressed="true">Detailed</button>
+              <button type="button" data-mode="explain" aria-pressed="false">For parents</button>
+            </div>
+            <span class="hint">Press <kbd>Enter</kbd> to ask</span>
+          </div>
+        </form>
+      </div>
+
+      <div class="dockwrap intro" style="animation-delay:1.15s">
+        <span class="dock-label">Or open a topic</span>
+        <div class="dock g idle" id="dock" role="group" aria-label="Topics" data-lens="dock"></div>
+      </div>
+
+      <div class="scrollcue intro" style="animation-delay:1.6s" aria-hidden="true"><span></span>Scroll to explore</div>
+    </section>
+
+    <section class="section" id="preview">
+      <div class="head">
+        <span class="eyebrow g" data-reveal>How it works</span>
+        <h2 data-reveal style="--d:.08s">Answers that feel like a <em>conversation.</em></h2>
+        <p data-reveal style="--d:.16s">Ask something, read a clear answer, then tap a follow-up to go deeper. It remembers what you asked earlier in the chat.</p>
+      </div>
+      <div class="stage">
+        <div class="window g" id="win" data-lens="window">
+          <div class="wbar" style="position:relative"><i></i><i></i><i></i><b>DS-Agent</b><small>Example</small></div>
+          <div class="wbody">
+            <div class="me g">When was The Doon School founded?</div>
+            <div class="bot g soft">
+              <div class="who"><span class="orb" aria-hidden="true"></span>DS-Agent <small>· Detailed</small></div>
+              <div class="answer"><p>The Doon School opened in <strong>1935</strong> on the old Chandbagh estate in Dehradun.</p><p>It grew out of the vision of <strong>Satish Ranjan Das</strong>, and <strong>Arthur Foot</strong> was its first headmaster.</p></div>
+              <div class="follow" id="exFollow"></div>
+            </div>
+          </div>
+          <button type="button" class="wfoot press" id="tryOwn"><span>Ask your own question…</span><span class="go" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="popular" style="padding-top:110px">
+      <div class="head">
+        <span class="eyebrow g" data-reveal>Popular right now</span>
+        <h2 data-reveal style="--d:.08s">What people <em>ask most.</em></h2>
+      </div>
+      <div class="marquee" aria-label="Popular questions">
+        <div class="track" id="row1" style="--dur:80s"></div>
+        <div class="track rev" id="row2" style="--dur:95s"></div>
+      </div>
+    </section>
+
+    <section class="section" id="topics">
+      <div class="head">
+        <span class="eyebrow g" data-reveal>Topics</span>
+        <h2 data-reveal style="--d:.08s">Everything Chandbagh, <em>one tap away.</em></h2>
+        <p data-reveal style="--d:.16s">Eight areas of school life, each with the questions people ask first.</p>
+      </div>
+      <div class="bento" id="bento"></div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="head">
+        <span class="eyebrow g" data-reveal>About the school</span>
+        <h2 data-reveal style="--d:.08s">A school with a <em>long memory.</em></h2>
+        <p data-reveal style="--d:.16s">DS-Agent’s answers come from the school’s own website and its 2025–26 School Profile. Details that change each year, like fees and dates, are worth confirming with the school.</p>
+      </div>
+      <div class="facts g" data-reveal style="--d:.1s">
+        <div class="fact"><b>1935</b><span>Founded by S. R. Das’s vision</span></div>
+        <div class="fact"><b>~600</b><span>Boys aged 12 to 18, all boarders</span></div>
+        <div class="fact"><b>70 <em>acres</em></b><span>The Chandbagh campus</span></div>
+        <div class="fact"><b>8:1</b><span>Students to each teacher</span></div>
+      </div>
+    </section>
+
+    <section class="closing">
+      <h2 data-reveal>Got a question about <em>Chandbagh?</em></h2>
+      <button class="big-cta press" id="bigCta" type="button" data-reveal style="--d:.12s">Ask DS-Agent
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </section>
+
+    <footer>
+      <span>DS-Agent · An unofficial guide to The Doon School, built from information on doonschool.com</span>
+      <span>Official information: <a href="https://www.doonschool.com" target="_blank" rel="noopener">doonschool.com</a></span>
+    </footer>
+  </div>
+
+  <div id="thread" aria-live="polite"></div>
+</main>
+
+<div class="bar" id="bar"><p class="fine">Answers come from doonschool.com and may be out of date. Confirm important details with the school.</p></div>
+
+<dialog class="sheet g" id="sheet" aria-labelledby="shTitle" data-lens="sheet">
+  <div class="sh-head">
+    <span class="icon" id="shIcon" aria-hidden="true"></span>
+    <div><h2 id="shTitle">Topic</h2><p id="shMeta"></p></div>
+    <button class="sh-close g press" id="shClose" type="button" aria-label="Close">
+      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <ul class="sh-list" id="shList"></ul>
+  <p class="sh-note">Pick a question, or close this and type your own.</p>
+</dialog>
+
+<script>
+(function(){
+  document.documentElement.classList.add('js');
+  const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine=matchMedia('(hover:hover) and (pointer:fine)').matches;
+  const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+
+  /* ───────── content ───────── */
+  const ICONS={
+    admissions:'<rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 3.5h6v3H9z"/><path d="M9 13.5l2 2 4-4.5"/>',
+    houses:'<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/>',
+    academics:'<path d="M2 5h6a4 4 0 0 1 4 4v11a3 3 0 0 0-3-3H2z"/><path d="M22 5h-6a4 4 0 0 0-4 4v11a3 3 0 0 1 3-3h7z"/>',
+    sports:'<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4"/><path d="M12 13v4M8 21h8M9.5 17h5"/>',
+    traditions:'<path d="M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5.3 1.5 1 2.5 2 3 0-3 0-5.5 1-8.5z"/>',
+    history:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/>',
+    campus:'<path d="M2.5 20l6.5-11 4 6.5 3-4.5 5.5 9z"/><circle cx="17" cy="5.5" r="2"/>',
+    alumni:'<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/><path d="M22 9v6"/>'
+  };
+  const TOPICS=[
+    {id:'admissions',name:'Admissions',meta:'Joining the school',c1:'#2E9BFF',c2:'#5E5CE6',qs:['At what age or class can students join The Doon School?','What is the entrance process like?','Is financial aid or scholarship available?']},
+    {id:'houses',name:'Houses',meta:'Where boys live',c1:'#FFB340',c2:'#FF375F',qs:['How are boys placed into houses?','What is a holding house?','What do inter-house competitions look like?']},
+    {id:'academics',name:'Academics',meta:'What is taught',c1:'#3DDC84',c2:'#00A0B0',qs:['Which boards and curricula does Doon offer?','What subjects can senior boys choose?','How are classes and evening prep organised?']},
+    {id:'sports',name:'Sports',meta:'On the fields',c1:'#FFD60A',c2:'#FF8A00',qs:['What sports are played at Doon?','What is the Midterm trek tradition?','How does inter-house sport work?']},
+    {id:'traditions',name:'Traditions',meta:'Ninety years of habits',c1:'#FF5E57',c2:'#BF5AF2',qs:['What is Founder’s Day?','What does “Dosco” mean?','What is the school motto?']},
+    {id:'history',name:'History',meta:'Since 1935',c1:'#64D2FF',c2:'#0A6CFF',qs:['Give me a short history of The Doon School.','Who founded the school, and why?','How has the school changed over the decades?']},
+    {id:'campus',name:'Campus',meta:'Life at Chandbagh',c1:'#34C759',c2:'#0B7A5C',qs:['What is the Chandbagh campus like?','What facilities does the school have?','Where exactly is the school located?']},
+    {id:'alumni',name:'Old Boys',meta:'Alumni and their stories',c1:'#C77DFF',c2:'#5E5CE6',qs:['Who are some famous Old Boys?','What is the Doon School Old Boys’ Society?','How do Old Boys stay connected to the school?']}
+  ];
+  const MODES={
+    quick:{label:'Quick',tier:'quick',rule:'Answer in 2-4 short sentences.'},
+    detailed:{label:'Detailed',tier:'default',rule:'Give a clear, well-organised answer. Use short paragraphs and a bulleted list where it helps. Keep it under 250 words.'},
+    explain:{label:'For parents',tier:'default',rule:'Write for a parent considering the school: warm, plain language, practical detail, and point out what they should confirm directly with the admissions office. Under 250 words.'}
+  };
+  const RULES=`You are DS-Agent, a friendly guide that answers questions about The Doon School, the boys' boarding school in Dehradun, India (campus known as Chandbagh; students are called Doscos).
+Rules:
+- Only answer questions about The Doon School. If asked about something unrelated, say briefly that you only cover The Doon School and suggest a related question.
+- Base your answer on the NOTES below, which are drawn from the school's official website (doonschool.com) and its 2025-26 School Profile. Prefer them over anything else you know.
+- If the notes don't cover something, you may use general knowledge, but say so plainly. For details that change year to year (fees, dates, deadlines, seats), suggest confirming with the Admissions Office at admissions@doonschool.com. Never invent numbers, names or dates.
+- Write in plain English. Use **bold** sparingly and "- " for bullet points. No headings, no tables.
+- After the answer, if you used a note, add a line "Source: [page name](url)" using that note's source URL.
+- Then, on a final line, write exactly "FOLLOWUPS:" followed by two short follow-up questions separated by " | ".`;
+
+/*ENGINE-START*/
+  /* ───────── knowledge base (paraphrased from doonschool.com; a few gaps from Wikipedia) ───────── */
+  const SRC={
+    profile:['School Profile 2025–26','https://www.doonschool.com/wp-content/uploads/2025/09/School-Profile-2025-26.pdf'],
+    home:['doonschool.com','https://www.doonschool.com'],
+    history:['Origins and History','https://www.doonschool.com/about-us/origins-and-history/'],
+    faq:['Admissions FAQs','https://www.doonschool.com/admissions/faqs/'],
+    process:['Admissions Process','https://www.doonschool.com/wp-content/uploads/2023/07/Doon-School-Admissions-Process-2023.pdf'],
+    tests:['Admissions Tests and Interview','https://www.doonschool.com/wp-content/uploads/2019/03/Admissions-Tests-and-Interview.pdf'],
+    bursary:['Bursary Application 2026–27','https://www.doonschool.com/?p=31075'],
+    houses:['House Life','https://www.doonschool.com/pastoral-care/house-life/'],
+    martyn:['Martyn House','https://www.doonschool.com/pastoral-care/house-life/martyn-house/'],
+    sports:['Sports','https://www.doonschool.com/academic-life/departments/sports/'],
+    activities:['Activities and Outdoor Pursuits','https://www.doonschool.com/life-at-doon/activities-and-outdoor-pursuits/'],
+    service:['Service','https://www.doonschool.com/life-at-doon/service/'],
+    oldboys:['Old Boys','https://www.doonschool.com/alumni/old-boys/'],
+    founders:['Founder’s Day','https://www.doonschool.com/founders-day/'],
+    wiki:['Wikipedia: The Doon School','https://en.wikipedia.org/wiki/The_Doon_School'],
+    compendium:['Doon School Compendium (V2)','https://docs.google.com/document/d/1X8yR3r7wrbVc-SeLZxPO8lYvMSMBlk9Slon6RBcRbwA/edit?usp=sharing']
+  };
+  const ADM='**admissions@doonschool.com** or **+91 135 2526406**';
+  const KB=[
+  {id:'overview',t:'The Doon School at a glance',k:'about overview known famous reputation introduction what is boarding all boys best',q:['What is The Doon School known for?','Tell me about the school'],
+   a:`The Doon School is an all-boys, fully boarding school in Dehradun, in the foothills of the Himalayas. It opened in **1935** and today has about **600 boys** aged roughly 12 to 18, with around 80 teachers (about one teacher for every eight boys).
+
+It is known for:
+- a broad academic programme (ICSE, then ISC or the IB Diploma)
+- treks, sport and more than 50 clubs and societies
+- a social-service tradition going back to its founding, summed up in its ideal of an “aristocracy of service”
+- one of India’s best-known alumni networks`,s:['profile','history'],r:['Give me a short history of The Doon School.','Who are some famous Old Boys?']},
+
+  {id:'size',t:'How big the school is',k:'howmany size number students teachers ratio class strength enrolment population',q:['How many students are there?','What is the student teacher ratio?'],
+   a:`According to the School Profile for 2025–26, Doon has about **605 students** and **80 teachers**, a ratio of roughly **8 students to each teacher**.
+
+Each year about 90 boys graduate from Class 12.`,s:['profile'],r:['How are boys placed into houses?','What is a holding house?']},
+
+  {id:'location',t:'Where the school is',k:'locat where address city dehradun uttarakhand mall road reach map directions situated cantonment himalaya',q:['Where exactly is the school located?','What is the address?'],
+   a:`The Doon School is on **Mall Road, Dehradun, Uttarakhand 248003**, in the foothills of the Himalayas, north of Delhi.
+
+Its campus, known as **Chandbagh**, sits in the Dehradun Cantonment between Chakrata Road and Mall Road.`,s:['profile','wiki'],r:['What is the Chandbagh campus like?','How do I contact the school?']},
+
+  {id:'contact',t:'Contacting the school',k:'contact email phone number call telephone reach office enquiry website',q:['How do I contact the school?','What is the admissions email?'],
+   a:`- **Admissions:** ${ADM}
+- **School office:** +91 135 2526536 or +91 135 2526490
+- **Careers counselling:** careercounselling@doonschool.com
+- **Website:** doonschool.com
+
+The school is also on Facebook, Instagram, YouTube, LinkedIn and X (@The_Doon_School).`,s:['profile','faq'],r:['How do I book a visit to the school?','How do I apply for admission?']},
+
+  {id:'history',t:'A short history',k:'history past story timeline began opened 1935 old early years decades changed',q:['Give me a short history of The Doon School.','How has the school changed over the decades?','When was the school founded?'],
+   a:`The school was the idea of **Satish Ranjan Das**, a Calcutta lawyer who wanted an Indian school modelled on Britain’s boarding schools, open to boys from every community. He set up the Indian Public Schools’ Society to fund it but died in 1928, before it opened.
+
+Others carried the plan through and secured the old Forest Research Institute estate at Chandbagh. The first boys arrived on **10 September 1935**, and Viceroy Lord Willingdon formally opened the school on **27 October 1935**. **Arthur Foot** from Eton was the first Headmaster.
+
+Over the decades the school has grown to about 600 boys, gained a fifth main house (Oberoi), added the IB Diploma alongside Indian boards, and had eleven headmasters, the first Indian among them being Eric Simeon in the 1970s.`,s:['history','wiki'],r:['Who founded the school, and why?','Who was Arthur Foot?']},
+
+  {id:'founder',t:'Who founded the school, and why',k:'found founder satish ranjan das sr das ipss society vision idea why created',q:['Who founded the school, and why?','Who was S.R. Das?'],
+   a:`The Doon School was founded by **S. R. Das** (Satish Ranjan Das), a Calcutta lawyer who became Advocate General of Bengal and a member of the Viceroy’s Executive Council.
+
+Inspired by his own schooling at Manchester Grammar School, he wanted a school built on the British boarding model but rooted in Indian identity: fully secular, open to boys from every part of Indian society and every state, and preparing them to serve a free, democratic India.
+
+He founded the **Indian Public Schools’ Society (IPSS)** to raise the money, but died in 1928. The school opened seven years later, in 1935.`,s:['history','profile'],r:['Give me a short history of The Doon School.','Who was Arthur Foot?']},
+
+  {id:'foot',t:'Arthur Foot, the first Headmaster',k:'arthur foot first headmaster eton aristocracy service',q:['Who was Arthur Foot?','Who was the first headmaster?'],
+   a:`**Arthur Foot** was a science master at Eton College who became Doon’s first Headmaster, leading the school from its opening in 1935 until 1948. His deputy, **John Martyn** from Harrow, became the second Headmaster.
+
+At the first Founder’s Day, Foot said boys should leave Doon as members of an “aristocracy of service”, meaning one built on unselfishness rather than privilege or wealth. That idea is still the school’s guiding line, and **Foot House**, one of the two houses for new boys, is named after him.`,s:['history','wiki'],r:['Who is the current headmaster?','What is a holding house?']},
+
+  {id:'headmaster',t:'Headmasters, past and present',k:'headmaster current present now leader principal list past former eleventh 11th all every',q:['Who is the current headmaster?','Who have been the headmasters?','List all the headmasters'],
+   a:`The current Headmaster is **Dr Jagpreet Singh**, the school’s 11th Headmaster, in post since 2020. He is also Honorary Secretary of the Indian Public Schools’ Society. **Mr Kamal Ahuja** is Deputy Headmaster.
+
+Every Headmaster of Doon:
+- Arthur E. Foot (1935–1948)
+- J.A.K. Martyn (1948–1966)
+- C.J. Miller (1966–1970)
+- Eric J. Simeon (1970–1979)
+- Gulab Ramchandani (1979–1988)
+- Shomie Das (1988–1996)
+- John A. Mason (1996–2003)
+- Kanti Bajpai (2003–2006)
+- Peter McLaughlin (2009–2016)
+- Matthew Raggett (2016–2020)
+- Jagpreet Singh (2020–present)`,s:['compendium','profile'],r:['Who is on the school’s leadership team?','Who was Arthur Foot?']},
+
+
+  {id:'motto',t:'Motto, colours and ideals',k:'motto slogan colours colors crest ideal values ethos knowledge light aristocracy service philosophy principle',q:['What is the school motto?','What are the school colours?','What is the aristocracy of service?'],
+   a:`The school motto is **“Knowledge Our Light”**, and the school colours are **blue and white**.
+
+Doon’s guiding philosophy is an **aristocracy of service**: leadership rooted in humility, social duty, secularism and unselfish public service, rather than class privilege. The first Headmaster, Arthur Foot, set out the idea at the very first Founder’s Day.`,s:['compendium','wiki','history'],r:['What does “Dosco” mean?','What is Founder’s Day?']},
+
+
+  {id:'dosco',t:'What “Dosco” means',k:'dosco doscos nickname called name word mean meaning',q:['What does “Dosco” mean?','What are Doon students called?'],
+   a:`**Dosco** is the name for anyone who studies, or has studied, at The Doon School. Current boys are Doscos, and former pupils, known as **Old Boys**, call themselves Doscos for life.
+
+The school uses the word too: its Founder’s Day page talks of the school’s legacy guiding “generations of Doscos”.`,s:['founders','wiki'],r:['What is the Doon School Old Boys’ Society?','Who are some famous Old Boys?']},
+
+  {id:'campus',t:'The Chandbagh campus',k:'campus chandbagh grounds estate acres main building fri forest research institute trees birds green garden moon skinner',q:['What is the Chandbagh campus like?','How big is the campus?'],
+   a:`The campus, **Chandbagh** (“garden of the moon”), covers about **70 acres** of green space in Dehradun. It was once the site of the Forest Research Institute.
+
+- The **Main Building** dates from 1911 and won a UNESCO Asia-Pacific heritage award in 2016 for its conservation.
+- More than 150 species of trees grow on campus, and well over 150 species of birds have been recorded there.
+- The **Rose Bowl**, an open-air amphitheatre, was built by boys and masters in the 1930s.
+- More than 30 acres are playing fields, including Skinner’s Field and the Main Field.`,s:['home','wiki'],r:['What facilities does the school have?','Where exactly is the school located?']},
+
+  {id:'facilities',t:'Facilities',k:'facility pool gym swimming shooting range courts fields hall library labs learning centre',q:['What facilities does the school have?'],
+   a:`Facilities listed by the school include:
+- a **25-metre swimming pool**, gym and fitness room
+- squash courts, a sports pavilion and a multi-purpose hall used for boxing and badminton
+- floodlit **basketball and tennis courts**, several pitches and cricket nets
+- a **shooting range** (opened 2014), with golf played at local courses
+- the **Rose Bowl** amphitheatre and the historic Main Building
+- the **Kilachand Library** and the **Art & Media Centre**
+- a **Learning Centre** offering personal academic support and enrichment
+
+Each boarding house has its own dorms, common room and Housemaster’s residence.`,s:['sports','profile'],r:['What sports are played at Doon?','What is the Chandbagh campus like?']},
+
+  {id:'age',t:'When and at what age boys join',k:'admit age class7 class8 grade year entry eligible eligibility join dform old',q:['At what age or class can students join The Doon School?','What is the age limit for admission?'],
+   a:`Most boys join in **Class 7**, and a few in **Class 8**. They then stay six years, through Class 12.
+
+Age rules, counted as of **September of the year of the entrance exam**:
+- **Class 7:** older than 11 and younger than 12
+- **Class 8:** older than 12 and younger than 13
+
+Applicants come from almost every Indian state and from Indian families abroad.`,s:['faq','profile'],r:['What is the entrance process like?','How should my son prepare for the test?']},
+
+  {id:'process',t:'How admission works',k:'admit process apply register registration step entrance test date when centre center result offer shortlist',q:['What is the entrance process like?','How do I apply for admission?','When is the entrance exam?'],
+   a:`Admission runs in four steps:
+
+1. **Register online** at doonschool.com before the deadline, which in recent years has been around **1 September**.
+2. **Written test** on a Sunday in early **October**, held at centres such as Dehradun, Kolkata, Jaipur, Lucknow, Mumbai, Chennai, Hyderabad and Bangalore. Recent papers have been one-hour tests in **English, Mathematics, Reasoning & Case Study, and Science**.
+3. **Shortlist and interview:** about twice as many boys as there are places are invited for a **group discussion** and an **interview with the Headmaster**, usually in November.
+4. **Offers** are sent a few days after the process ends. Marks are not shared.
+
+Dates and centres change each year, so check the admissions page or write to ${ADM}.`,s:['process','faq','tests'],r:['What does the entrance test look for?','How does the group discussion work?']},
+
+  {id:'testcontent',t:'What the tests look for and how to prepare',k:'test prepare preparation coaching tuition syllabus study practice sample paper english maths reasoning crack',q:['What does the entrance test look for?','How should my son prepare for the test?','Is coaching needed?'],
+   a:`The tests look at **how a boy thinks**, not what he has memorised:
+- **English:** following instructions, clear and creative expression, engaging with what he reads
+- **Mathematics:** number, shape and proportion, spotting patterns, reading data
+- **Reasoning & Case Study:** ordering events, telling fact from opinion, justifying a view with empathy
+
+The school says it values curiosity and creativity over cramming, and it **does not endorse coaching centres**. It suggests regular reading, real hobbies and steady schoolwork. For free practice it points to **BBC Bitesize** (KS2 for Class 7, KS3 for Class 8) and the **Cambridge Checkpoint** materials.`,s:['tests','faq'],r:['How does the group discussion work?','What is the entrance process like?']},
+
+  {id:'interview',t:'The group discussion and interview',k:'interview discussion group gd shortlist headmaster weight weighting',q:['How does the group discussion work?','What happens at the interview?'],
+   a:`Shortlisted boys take part in a **group discussion with three other boys**. Assessors watch how each boy listens, shares and explains his views, reasons, and responds to different opinions, and whether he will try something unfamiliar without fear of being wrong.
+
+Past prompts have included talking about something they read, estimating the size of an object in the room, and drawing a map of India or the world.
+
+The **Headmaster interviews every shortlisted boy**, either at the school or at regional centres. In one recent cycle, the written tests and school reports counted for 70% and the discussion for 30%.`,s:['tests','faq'],r:['What is the entrance process like?','Is financial aid or scholarship available?']},
+
+  {id:'policies',t:'Donations, recommendations and other admission rules',k:'donation recommendation reference hindi boarding experience international nri abroad overseas reservation quota rte',q:['Do I need a recommendation?','Is there a Hindi test?','Can international students apply?'],
+   a:`A few points from the admissions FAQs:
+- **No donations.** The school says admission is merit-based, and any attempt to offer a donation leads to disqualification.
+- **No recommendations needed** from parents, pupils or schools.
+- **No Hindi test** at admission. Hindi level is checked after a boy joins.
+- **No boarding experience needed.** Most boys come from day schools.
+- **International applicants** can sit the test at the school and be interviewed soon after, by arrangement with the Admissions Office.`,s:['faq'],r:['How do I book a visit to the school?','What is the entrance process like?']},
+
+  {id:'visit',t:'Visiting the school',k:'visit visiting tour open day see campus book appointment',q:['How do I book a visit to the school?','Can we visit the campus?'],
+   a:`Families can book an **Open Day visit**, ideally during term time, using the form on the school website or by contacting the Admissions Office at ${ADM}.`,s:['faq'],r:['How do I apply for admission?','What is the Chandbagh campus like?']},
+
+  {id:'bursary',t:'Scholarships and bursaries',k:'bursary scholarship financial aid help support merit need means waiver free',q:['Is financial aid or scholarship available?','How do bursaries work?'],
+   a:`Doon offers two kinds of help:
+- **Scholarships** reward excellence in a particular field (merit-based).
+- **Bursaries** are means-tested financial aid based on a family’s need, and can cover **up to 100% of the fees**.
+
+About **one boy in five** receives a bursary. Families can apply for a bursary even if their son is not awarded a scholarship.
+
+For the 2026–27 year, the bursary form was released on 19 December 2025 with a deadline of **10 January 2026**. Check the website for the current cycle.`,s:['faq','profile','bursary'],r:['How much are the fees?','What is the entrance process like?']},
+
+  {id:'fees',t:'Fees',k:'fee cost price tuition expensive afford annual lakh rupee money',q:['How much are the fees?','What does it cost to study at Doon?'],
+   a:`The school’s own pages used here don’t list the current fee. Wikipedia, citing recent figures, gives annual fees of roughly **₹13.6 lakh for Indian students** and about **₹17 lakh for international students**.
+
+Fees change every year, so confirm the exact amount with the Admissions Office at ${ADM}. Means-tested **bursaries can cover up to the full fee**, and the school says there is no fee concession outside that system.`,s:['wiki','faq'],r:['Is financial aid or scholarship available?','How do I contact the school?']},
+
+  {id:'houses',t:'The boarding houses',k:'house houses hostel dorm boarding live work system structure tata hyderabad kashmir jaipur oberoi colour colors main',q:['What are the houses at Doon?','Which houses are there?','How do the houses work?'],
+   a:`Every boy lives in a boarding house. There are **five main houses**:
+- **Hyderabad**
+- **Jaipur**
+- **Kashmir**
+- **Tata**
+- **Oberoi** (the newest, added in the late 1980s)
+
+New boys spend their first year in one of **two holding houses**, **Foot** and **Martyn**, before moving into a main house.
+
+Each house has a Housemaster, an Assistant Housemaster, tutors and a **Dame** who looks after the boys’ welfare.`,s:['history','houses','wiki'],r:['Who are the housemasters?','What is a holding house?']},
+
+  {id:'holding',t:'Holding houses',k:'holdinghouse holding junior new first year dform foot martyn',q:['What is a holding house?','Where do new boys live?'],
+   a:`A **holding house** is where boys live during their **first year** (Class 7, called D Form). There are two: **Martyn House** and **Foot House**, named after the school’s first two headmasters.
+
+Martyn holds about 40 new boys, with well-lit dorms, attached bathrooms, a common room, rooms for evening study (“toye”) and a badminton court. The Housemaster and a tutor live alongside.
+
+After the first year, boys move into one of the five main houses.`,s:['martyn','wiki'],r:['How are boys placed into houses?','What are the houses at Doon?']},
+
+  {id:'placement',t:'How boys are placed in houses',k:'placed assign allot choose pick which house decided brother father family',q:['How are boys placed into houses?','Can we choose a house?'],
+   a:`Boys are assigned a house when they are admitted. They spend the first year in a holding house (Foot or Martyn), then move into their main house.
+
+Boys whose brothers or fathers were in a particular house are usually placed in the same one.`,s:['wiki'],r:['What is a holding house?','What do inter-house competitions look like?']},
+
+  {id:'housenames',t:'Where the house names come from',k:'name named origin barrit thomas donor maharaja nizam tata history house',q:['Why are the houses named that way?','Where do the house names come from?'],
+   a:`The first houses, opened in 1935, were **Martyn** and **Barrit**, named after their first Housemasters. **Thomas House** followed in 1936.
+
+In November 1937 the school renamed them after early donors to the Indian Public Schools’ Society: the **Maharaja of Jaipur**, the **Maharaja of Jammu & Kashmir**, the **Nizam of Hyderabad**, and **Sir Dorabji and Sir Ratanji Tata**. Thomas House became **Jaipur House**.
+
+**Oberoi House** was added much later, and the two holding houses honour the first headmasters, **Arthur Foot** and **John Martyn**.`,s:['houses','wiki'],r:['What are the houses at Doon?','Who was Arthur Foot?']},
+
+  {id:'pastoral',t:'Care and support for boys',k:'pastoral care wellbeing tutor dame matron housemaster support homesick help learning centre counsel',q:['Who looks after the boys?','What support is there for new boys?'],
+   a:`Each house is run by a **Housemaster**, with an assistant and a team of **tutors**. Every boy has a tutor from his house who keeps an eye on his progress.
+
+Each house also has a **Dame**, who looks after health and day-to-day welfare.
+
+The **Learning Centre** offers personal academic support and enrichment, based on professional assessments.`,s:['martyn','profile','wiki'],r:['What is a holding house?','What does a typical day look like?']},
+
+  {id:'interhouse',t:'Inter-house competition',k:'interhouse competition cup compete matches rivalry between houses tournament',q:['What do inter-house competitions look like?','How does inter-house sport work?'],
+   a:`Houses compete through the year in a full list of **inter-house matches** across sports, alongside inter-school and national fixtures.
+
+The **Inter-House Athletics Finals** are held during Founder’s Day, and houses host their own events too, such as Jaipur House’s **Pagal Gymkhana** on Skinner’s Field.
+
+Debating, dramatics, music and quizzing also give boys chances to represent their house.`,s:['sports','founders'],r:['What sports are played at Doon?','What is Founder’s Day?']},
+
+  {id:'curriculum',t:'Boards and curricula',k:'curriculum board ib icse isc igcse cbse diploma bilingual exam certificate',q:['Which boards and curricula does Doon offer?','Does Doon offer the IB?'],
+   a:`Boys study from **Form D/C** (Class 7/8) to **Form SC** (Class 12).
+
+- **Classes 9–10:** boys take the **ICSE** (Council for the Indian School Certificate Examinations). The Cambridge **IGCSE** was discontinued from 2025.
+- **Classes 11–12:** boys choose either the **ISC** or the **International Baccalaureate (IB) Diploma**. A bilingual IB Diploma is also offered.
+
+In the class graduating in 2026, about 62% took the ISC and 38% the IB.`,s:['profile','compendium'],r:['What subjects can senior boys choose?','How do Doon students do in exams?']},
+
+  {id:'subjects',t:'Subjects',k:'subject choose option elective stream science commerce humanities language french german spanish sanskrit economics psychology robotics',q:['What subjects can senior boys choose?','Which languages are taught?'],
+   a:`- **ICSE (Classes 9–10):** English and Mathematics are compulsory. Options include Hindi, Sanskrit, French, German, History/Civics/Geography, Economics, Commercial Studies, the sciences, Environmental Science, Art, Western and Hindustani Music, Physical Education, Computer Applications, Technical Drawing, and Robotics & AI.
+- **ISC (Classes 11–12):** English, Hindi, Economics, Biology, Commerce, Accounts, History, Geography, Computer Science, Environmental Science, Legal Studies, Art, Physical Education, Sanskrit and more.
+- **IB Diploma:** six subjects across the IB groups, from English, Hindi, French, German and Spanish to Economics, Psychology, Business, History, Geography, the sciences, Computer Science, Design Technology, Sports Science, Environmental Systems, Mathematics, Visual Arts and Music.`,s:['profile'],r:['Which boards and curricula does Doon offer?','How do Doon students do in exams?']},
+
+  {id:'timetable',t:'Classes, terms and evening prep',k:'class lesson period timetable term semester saturday prep toye homework study evening week',q:['How are classes and evening prep organised?','Are there classes on Saturday?'],
+   a:`The school runs a **seven-day week**, with classes on weekday mornings and **Saturday mornings** too. The year has **three terms**, and every year group has PE timetabled daily.
+
+Class periods are traditionally called **“schools”**, and supervised evening study in the houses is called **“toye”**.
+
+Doon does not rank boys or give GPAs, because it believes numbers can’t fairly capture each boy’s strengths and growth.`,s:['profile','wiki'],r:['What does a typical day look like?','What subjects can senior boys choose?']},
+
+  {id:'routine',t:'A day at Chandbagh',k:'routine day daily typical schedule morning wake sleep sunday weekend life',q:['What does a typical day look like?','How is a day at Chandbagh structured?'],
+   a:`A typical weekday:
+- an early snack known as **chhota haazri**, then outdoor exercise
+- **morning assembly**, which every boy and teacher attends
+- classes (“schools”) through the morning and into the afternoon
+- **games** and activities in the afternoon
+- **toye**, supervised evening study in the house
+
+**Sundays** are free for sport, hobbies and rest, and senior boys may visit town on set Sundays with their Housemaster’s permission.`,s:['wiki','profile'],r:['How are classes and evening prep organised?','What clubs and societies can boys join?']},
+
+  {id:'results',t:'Exam results and universities',k:'result score marks performance university college abroad sat ap destination placement career oxford harvard',q:['How do Doon students do in exams?','Which universities do Doscos go to?'],
+   a:`From the 2025–26 School Profile:
+- **IB Diploma 2025:** a school average of **36.1**, against a world average of about 30.6
+- **ISC 2025:** 46% of candidates scored 90% or more
+- **ICSE 2025:** 43% scored 90% or more
+
+Between 2021 and 2025, Doscos received offers from more than 150 US universities, more than 50 in the UK (including Oxford, Cambridge, Imperial and LSE), and many in Canada, Australia, Europe and Asia. In India, destinations include Ashoka, St Stephen’s, BITS Pilani and NLSIU. A careers team guides boys through applications.`,s:['profile'],r:['Which boards and curricula does Doon offer?','What awards can boys win?']},
+
+  {id:'awards',t:'Awards and recognition',k:'award blazer prize colours scholar recognition honour reading',q:['What awards can boys win?','What is a Scholar’s Blazer?'],
+   a:`Doon recognises achievement in several ways:
+- **Scholar’s Blazer:** top academic standing plus a strong reading record
+- **Games Blazer:** four years of consistent success in one or more sports
+- **School Colours:** for integrity, responsibility and service, in Classes 11–12
+- **Colours** in Arts, Debating (English and Hindi), Dramatics and Quizzing
+- **Reading Awards** at bronze, silver and gold levels
+- subject cups for the highest marks`,s:['profile'],r:['How do Doon students do in exams?','What clubs and societies can boys join?']},
+
+  {id:'sports',t:'Sports at Doon',k:'sport cricket football soccer hockey athletics boxing tennis squash basketball swimming badminton shooting golf yoga coach',q:['What sports are played at Doon?','Is sport compulsory?'],
+   a:`Doon offers about **15 sports**. The major games are **football, cricket and hockey**, alongside athletics, boxing, tennis, table tennis, squash, badminton, basketball and swimming. There is also **shooting** (range opened in 2014), golf at local courses, and volleyball, yoga, trampolining and dance.
+
+Every year group has **daily PE**. Boys are coached by qualified sports staff and professional coaches, with past pre-season camps run with **FC Barcelona** and the **MCC**.
+
+Teams play inter-house, inter-school, IPSC and district-to-national fixtures.`,s:['sports','profile'],r:['How does inter-house sport work?','What is the Midterm trek tradition?']},
+
+  {id:'sportstars',t:'Sporting achievements',k:'achievement national state medal olympic abhinav bindra champion represent',q:['What have Doon sportsmen achieved?'],
+   a:`Doscos have represented their state and India in basketball, football, squash, badminton, tennis and shooting, and won medals at IPSC national swimming and district athletics events.
+
+The school’s best-known sportsman is **Abhinav Bindra**, India’s first individual Olympic gold medallist (shooting, 2008), who is an Old Boy.`,s:['sports','wiki'],r:['What sports are played at Doon?','Who are some famous Old Boys?']},
+
+  {id:'midterm',t:'Midterms, treks and expeditions',k:'trek midterm expedition hike mountain himalaya adventure camping outdoor antarctica everest leh mountaineering',q:['What is the Midterm trek tradition?','Do boys go on treks?'],
+   a:`**Midterms** are one of Doon’s oldest traditions. Each term, boys and masters set off on a **five-day expedition** into the Himalayas or the Siwalik Hills, often combining adventure with service in remote villages. Senior boys plan and lead their own treks.
+
+Before setting out, boys train in budgeting, pitching tents, safety and emergency response.
+
+Past journeys include the **Thar Desert**, **Everest Base Camp** (about 17,500 ft) and cycling from **Manali to Leh**. In December 2015 Doon led **the first school expedition from India to Antarctica**.`,s:['activities','profile','wiki'],r:['What clubs and societies can boys join?','What community service do boys do?']},
+
+  {id:'clubs',t:'Clubs and societies',k:'club activity society hobby debate debating quiz music drama theatre art astronomy robotics mun radio photography extracurricular',q:['What clubs and societies can boys join?','What activities are there besides studies?'],
+   a:`Doon has **more than 50 clubs and societies**. They include:
+- the Debating Society, plus **Bharatvani** and **YuvBharati** for Hindi debate
+- the Quiz, Science, Maths, IT, Economics, Historical, Poetry and Nature Societies
+- the Business Club and the Astronomy Society
+- interests such as Model UN, robotics, photography, pottery, carpentry, birdwatching and amateur radio
+
+Boys also produce **more than 15 publications**, led by the student-run *Doon School Weekly*.`,s:['activities','profile','wiki'],r:['What is the Doon School Weekly?','What is the Midterm trek tradition?']},
+
+  {id:'weekly',t:'The Doon School Weekly and other publications',k:'weekly newspaper magazine publication journal paper student press yearbook',q:['What is the Doon School Weekly?','Are there school magazines?'],
+   a:`The ***Doon School Weekly***, published since **1936**, is the school’s oldest publication: a student-edited newspaper that comes out every Saturday.
+
+Other publications include *The Doon School Information Review*, *The Rose Bowl Herald*, *The Yearbook*, *Echo* (science), *Vibgyor* (art), *The Circle* (history and politics), *Econocrat*, *Infinity*, *Srijan Prayas*, *The Altruist*, *Grand Slam* and *DS-Tech*.`,s:['activities','wiki'],r:['What clubs and societies can boys join?','What is Founder’s Day?']},
+
+  {id:'service',t:'Community service',k:'service social community volunteer supw village slum round square ngo help charity',q:['What community service do boys do?','What is SUPW?'],
+   a:`Social service has been part of Doon since **1935**, and India later used the school’s model when it made social service compulsory in schools. Every boy takes part.
+
+- **Projects** include building, teaching and medical help in villages and urban slums, work against substance abuse, microfinance, and clean-water schemes. The school supports several slum and village schools.
+- **SUPW** (Socially Useful Productive Work) means at least **20 hours a term** of service, such as helping in house linen rooms, the kitchen or gardens, or squads like AV, Stage and Paper Recycling.
+- Through the **Round Square** association, which Doon has belonged to for about three decades, boys join service projects in India and abroad.`,s:['service','profile'],r:['What is the Midterm trek tradition?','What clubs and societies can boys join?']},
+
+  {id:'foundersday',t:'Founder’s Day',k:'foundersday celebration festival annual october event function',q:['What is Founder’s Day?','When is Founder’s Day?'],
+   a:`**Founder’s Day** is Doon’s biggest annual celebration, held over three days in **October**. In 2025 it ran from 16 to 18 October and marked the school’s 90th year.
+
+Highlights include:
+- departmental exhibitions and an art show
+- the **Founder’s Play** in the Rose Bowl, plus street plays in Hindi and English
+- the Inter-House Athletics Finals and an Old Boys vs School T20 cricket match
+- band performances, debates and Jaipur House’s **Pagal Gymkhana**
+- house teas for parents, and the **Founder’s Day Speeches and Music Programme** on the final evening`,s:['founders'],r:['What is the Rose Bowl?','What does “Dosco” mean?']},
+
+  {id:'traditions',t:'School traditions',k:'tradition custom culture rosebowl song anthem chambers ritual heritage',q:['What is the Rose Bowl?','What traditions does Doon have?'],
+   a:`Some Doon traditions:
+- the **Rose Bowl**, an open-air amphitheatre built by boys and masters in the 1930s, which seats about 2,000
+- **Founder’s Day** every October
+- **Midterms**, the term-time treks into the hills
+- the school song book, which mixes Urdu poetry, hymns and bhajans, and in which the national anthem is known as **“Song No. 1”**
+- school slang: classes are “schools”, evening study is “toye”, and the weekly masters’ meeting is “Chambers”`,s:['wiki'],r:['What is Founder’s Day?','What is the Midterm trek tradition?']},
+
+  {id:'dsobs',t:'The Doon School Old Boys’ Society',k:'alumni oldboys dsobs society association network connected chapter reunion',q:['What is the Doon School Old Boys’ Society?','How do Old Boys stay connected to the school?'],
+   a:`The **Doon School Old Boys’ Society (DSOBS)**, founded in **1939** according to the school’s website (some sources give 1959), links former pupils in India and abroad and supports the school’s development. Its President is a special invitee on the school’s Board of Governors.
+
+Each March, departing Class 12 boys are inducted and take out lifetime membership. Old Boys stay connected through:
+- **chapters** in Delhi, Mumbai, Kolkata, Chennai, Bangalore, Hyderabad, Jaipur, Indore and Dehradun, and abroad in the US, UK, Singapore, Hong Kong, Dubai, Australia and Oman
+- *The Rose Bowl* magazine, an Old Boys directory and the website **dsobs.net**
+- Founder’s Day reunions and matches against the school`,s:['oldboys'],r:['Who are some famous Old Boys?','What is Founder’s Day?']},
+
+  {id:'alumni',t:'Famous Old Boys',k:'alumni famous notable celebrity known well-known people rajiv gandhi rahul vikram seth amitav ghosh anish kapoor politician writer actor journalist businessman',q:['Who are some famous Old Boys?','Which famous people studied at Doon?'],
+   a:`Former pupils are known as **Doscos**. Well-known Old Boys include:
+- **Politics:** Rajiv Gandhi (6th Prime Minister of India), Rahul Gandhi (MP and Congress leader), Naveen Patnaik (former Chief Minister of Odisha), Jyotiraditya Scindia (Union Cabinet Minister), Kamal Nath (former Chief Minister of Madhya Pradesh) and Karan Singh (statesman, diplomat and Union Minister)
+- **Literature:** Amitav Ghosh (Jnanpith Award-winning novelist), Vikram Seth (*A Suitable Boy*) and historian Ramachandra Guha
+- **Arts and film:** Sir Anish Kapoor (Turner Prize-winning sculptor of *Cloud Gate*), actors Ali Fazal and Roshan Seth, and fashion designer Tarun Tahiliani
+- **Media:** Prannoy Roy (co-founder of NDTV), Aroon Purie (founder of the India Today Group), Karan Thapar and economist-columnist Swaminathan Aiyar
+- **Business:** Sunil Kant Munjal (Hero MotoCorp), Siddhartha Lal (CEO and MD of Eicher Motors, Royal Enfield) and Analjit Singh (founder of Max Group)
+- **Sport and social enterprise:** Abhinav Bindra (2008 Beijing Olympic gold in shooting) and Bunker Roy (founder of Barefoot College)`,s:['compendium','wiki'],r:['What is the Doon School Old Boys’ Society?','What have Doon sportsmen achieved?']},
+
+
+  {id:'affiliations',t:'Memberships and affiliations',k:'affiliation member membership association ipsc hmc round square g20 accredited recognised',q:['Which organisations is Doon a member of?'],
+   a:`Doon belongs to:
+- the Indian Public Schools’ Conference
+- the Headmasters’ and Headmistresses’ Conference (UK)
+- the International Boys’ Schools Coalition and the Boarding Schools’ Association (UK)
+- the **Round Square** association
+- AFS-India, the College Board, IACAC and CASE
+
+Its exams run through the CISCE (ICSE and ISC) and the International Baccalaureate.`,s:['profile'],r:['Which boards and curricula does Doon offer?','What community service do boys do?']},
+
+  {id:'newboy',t:'Life as a new boy',k:'new boy first year settle homesick adjust orientation boarding life parents worry',q:['What is life like for a new boy?','Will my son settle into boarding?'],
+   a:`Most boys join Doon from day schools, so the school assumes **no boarding experience**, and its orientation is built around that.
+
+New boys spend their first year (D Form, Class 7) in a **holding house**, Foot or Martyn, with about 40 boys of the same age, a Housemaster, tutors and a Dame. They then move into one of the five main houses.
+
+Hindi level is checked after joining, and the **Learning Centre** is there for anyone who needs extra academic help.`,s:['faq','martyn','profile'],r:['What is a holding house?','What does a typical day look like?']},
+
+  {id:'leadership',t:'The school’s leadership team',k:'leadership team administration staff dean deans pastoral academics director directors activities deputy management senior appointments',q:['Who is on the school’s leadership team?','Who is the Dean of Academics?','Who is the Director of Sports?','Who is the Dean Pastoral?'],
+   a:`Doon’s senior leadership team:
+- **Headmaster:** Dr Jagpreet Singh
+- **Deputy Headmaster:** Mr Kamal Ahuja
+- **Dean Pastoral:** Ms Stuti Kuthiala
+- **Dean Academics:** Mr Anjan Kumar Chaudhary
+- **Director of Activities:** Mr Manu Mehrotra
+- **Director of Sports:** Mr Inderjit Singh
+
+Each of the seven boarding houses also has its own Housemaster or Housemistress.`,s:['compendium'],r:['Who are the housemasters?','Who is on the Board of Governors?']},
+
+  {id:'housemasters',t:'Housemasters of every house',k:'housemaster housemasters housemistress warden incharge',q:['Who are the housemasters?','Who is the housemaster of each house?'],
+   a:`- **Hyderabad House:** Mr Sudhir Thapa
+- **Jaipur House:** Mr Pratyush Vaishnava
+- **Kashmir House:** Mr Manish Kant Pant
+- **Tata House:** Mr Parvinder Kumar
+- **Oberoi House:** Mr Vishal Mohla
+- **Foot House** (holding house, first year): Ms Ruchi Sahni
+- **Martyn House** (holding house, first year): Mr Samik Das
+
+Housemasters change from time to time, so check with the school for the latest.`,s:['compendium'],r:['What are the houses at Doon?','What is a holding house?']},
+
+  {id:'h-hyderabad',t:'Hyderabad House',k:'hyderabad nizam',q:['Tell me about Hyderabad House','Who is the housemaster of Hyderabad House?'],
+   a:`**Hyderabad House** is one of Doon’s five main boarding houses. It is named in honour of the **Nizam of Hyderabad’s** financial endowment.
+
+Its building is where the very first boys reported in 1935, when it was known as Martyn House.
+
+**Housemaster:** Mr Sudhir Thapa`,s:['compendium','houses'],r:['Who are the housemasters?','Where do the house names come from?']},
+
+  {id:'h-jaipur',t:'Jaipur House',k:'jaipur maharaja thomas',q:['Tell me about Jaipur House','Who is the housemaster of Jaipur House?'],
+   a:`**Jaipur House** is one of the five main boarding houses, named after the **Maharaja of Jaipur**, a prominent early donor.
+
+It began in 1936 as **Thomas House**, the school’s third house. Its building was finished in 1937, when 49 boys moved in. Jaipur House also runs the **Pagal Gymkhana** on Skinner’s Field at Founder’s Day.
+
+**Housemaster:** Mr Pratyush Vaishnava`,s:['compendium','houses','founders'],r:['Who are the housemasters?','What is Founder’s Day?']},
+
+  {id:'h-kashmir',t:'Kashmir House',k:'kashmir jammu princely',q:['Tell me about Kashmir House','Who is the housemaster of Kashmir House?'],
+   a:`**Kashmir House** is one of the five main boarding houses, named after the princely state of **Jammu and Kashmir**.
+
+**Housemaster:** Mr Manish Kant Pant`,s:['compendium','wiki'],r:['Who are the housemasters?','Where do the house names come from?']},
+
+  {id:'h-tata',t:'Tata House',k:'tata dorabji ratanji barrit',q:['Tell me about Tata House','Who is the housemaster of Tata House?'],
+   a:`**Tata House** is one of the five main boarding houses, named after the **Tata family and Group** for their foundational philanthropy (Sir Dorabji and Sir Ratanji Tata).
+
+Its building was ready in 1936, when Mr Barrit moved his boys into it.
+
+**Housemaster:** Mr Parvinder Kumar`,s:['compendium','houses'],r:['Who are the housemasters?','Where do the house names come from?']},
+
+  {id:'h-oberoi',t:'Oberoi House',k:'oberoi newest fifth',q:['Tell me about Oberoi House','Who is the housemaster of Oberoi House?'],
+   a:`**Oberoi House** is the newest of the five main boarding houses, added in the late 1980s. It is named after the **Oberoi family and business group**.
+
+**Housemaster:** Mr Vishal Mohla`,s:['compendium','wiki'],r:['Who are the housemasters?','What are the houses at Doon?']},
+
+  {id:'h-foot',t:'Foot House',k:'foot holdinghouse junior',q:['Tell me about Foot House','Who is the housemaster of Foot House?'],
+   a:`**Foot House** is one of the two **holding houses**, where boys spend their first year. It is named after **Arthur E. Foot**, Doon’s first Headmaster.
+
+**Housemistress:** Ms Ruchi Sahni`,s:['compendium'],r:['What is a holding house?','Who was Arthur Foot?']},
+
+  {id:'h-martyn',t:'Martyn House',k:'martyn holdinghouse junior dform',q:['Tell me about Martyn House','Who is the housemaster of Martyn House?'],
+   a:`**Martyn House** is one of the two **holding houses**, home to about 40 first-year (D Form) boys. It is named after **J.A.K. Martyn**, the second Headmaster, and is the school’s first house: new boys first reported to it in 1935.
+
+It has well-lit dorms with attached bathrooms, a common room, rooms for evening study (“toye”) and a badminton court.
+
+**Housemaster:** Mr Samik Das · **Dame:** Ms Gurjeet Dhaliwal`,s:['compendium','martyn'],r:['What is a holding house?','Who are the housemasters?']},
+
+  {id:'board',t:'Board of Governors and the IPSS',k:'board governors governance ipss society chairman owner owns run managed bishnoi nonprofit trust',q:['Who is on the Board of Governors?','Who runs the school?','What is the IPSS?'],
+   a:`The school is run by a non-profit parent body, the **Indian Public Schools’ Society (IPSS)**, which S. R. Das registered in 1928. It is overseen by a **Board of Governors**:
+- **Chairman:** Mr Anoop Singh Bishnoi (Chairman of the Board and of the IPSS)
+- **Headmaster and Honorary Secretary of the IPSS:** Dr Jagpreet Singh
+- **Members:** Mr Jaswinder Singh Bull, Mr Ravi Prakash Singhee, Mr Vinayak Bahuguna, Mr Sanjiv Sapra, Mr Ankur Bahl, Ms Saloni Goel, Mr Ratanjit Pratap Narain Singh, Mr Shishir Priyadarshi and Mr Sameer Sabharwal
+- **Association of Indian Universities representative:** Dr (Mrs) Pankaj Mittal
+- **Special invitee:** Mr Syed Junaid Altaf, President of the Doon School Old Boys’ Society`,s:['compendium'],r:['Who is on the school’s leadership team?','Who founded the school, and why?']},
+
+  {id:'timeline',t:'Timeline of the school',k:'timeline chronology chronological milestones key dates eras era 1928 1948 1966 1970s 1980s 2000s',q:['Give me a timeline of the school','What are the key dates in Doon’s history?'],
+   a:`- **1928:** S. R. Das registers the Indian Public Schools’ Society to raise funds for the school.
+- **10 September 1935:** the school opens. Viceroy Lord Willingdon formally inaugurates it on **27 October 1935**.
+- **1935–1948, the Foot years:** Arthur E. Foot lays down the core traditions: the house system, social service, outdoor expeditions and student self-government.
+- **1948–1966, the Martyn years:** J.A.K. Martyn consolidates the school after Independence, broadens academics and builds international links.
+- **1970s–1980s:** under Eric J. Simeon, Gulab Ramchandani and Shomie Das, the campus, arts and sports facilities expand and modernise.
+- **2000s–today:** the IB Diploma arrives, the Main Building wins a **UNESCO Asia-Pacific Heritage Award** (2016), and sustainability work grows.`,s:['compendium'],r:['Who have been the headmasters?','Who founded the school, and why?']},
+
+  {id:'library',t:'Kilachand Library and the Art & Media Centre',k:'library kilachand books reading art media centre center studio studios archive archives exhibition',q:['Does Doon have a library?','What is the Kilachand Library?'],
+   a:`The **Kilachand Library** and the **Art & Media Centre** give boys a wide range of learning resources, digital archives, studios and exhibition spaces.`,s:['compendium'],r:['What facilities does the school have?','What is the Chandbagh campus like?']},
+
+  {id:'green',t:'Sustainability on campus',k:'sustainability sustainable environment environmental eco green recycling solar water treatment forest conservation climate',q:['What does Doon do for the environment?','Is the campus eco-friendly?'],
+   a:`Chandbagh is known for its biodiversity and classical red-brick buildings, and the school works to protect both. It runs **recycling** and **water-treatment plants**, uses **solar power**, and follows strict building standards to preserve the estate’s natural forest cover. More than 150 species of trees grow on campus.`,s:['compendium','wiki'],r:['What is the Chandbagh campus like?','What community service do boys do?']},
+
+  {id:'mainbuilding',t:'The Main Building',k:'main building architecture unesco heritage award renaissance 1911 red brick restoration',q:['Tell me about the Main Building','What heritage award did Doon win?'],
+   a:`The **Main Building** was completed in **1911** for the Forest Research Institute, before Doon was founded, in a colonial Renaissance style. After careful restoration it received a **UNESCO Asia-Pacific Award for Cultural Heritage Conservation** in **2016**.`,s:['compendium','wiki'],r:['What is the Chandbagh campus like?','What is the Rose Bowl?']},
+
+  {id:'otherdoon',t:'Other schools with “Doon” in the name',k:'other different doon international welham dps related connected same branch',q:['Is The Doon School connected to other Doon schools?'],
+   a:`No. The Doon School says it is **not connected with any other school** that uses “Doon” in its name.`,s:['profile'],r:['What is The Doon School known for?','Where exactly is the school located?']}
+  ];
+
+  /* ───────── answer engine (works offline) ───────── */
+  const STOPW=new Set('a an the is are was were be been being of to in on at for by with as and or but if then so do does did doing what which who whom whose when why how can could would should will shall may might must i me my we our us you your he him his she her it its they them their this that these those there here tell explain describe give show please know want like any some much more most just also into from up out over than very really get got have has had doon school schools thedoon dehradun about wanna need'.split(' '));
+  const PHRASES=[[/founder'?s?'? ?day/g,' foundersday '],[/old ?boys?'?/g,' oldboys alumni '],[/holding ?house/g,' holdinghouse '],[/inter[- ]?house/g,' interhouse '],[/rose ?bowl/g,' rosebowl '],
+    [/how many/g,' howmany '],[/how old/g,' age '],[/class (vii|7)\b|7th class|grade 7/g,' class7 '],[/class (viii|8)\b|8th class|grade 8/g,' class8 '],[/d form/g,' dform '],[/round square/g,' round square service '],
+    [/head ?master|head of school/g,' headmaster '],[/s\.? ?r\.? das/g,' das founder '],[/doon school weekly|the weekly/g,' weekly ']];
+  const SYN={};
+  [['admit','admission admissions admit admitted join joining joined entry enrol enroll enrolment intake'],
+   ['apply','apply applying application applications register registration registering'],
+   ['fee','fee fees cost costs price tuition expensive afford affordable charge charges'],
+   ['bursary','scholarship scholarships bursary bursaries financial aid waiver concession'],
+   ['test','exam exams examination test tests paper papers'],
+   ['headmaster','principal hm head'],
+   ['interview','interview interviews gd discussion'],
+   ['teacher','teacher teachers faculty staff masters'],
+   ['student','student students boy boys pupil pupils kid kids children child son sons'],
+   ['house','house houses hostel hostels dorm dorms dormitory dormitories'],
+   ['sport','sport sports games game athletics'],
+   ['found','founded founding founder founders establish established start started began begin opened'],
+   ['subject','subject subjects course courses stream streams'],
+   ['curriculum','curriculum curricula syllabus ib icse isc igcse cbse board boards'],
+   ['trek','trek treks trekking expedition expeditions midterm midterms hike hiking camping adventure mountaineering'],
+   ['club','club clubs society societies activity activities hobby hobbies extracurricular cocurricular'],
+   ['service','service social community volunteer volunteering supw ngo'],
+   ['routine','routine schedule daily typical timetable wake'],
+   ['campus','campus chandbagh grounds estate acres'],
+   ['facility','facility facilities infrastructure amenities'],
+   ['celebration','celebration celebrate celebrated festival function annual'],
+   ['locat','location located address situated city'],
+   ['contact','contact email mail phone call telephone number'],
+   ['famous','famous notable celebrity celebrities well-known prominent'],
+   ['history','history historical past'],
+   ['motto','motto slogan']
+  ].forEach(([c,ws])=>ws.split(' ').forEach(w=>SYN[w]=c));
+  function stem(w){
+    if(w.length<=4) return w;
+    if(/ies$/.test(w)) return w.slice(0,-3)+'y';
+    if(/(ss|us|is)$/.test(w)) return w;
+    if(/(ches|shes|sses|xes)$/.test(w)) return w.slice(0,-2);
+    if(/s$/.test(w)) return w.slice(0,-1);
+    return w;
+  }
+  function toks(text){
+    let s=(' '+String(text).toLowerCase().replace(/[’‘]/g,"'")+' ');
+    PHRASES.forEach(([re,r])=>{ s=s.replace(re,r); });
+    s=s.replace(/[^a-z0-9\s]/g,' ');
+    const out=[];
+    for(const raw of s.split(/\s+/)){ if(!raw||STOPW.has(raw)) continue; let w=SYN[raw]||stem(raw); w=SYN[w]||w; if(!STOPW.has(w)) out.push(w); }
+    return out;
+  }
+  const DOCS=KB.map(e=>{
+    const tf=new Map(); let len=0;
+    const add=(text,wt)=>toks(text).forEach(t=>{ tf.set(t,(tf.get(t)||0)+wt); len+=wt; });
+    add(e.t,3); add(e.k,2.5); e.q.forEach(q=>add(q,2.5)); add(e.a.replace(/\*\*/g,''),.6);
+    return {e,tf,len};
+  });
+  const AVG=DOCS.reduce((s,d)=>s+d.len,0)/DOCS.length;
+  const DF=new Map(); DOCS.forEach(d=>d.tf.forEach((_,t)=>DF.set(t,(DF.get(t)||0)+1)));
+  function rank(query, extra){
+    let qt=[...new Set(toks(query))], xt=extra?[...new Set(toks(extra))].filter(t=>!qt.includes(t)):[];
+    if(!qt.length && xt.length){ qt=xt; xt=[]; }
+    const N=DOCS.length, k1=1.2, b=.55;
+    const res=DOCS.map(d=>{
+      let s=0;
+      const sc=(t,w)=>{ const f=d.tf.get(t); if(!f) return; const idf=Math.log(1+(N-DF.get(t)+.5)/(DF.get(t)+.5)); s+=w*idf*(f*(k1+1))/(f+k1*(1-b+b*d.len/AVG)); };
+      qt.forEach(t=>sc(t,1)); xt.forEach(t=>sc(t,.35));
+      return {e:d.e,d,score:s};
+    }).sort((a,b)=>b.score-a.score);
+    return {res, n:qt.length, qt};
+  }
+  const GREET=/^\s*(hi+|hello+|hey+|hiya|namaste|yo|good (morning|afternoon|evening)|greetings)\b[\s!.,?]*$/i;
+  const THANKS=/^\s*(thanks|thank you|thx|ty|great|cool|ok(ay)?|awesome|nice)\b[\s!.,?]*$/i;
+  function srcLine(e){ return 'Source: '+e.s.map(k=>`[${SRC[k][0]}](${SRC[k][1]})`).join(' · '); }
+  function localAnswer(q, prevQ, modeKey){
+    if(GREET.test(q)) return {text:`Hello! I’m **DS-Agent**, your guide to The Doon School. Ask me about admissions, houses, academics, sport, treks, traditions or famous Old Boys.\n\nFOLLOWUPS: What is The Doon School known for? | How do I apply for admission?`, hit:null};
+    if(THANKS.test(q)) return {text:`You’re welcome! Ask me anything else about Doon whenever you like.\n\nFOLLOWUPS: What does a typical day look like? | What is Founder’s Day?`, hit:null};
+    const short=toks(q).length<=2 || /\b(it|that|this|they|them|those|more|else|also)\b/i.test(q);
+    const {res,n,qt}=rank(q, short?prevQ:'');
+    const top=res[0], second=res[1];
+    const covered=n>0 && qt.every(t=>top.d.tf.has(t)) && top.score>0.5;
+    if(!n || (top.score<2.2 && !covered)){
+      const alt=res.slice(0,2).filter(x=>x.score>0.6);
+      const sug=(alt.length?alt.map(x=>x.e.q[0]):['What is The Doon School known for?','How do I apply for admission?']);
+      return {text:`I don’t have that in my notes from the school’s website yet. For anything I can’t answer, the official site **doonschool.com** is the best place to look, or you can write to ${ADM}.\n\nYou could also try one of these.\n\nFOLLOWUPS: ${sug.join(' | ')}`, hit:null};
+    }
+    const e=top.e;
+    let body=e.a;
+    if(modeKey==='quick'){ body=body.split(/\n\s*\n/)[0]; }
+    if(modeKey==='explain') body+=`\n\n**For parents:** details like dates, fees and seats change each year, so it’s worth confirming with the Admissions Office at ${ADM}.`;
+    const fu=[...e.r];
+    if(second && second.score>top.score*.7 && second.e.id!==e.id && !fu.includes(second.e.q[0])) fu[1]=second.e.q[0];
+    return {text:`${body}\n\n${srcLine(e)}\n\nFOLLOWUPS: ${fu.slice(0,2).join(' | ')}`, hit:e};
+  }
+  function notesFor(q, prevQ){
+    const {res}=rank(q, prevQ);
+    return res.slice(0,5).filter(x=>x.score>0.5).map(x=>`### ${x.e.t}\n${x.e.a}\n(Source: ${x.e.s.map(k=>SRC[k][1]).join(' , ')})`).join('\n\n');
+  }
+/*ENGINE-END*/
+
+
+
+  const ARROW='<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>';
+  const STOP='<svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3" fill="currentColor"/></svg>';
+  const CHEV='<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+  const iconHTML=t=>`<span class="icon" style="--c1:${t.c1};--c2:${t.c2}"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${ICONS[t.id]}</svg></span>`;
+
+  /* ───────── liquid-glass refraction (Chromium) ───────── */
+  const LENS = !!navigator.userAgentData && !matchMedia('(prefers-reduced-transparency: reduce)').matches;
+  const defs=$('#lensDefs'); const NS='http://www.w3.org/2000/svg'; let lensSeq=0;
+  const LENS_CFG={nav:{bezel:16,scale:34,blur:18,sat:1.9},composer:{bezel:24,scale:52,blur:16,sat:1.9},dock:{bezel:20,scale:46,blur:14,sat:1.8},
+    window:{bezel:30,scale:60,blur:26,sat:1.7},sheet:{bezel:28,scale:56,blur:30,sat:1.8}};
+  function lensMap(w,h,rad,B){
+    const k=2, cw=Math.ceil(w/k), ch=Math.ceil(h/k);
+    const cv=document.createElement('canvas'); cv.width=cw; cv.height=ch;
+    const cx=cv.getContext('2d'); const img=cx.createImageData(cw,ch); const d=img.data;
+    for(let j=0;j<ch;j++) for(let i=0;i<cw;i++){
+      const x=(i+.5)*k, y=(j+.5)*k, px=x-w/2, py=y-h/2;
+      const qx=Math.abs(px)-(w/2-rad), qy=Math.abs(py)-(h/2-rad);
+      const ox=Math.max(qx,0), oy=Math.max(qy,0), ol=Math.hypot(ox,oy);
+      const dist=-(ol+Math.min(Math.max(qx,qy),0)-rad);
+      let vx=0, vy=0;
+      if(dist>=0 && dist<B){
+        let nx,ny; if(ol>0){nx=ox/ol;ny=oy/ol;} else if(qx>qy){nx=1;ny=0;} else {nx=0;ny=1;}
+        nx*=(px<0?-1:1); ny*=(py<0?-1:1);
+        const t=1-dist/B, m=.55*t*t+.45*(1-Math.sqrt(Math.max(0,1-t*t)));
+        vx=-nx*m; vy=-ny*m;
+      }
+      const o=(j*cw+i)*4; d[o]=128+vx*127; d[o+1]=128+vy*127; d[o+2]=128; d[o+3]=255;
+    }
+    cx.putImageData(img,0,0); return cv.toDataURL();
+  }
+  function applyLens(el){
+    if(!LENS) return;
+    const cfg=LENS_CFG[el.dataset.lens]; if(!cfg) return;
+    const w=Math.round(el.offsetWidth), h=Math.round(el.offsetHeight); if(w<8||h<8) return;
+    const key=w+'x'+h; if(el._lensKey===key) return; el._lensKey=key;
+    let rad=parseFloat(getComputedStyle(el).borderTopLeftRadius)||0; rad=Math.min(rad,w/2,h/2);
+    const B=Math.min(cfg.bezel,w/2,h/2), url=lensMap(w,h,rad,B), id='lens-'+el.dataset.lens+'-'+(++lensSeq);
+    if(el._lensId){ const old=document.getElementById(el._lensId); if(old) setTimeout(()=>old.remove(),100); } el._lensId=id;
+    const f=document.createElementNS(NS,'filter');
+    Object.entries({id,x:0,y:0,width:w,height:h,filterUnits:'userSpaceOnUse',primitiveUnits:'userSpaceOnUse','color-interpolation-filters':'sRGB'}).forEach(([a,v])=>f.setAttribute(a,v));
+    const S=cfg.scale;
+    f.innerHTML=`<feImage href="${url}" x="0" y="0" width="${w}" height="${h}" preserveAspectRatio="none" result="map"/>
+      <feDisplacementMap in="SourceGraphic" in2="map" scale="${S}" xChannelSelector="R" yChannelSelector="G" result="dR"/>
+      <feColorMatrix in="dR" type="matrix" values="1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0" result="R"/>
+      <feDisplacementMap in="SourceGraphic" in2="map" scale="${S*1.07}" xChannelSelector="R" yChannelSelector="G" result="dG"/>
+      <feColorMatrix in="dG" type="matrix" values="0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 1 0" result="G"/>
+      <feDisplacementMap in="SourceGraphic" in2="map" scale="${S*1.14}" xChannelSelector="R" yChannelSelector="G" result="dB"/>
+      <feColorMatrix in="dB" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0" result="B"/>
+      <feBlend in="R" in2="G" mode="screen" result="RG"/><feBlend in="RG" in2="B" mode="screen"/>`;
+    defs.appendChild(f);
+    const v=`url(#${id}) blur(${cfg.blur}px) saturate(${cfg.sat})`;
+    el.style.backdropFilter=v;
+    if(!el.style.backdropFilter){ el.style.removeProperty('backdrop-filter'); }
+  }
+  const lensRO = (LENS && 'ResizeObserver' in window) ? new ResizeObserver(es=>es.forEach(e=>requestAnimationFrame(()=>applyLens(e.target)))) : null;
+  function watchLens(el){ if(lensRO){ lensRO.observe(el); applyLens(el); } }
+
+  /* ───────── pointer light on glass ───────── */
+  function spec(el){
+    if(!fine) return;
+    el.addEventListener('pointermove',e=>{ const r=el.getBoundingClientRect(); el.style.setProperty('--mx',(e.clientX-r.left)+'px'); el.style.setProperty('--my',(e.clientY-r.top)+'px'); el.style.setProperty('--spec','1'); },{passive:true});
+    el.addEventListener('pointerleave',()=>el.style.setProperty('--spec','0'));
+  }
+
+  /* ───────── state ───────── */
+  let mode='detailed', turns=[], busy=false, ctl=null, sample=null, sampleReady=false;
+  const KEY='ds-agent-chat-v1';
+  function save(){ try{ localStorage.setItem(KEY,JSON.stringify({turns:turns.slice(-30),mode})); }catch(e){} }
+  function load(){ try{ const d=JSON.parse(localStorage.getItem(KEY)||'null'); if(d&&Array.isArray(d.turns)){ turns=d.turns.filter(t=>t&&(t.role==='user'||t.role==='assistant')&&typeof t.content==='string'); if(MODES[d.mode]) mode=d.mode; } }catch(e){} }
+
+  /* ───────── composer ───────── */
+  const cwrap=$('#cwrap'), form=$('#form'), input=$('#q'), send=$('#send'), seg=$('#seg'), thumb=seg.querySelector('.thumb');
+  function syncSend(){ if(busy) return; send.innerHTML=ARROW; send.classList.toggle('ready', !!input.value.trim()); send.classList.remove('stop'); send.setAttribute('aria-label','Send'); }
+  input.addEventListener('input',syncSend);
+  cwrap.addEventListener('animationend',e=>{ if(e.target===cwrap) cwrap.classList.remove('intro'); });
+  function setPh(){ input.placeholder = innerWidth<520 ? 'Ask about The Doon School…' : 'Ask anything about The Doon School…'; }
+  setPh(); addEventListener('resize',setPh);
+  input.addEventListener('focus',()=>cwrap.classList.add('focus'));
+  input.addEventListener('blur',()=>cwrap.classList.remove('focus'));
+  function placeThumb(animate){
+    const b=seg.querySelector(`button[data-mode="${mode}"]`); if(!b) return;
+    if(animate&&!reduced){ thumb.classList.remove('squish'); void thumb.offsetWidth; thumb.classList.add('squish'); }
+    thumb.style.left=b.offsetLeft+'px'; thumb.style.width=b.offsetWidth+'px';
+  }
+  function syncModes(animate){ seg.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===mode))); placeThumb(animate); }
+  seg.querySelectorAll('button').forEach(b=>b.onclick=()=>{ mode=b.dataset.mode; syncModes(true); save(); });
+
+  function chatting(){ return document.body.classList.contains('chatting'); }
+  function swap(fn){
+    if(document.startViewTransition && !reduced){
+      cwrap.style.viewTransitionName='composer';
+      const vt=document.startViewTransition(fn);
+      vt.finished.finally(()=>{ cwrap.style.viewTransitionName=''; });
+    } else fn();
+  }
+  function enterChat(){
+    if(chatting()) return;
+    cwrap.classList.remove('intro');
+    swap(()=>{ document.body.classList.add('chatting'); $('#bar').prepend(cwrap); window.scrollTo({top:0,behavior:'instant'}); placeThumb(false); });
+  }
+  function leaveChat(then){
+    if(!chatting()){ then&&then(); return; }
+    swap(()=>{ document.body.classList.remove('chatting'); $('#ask').insertBefore(cwrap, $('.dockwrap')); window.scrollTo({top:0,behavior:'instant'}); placeThumb(false); then&&then(); });
+  }
+
+  /* ───────── markdown-lite ───────── */
+  function esc(s){ return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function inline(s){
+    s=esc(s);
+    s=s.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+    s=s.replace(/\[([^\]]+)\]\((https:\/\/[^\s)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+    s=s.replace(/(^|[\s(])((?:https:\/\/)?(?:www\.)?doonschool\.com[^\s)<,.]*)/g,(m,p,u)=>p+'<a href="'+(u.startsWith('http')?u:'https://'+u)+'" target="_blank" rel="noopener">'+u+'</a>');
+    return s;
+  }
+  function md(text){
+    let html='',list=null,para=[];
+    const fp=()=>{ if(para.length){ const t=para.join(' '); html+=(/^Source:/.test(t)?'<p class="src">':'<p>')+inline(t)+'</p>'; para=[]; } };
+    const fl=()=>{ if(list){ html+='</'+list+'>'; list=null; } };
+    for(const raw of text.split('\n')){
+      const l=raw.trim(); let m;
+      if(!l){ fp(); fl(); continue; }
+      if((m=l.match(/^[-*•]\s+(.*)/))){ fp(); if(list!=='ul'){fl(); html+='<ul>'; list='ul';} html+='<li>'+inline(m[1])+'</li>'; continue; }
+      if((m=l.match(/^\d+[.)]\s+(.*)/))){ fp(); if(list!=='ol'){fl(); html+='<ol>'; list='ol';} html+='<li>'+inline(m[1])+'</li>'; continue; }
+      if((m=l.match(/^#{1,6}\s+(.*)/))){ fp(); fl(); html+='<p><strong>'+inline(m[1])+'</strong></p>'; continue; }
+      fl(); para.push(l);
+    }
+    fp(); fl(); return html;
+  }
+  function split(text){
+    const i=text.lastIndexOf('FOLLOWUPS:');
+    if(i<0) return {body:text,follow:[]};
+    return {body:text.slice(0,i).trim(), follow:text.slice(i+10).split('|').map(s=>s.trim().replace(/^["“]|["”]$/g,'')).filter(Boolean).slice(0,3)};
+  }
+
+  /* ───────── thread ───────── */
+  const thread=$('#thread');
+  function toBottom(){ window.scrollTo({top:document.documentElement.scrollHeight,behavior:reduced?'instant':'smooth'}); }
+  function fchip(q){ const b=document.createElement('button'); b.type='button'; b.className='fchip g soft press'; b.textContent=q; b.onclick=()=>ask(q); return b; }
+  function threadHead(){ thread.innerHTML='<div class="t-head msg"><span class="eyebrow g">Conversation</span><h2>Ask <em>away.</em></h2></div>'; }
+  function addMe(t){ const d=document.createElement('div'); d.className='me g msg'; d.textContent=t; thread.appendChild(d); toBottom(); }
+  function addBot(){
+    const w=document.createElement('div'); w.className='bot g msg';
+    w.innerHTML=`<div class="who"><span class="orb" aria-hidden="true"></span>DS-Agent <small>· ${MODES[mode].label}</small></div><div class="answer"></div>`;
+    thread.appendChild(w); spec(w); toBottom();
+    return {wrap:w, ans:w.querySelector('.answer')};
+  }
+  function think(b){ b.wrap.classList.add('thinking'); b.ans.innerHTML='<span class="shine">Thinking…</span>'; }
+  function setBot(b,text,done){
+    b.wrap.classList.remove('thinking');
+    const {body,follow}=split(text);
+    b.ans.innerHTML=md(done?body:(text.replace(/FOLLOWUPS:[\s\S]*$/,'').trim()||'…'));
+    if(done&&follow.length){ const f=document.createElement('div'); f.className='follow'; follow.forEach(q=>f.appendChild(fchip(q))); b.wrap.appendChild(f); }
+  }
+  function note(b,msg,err){ const n=document.createElement('div'); n.className='note'+(err?' err':''); n.textContent=msg; b.wrap.appendChild(n); }
+
+  function replay(){
+    if(!turns.length) return;
+    cwrap.classList.remove('intro'); document.body.classList.add('chatting'); $('#bar').prepend(cwrap); threadHead();
+    turns.forEach((t,i)=>{ if(t.role==='user') addMe(t.content); else setBot(addBot(),t.content,i===turns.length-1); });
+  }
+  function setBusy(v){
+    busy=v; cwrap.classList.toggle('busy',v);
+    if(v){ send.innerHTML=STOP; send.classList.add('stop'); send.setAttribute('aria-label','Stop answering'); }
+    else syncSend();
+  }
+
+  const PERM=['not_granted','sampling_disabled','not_declared','capability_disabled','capability_removed'];
+  function wait(ms,signal){ return new Promise((res,rej)=>{ const t=setTimeout(res,ms); signal&&signal.addEventListener('abort',()=>{ clearTimeout(t); rej({code:'cancelled'}); },{once:true}); }); }
+  function typeOut(b,text,signal){
+    if(reduced){ setBot(b,text,false); return Promise.resolve(); }
+    return new Promise((res,rej)=>{
+      const parts=text.split(/(\s+)/); let i=0; const per=Math.max(2,Math.ceil(parts.length/70)); let last=0;
+      const tick=()=>{
+        if(signal&&signal.aborted){ rej({code:'cancelled',text:parts.slice(0,i).join('')}); return; }
+        i=Math.min(parts.length,i+per); setBot(b,parts.slice(0,i).join(''),false);
+        const now=performance.now(); if(now-last>350){ last=now; toBottom(); }
+        if(i>=parts.length) res(); else setTimeout(tick,18);
+      };
+      tick();
+    });
+  }
+  function label(b,txt){ const sm=b.wrap.querySelector('.who small'); if(sm) sm.textContent='· '+txt; }
+  function lastUserQ(){ for(let i=turns.length-1;i>=0;i--) if(turns[i].role==='user') return turns[i].content; return ''; }
+
+  async function ask(q){
+    q=(q||'').trim(); if(!q||busy) return;
+    const first=!chatting();
+    if(first){ threadHead(); enterChat(); }
+    input.value=''; syncSend();
+    addMe(q);
+    const b=addBot(); think(b);
+    thread.setAttribute('aria-busy','true');
+    const prevQ=lastUserQ();
+    turns.push({role:'user',content:q});
+    const m=MODES[mode];
+    ctl=new AbortController(); setBusy(true);
+    let text=null;
+    try{
+      if(sample){
+        try{
+          const hist=turns.slice(-12); while(hist.length&&hist[0].role!=='user') hist.shift();
+          const notes=notesFor(q,prevQ)||'(No matching notes.)';
+          let lastScroll=0;
+          const r=await sample([{role:'user',content:RULES+'\n\nNOTES:\n'+notes+'\n\nAnswer style: '+m.rule},...hist],{
+            cache:false, modelTier:m.tier, signal:ctl.signal,
+            onText:({text})=>{ setBot(b,text,false); const now=performance.now(); if(now-lastScroll>400){ lastScroll=now; toBottom(); } }
+          });
+          text=r.text; label(b,m.label+' · AI + school notes');
+          setBot(b,text,true);
+          if(r.truncated) note(b,'The answer was cut short. Ask a narrower question for the rest.');
+        }catch(e){
+          if(e&&e.code==='cancelled') throw e;
+          if(e&&PERM.includes(e.code)) sample=null;
+          text=null;
+        }
+      }
+      if(text===null){
+        const ans=localAnswer(q,prevQ,mode);
+        await wait(reduced?0:420+Math.random()*300, ctl.signal);
+        b.wrap.classList.remove('thinking');
+        await typeOut(b,ans.text,ctl.signal);
+        text=ans.text; label(b,m.label+' · School notes');
+        setBot(b,text,true);
+      }
+      toBottom();
+      turns.push({role:'assistant',content:text});
+    }catch(e){
+      if(e&&e.text){ setBot(b,e.text,false); turns.push({role:'assistant',content:e.text}); }
+      else { turns.pop(); b.wrap.classList.remove('thinking'); b.ans.innerHTML=md('Stopped.'); }
+    }finally{ ctl=null; setBusy(false); save(); thread.removeAttribute('aria-busy'); input.focus({preventScroll:true}); }
+  }
+
+  form.addEventListener('submit',e=>{ e.preventDefault(); if(busy){ ctl&&ctl.abort(); return; } ask(input.value); });
+  function newChat(){ if(busy&&ctl) ctl.abort(); turns=[]; save(); leaveChat(()=>{ thread.innerHTML=''; }); setTimeout(()=>input.focus({preventScroll:true}),60); }
+  $('#newChat').onclick=newChat;
+  $('#homeBtn').onclick=()=>{ if(chatting()) leaveChat(); else window.scrollTo({top:0}); };
+  $$('#links a').forEach(a=>a.addEventListener('click',e=>{ if(chatting()){ e.preventDefault(); const id=a.getAttribute('href'); leaveChat(()=>setTimeout(()=>document.querySelector(id).scrollIntoView(),30)); } }));
+  function focusComposer(){ leaveChat(); window.scrollTo({top:0}); setTimeout(()=>input.focus({preventScroll:true}),reduced?0:500); }
+  $('#tryOwn').onclick=focusComposer; $('#bigCta').onclick=focusComposer;
+
+  /* ───────── nav hover lens ───────── */
+  const links=$('#links'), dot=links.querySelector('.lensdot');
+  links.querySelectorAll('a').forEach(a=>{
+    const on=()=>{ dot.style.left=a.offsetLeft+'px'; dot.style.width=a.offsetWidth+'px'; dot.style.opacity='1'; };
+    a.addEventListener('pointerenter',on); a.addEventListener('focus',on);
+  });
+  links.addEventListener('pointerleave',()=>dot.style.opacity='0');
+  links.addEventListener('focusout',()=>dot.style.opacity='0');
+
+  /* ───────── dock with magnification ───────── */
+  const dock=$('#dock');
+  TOPICS.forEach(t=>{
+    const b=document.createElement('button'); b.type='button'; b.className='app'; b.setAttribute('aria-label',t.name);
+    b.innerHTML=iconHTML(t)+`<span class="tip g" aria-hidden="true">${t.name}</span><span class="name" aria-hidden="true">${t.name}</span>`;
+    b.onclick=()=>{ if(!reduced){ b.classList.remove('bounce'); void b.offsetWidth; b.classList.add('bounce'); } setTimeout(()=>openSheet(t,b.querySelector('.icon')), reduced?0:260); };
+    dock.appendChild(b);
+  });
+  const apps=[...dock.children];
+  if(fine && !reduced){
+    dock.addEventListener('pointermove',e=>{
+      dock.classList.remove('idle');
+      apps.forEach(a=>{ const r=a.getBoundingClientRect(); const d=Math.abs(e.clientX-(r.left+r.width/2)); const s=1+.5*Math.pow(Math.max(0,1-d/150),2); a.style.setProperty('--s',s.toFixed(3)); });
+    },{passive:true});
+    dock.addEventListener('pointerleave',()=>{ dock.classList.add('idle'); apps.forEach(a=>a.style.setProperty('--s','1')); });
+  }
+
+  /* ───────── sheet (opens like an app) ───────── */
+  const sheet=$('#sheet'); let sheetFrom=null, closing=false;
+  function openSheet(t,fromEl){
+    sheetFrom=fromEl;
+    $('#shIcon').outerHTML=iconHTML(t).replace('class="icon"','class="icon" id="shIcon"');
+    $('#shTitle').textContent=t.name; $('#shMeta').textContent=t.meta;
+    const list=$('#shList'); list.innerHTML='';
+    t.qs.forEach((q,i)=>{ const li=document.createElement('li'); li.style.animationDelay=(.12+i*.06)+'s'; const b=document.createElement('button'); b.type='button'; b.className='g soft press'; b.innerHTML='<span></span>'+CHEV; b.firstChild.textContent=q; b.onclick=()=>{ closeSheet(()=>ask(q)); }; li.appendChild(b); list.appendChild(li); });
+    sheet.showModal(); watchLens(sheet);
+    if(reduced||!fromEl) return;
+    const a=fromEl.getBoundingClientRect(), r=sheet.getBoundingClientRect();
+    const dx=(a.left+a.width/2)-(r.left+r.width/2), dy=(a.top+a.height/2)-(r.top+r.height/2);
+    sheet.animate([{transform:`translate(${dx}px,${dy}px) scale(${a.width/r.width},${a.height/r.height})`,opacity:0,borderRadius:'40px'},{transform:'none',opacity:1,borderRadius:'32px'}],
+      {duration:620,easing:'cubic-bezier(.3,1.25,.45,1)'});
+  }
+  function closeSheet(then){
+    if(closing||!sheet.open) return; closing=true;
+    const done=()=>{ sheet.close(); closing=false; then&&then(); };
+    if(reduced||!sheetFrom||!sheetFrom.isConnected){ done(); return; }
+    const a=sheetFrom.getBoundingClientRect(), r=sheet.getBoundingClientRect();
+    const dx=(a.left+a.width/2)-(r.left+r.width/2), dy=(a.top+a.height/2)-(r.top+r.height/2);
+    sheet.animate([{transform:'none',opacity:1},{transform:`translate(${dx}px,${dy}px) scale(${a.width/r.width},${a.height/r.height})`,opacity:0}],{duration:380,easing:'cubic-bezier(.5,0,.75,0)'}).finished.then(done,done);
+  }
+  $('#shClose').onclick=()=>closeSheet();
+  sheet.addEventListener('cancel',e=>{ e.preventDefault(); closeSheet(); });
+  sheet.addEventListener('click',e=>{ if(e.target!==sheet) return; const r=sheet.getBoundingClientRect(); if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom) closeSheet(); });
+
+  /* ───────── example follow-ups, marquee, bento ───────── */
+  ['Who was Arthur Foot?','What is Founder’s Day?'].forEach(q=>$('#exFollow').appendChild(fchip(q)));
+  const row1=[], row2=[];
+  TOPICS.forEach(t=>{ row1.push([t.qs[0],t.c1]); row2.push([t.qs[1],t.c2]); });
+  row1.push(['What is The Doon School known for?','#64D2FF'],['How is a day at Chandbagh structured?','#FFD60A']);
+  row2.push(['What clubs and societies can boys join?','#3DDC84'],['How much are the fees?','#FF5E57']);
+  row1.push(['Who is on the school’s leadership team?','#64D2FF']); row2.push(['Who are the housemasters?','#FFD60A'],['Give me a timeline of the school','#64D2FF']);
+  function fill(el,items){
+    const make=(hidden)=>items.forEach(([q,c])=>{ const b=document.createElement('button'); b.type='button'; b.className='qchip g soft press'; b.style.setProperty('--c',c); b.innerHTML='<i aria-hidden="true"></i><span></span>'; b.lastChild.textContent=q; b.onclick=()=>ask(q); if(hidden){ b.tabIndex=-1; b.setAttribute('aria-hidden','true'); } el.appendChild(b); });
+    make(false); if(!reduced) make(true);
+  }
+  fill($('#row1'),row1); fill($('#row2'),row2);
+
+  const bento=$('#bento');
+  TOPICS.forEach((t,i)=>{
+    const c=document.createElement('article'); c.className='card g'; c.setAttribute('data-reveal',''); c.style.setProperty('--d',(i%4)*.07+'s');
+    c.innerHTML=`<div class="top">${iconHTML(t)}<div><h3></h3><span class="meta"></span></div></div><ul></ul>`;
+    c.querySelector('h3').textContent=t.name; c.querySelector('.meta').textContent=t.meta;
+    t.qs.forEach(q=>{ const li=document.createElement('li'); const b=document.createElement('button'); b.type='button'; b.innerHTML='<span></span>'+CHEV; b.firstChild.textContent=q; b.onclick=()=>ask(q); li.appendChild(b); c.querySelector('ul').appendChild(li); });
+    bento.appendChild(c); spec(c);
+    if(fine&&!reduced){
+      c.addEventListener('pointermove',e=>{ if(!c.classList.contains('in')) return; c.classList.add('live'); const r=c.getBoundingClientRect(); const x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5; c.style.setProperty('--ry',(x*7).toFixed(2)+'deg'); c.style.setProperty('--rx',(-y*7).toFixed(2)+'deg'); },{passive:true});
+      c.addEventListener('pointerleave',()=>{ c.style.setProperty('--ry','0deg'); c.style.setProperty('--rx','0deg'); });
+    }
+  });
+
+  /* ───────── scroll reveal + scroll-linked motion ───────── */
+  if('IntersectionObserver' in window && !reduced){
+    const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }),{threshold:.12, rootMargin:'0px 0px -6% 0px'});
+    $$('[data-reveal]').forEach(el=>io.observe(el));
+  } else $$('[data-reveal]').forEach(el=>el.classList.add('in'));
+
+  const nav=$('#nav'), hero=$('#ask'), win=$('#win');
+  let ticking=false;
+  function onScroll(){
+    if(ticking) return; ticking=true;
+    requestAnimationFrame(()=>{
+      ticking=false; const y=scrollY;
+      nav.classList.toggle('compact',y>24);
+      if(chatting()||reduced) return;
+      hero.style.setProperty('--p', innerWidth>720 ? clamp(y/(innerHeight*.75),0,1).toFixed(3) : '0');
+      const r=win.getBoundingClientRect(); win.style.setProperty('--t',clamp((innerHeight-r.top)/(innerHeight*.8),0,1).toFixed(3));
+    });
+  }
+  addEventListener('scroll',onScroll,{passive:true}); addEventListener('resize',()=>{ onScroll(); placeThumb(false); });
+
+  /* ───────── living wallpaper ───────── */
+  (function wallpaper(){
+    const A=$('#aurora'), a=A.getContext('2d'), L=$('#contours'), l=L.getContext('2d');
+    if(!a||!l) return;
+    const blobs=[
+      {c:'40,110,255',x:.12,y:.2,r:.46,sx:.9,sy:.7,p:0,z:1},
+      {c:'150,70,255',x:.88,y:.14,r:.42,sx:.7,sy:1.1,p:2,z:.7},
+      {c:'0,210,255',x:.74,y:.8,r:.38,sx:1.1,sy:.8,p:4,z:1.2},
+      {c:'255,55,140',x:.2,y:.9,r:.32,sx:.8,sy:1.2,p:1,z:.9},
+      {c:'255,150,30',x:.97,y:.5,r:.2,sx:1.3,sy:.9,p:3,z:1.4}
+    ];
+    let mx=.5,my=.5,tx=.5,ty=.5, W,H,LW,LH,dpr;
+    function size(){ W=A.width=Math.ceil(innerWidth/7); H=A.height=Math.ceil(innerHeight/7); dpr=Math.min(devicePixelRatio||1,1.5); LW=L.width=Math.ceil(innerWidth*dpr); LH=L.height=Math.ceil(innerHeight*dpr); }
+    if(fine) addEventListener('pointermove',e=>{ tx=e.clientX/innerWidth; ty=e.clientY/innerHeight; },{passive:true});
+    function draw(t){
+      mx+=(tx-mx)*.04; my+=(ty-my)*.04;
+      const sf=clamp(scrollY/(innerHeight*3),0,1);
+      a.globalCompositeOperation='source-over'; a.fillStyle='#141416'; a.fillRect(0,0,W,H);
+      a.globalCompositeOperation='lighter';
+      const m=Math.max(W,H);
+      for(const o of blobs){
+        const cx=(o.x+Math.sin(t*.00009*o.sx+o.p)*.13+(mx-.5)*.06*o.z)*W;
+        const cy=(o.y+Math.cos(t*.00008*o.sy+o.p)*.11+(my-.5)*.05*o.z - sf*.25*o.z)*H;
+        const r=o.r*m*(1+Math.sin(t*.0002+o.p)*.06);
+        const g=a.createRadialGradient(cx,cy,0,cx,cy,r);
+        g.addColorStop(0,`rgba(${o.c},.62)`); g.addColorStop(.5,`rgba(${o.c},.2)`); g.addColorStop(1,`rgba(${o.c},0)`);
+        a.fillStyle=g; a.fillRect(0,0,W,H);
+      }
+      l.clearRect(0,0,LW,LH); l.lineWidth=1*dpr;
+      const N=17, step=18*dpr, off=sf*LH*.35;
+      for(let i=0;i<N;i++){
+        const y0=LH*(.1+i*.058)-off;
+        l.strokeStyle=`rgba(255,255,255,${(.05+.035*Math.sin(i*1.7+1)).toFixed(3)})`;
+        l.beginPath();
+        for(let x=-step;x<=LW+step;x+=step){
+          const X=x/dpr;
+          const y=y0+(Math.sin(X*.0021+i*.6+t*.00011)*26-Math.abs(Math.sin(X*.0012+i*.9+t*.00005))*34+Math.sin(X*.0053-i*.7+t*.00008)*8)*dpr;
+          x<=-step?l.moveTo(x,y):l.lineTo(x,y);
+        }
+        l.stroke();
+      }
+      if(!reduced) requestAnimationFrame(draw);
+    }
+    size(); addEventListener('resize',()=>{ size(); if(reduced) draw(0); });
+    reduced?draw(0):requestAnimationFrame(draw);
+  })();
+
+  /* ───────── boot ───────── */
+  $$('.g[data-lens]').forEach(el=>{ if(el.tagName!=='DIALOG') watchLens(el); });
+  $$('.badge, .eyebrow, .facts, .window').forEach(spec); spec(form); spec(dock); spec(nav);
+  load(); syncModes(false); replay(); setBusy(false); onScroll();
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(()=>placeThumb(false));
+  if(window.claude&&typeof window.claude.use==='function'){
+    window.claude.use('sample').then(s=>{ sample=s||null; sampleReady=true; }).catch(()=>{ sampleReady=true; });
+  } else sampleReady=true;
+})();
+</script>
+
+</body>
+</html>
