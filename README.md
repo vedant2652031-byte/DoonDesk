@@ -1,19 +1,19 @@
-# DS-Agent
+# DoonDesk
 
 Ask anything about **The Doon School, Dehradun**: admissions, houses, staff, the Autumn Term 2026 calendar, sport, Midterms, traditions and famous Old Boys, and get a clear answer straight away.
 
 **Live site:** https://vedant2652031-byte.github.io/doon-agent-site/ (classic version: [/classic/](https://vedant2652031-byte.github.io/doon-agent-site/classic/))
 
-DS-Agent is a single web page with a built-in knowledge base, so it runs in any browser with no server, no sign-up and no API key.
+DoonDesk is a single web page with a built-in knowledge base, so it runs in any browser with no server, no sign-up and no API key.
 
-> DS-Agent is an independent student project. It is not an official publication of The Doon School. For anything important (fees, dates, admissions) confirm with the school at [doonschool.com](https://www.doonschool.com).
+> DoonDesk is an independent student project. It is not an official publication of The Doon School. For anything important (fees, dates, admissions) confirm with the school at [doonschool.com](https://www.doonschool.com).
 
 ## What's in this repo
 
 | File | What it is |
 |---|---|
-| `index.html` | **DS-Agent Pro**: the main site. Blue-and-black liquid-glass design, login page, floating glass bubbles, scroll animations, works on phones, tablets and computers. |
-| `classic/index.html` | **DS-Agent (classic)**: the first version, with the original design. |
+| `index.html` | **DoonDesk**: the main site. Blue-and-black liquid-glass design, login page, floating glass bubbles, scroll animations, works on phones, tablets and computers. |
+| `classic/index.html` | **DoonDesk Classic**: the earlier version, with the original design. |
 | `.nojekyll` | Tells GitHub Pages to serve the files exactly as they are. |
 
 ## Use it
@@ -36,7 +36,7 @@ Each answer shows where its information came from and suggests follow-up questio
 
 ## How answers work
 
-- **School notes (always on):** DS-Agent matches your question against its knowledge base and answers instantly. It works offline and anywhere.
+- **School notes (always on):** DoonDesk matches your question against its knowledge base and answers instantly. It works offline and anywhere.
 - **AI (only inside Claude):** when the page is opened inside Claude and the notes don't cover a question, it asks Claude, giving it the school notes to work from.
 
 ## Accounts
