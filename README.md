@@ -24,7 +24,7 @@ DS-Agent is a single web page with a built-in knowledge base, so it runs in any 
 ## What it can answer
 
 - **The school:** history and timeline, founder, all 11 Headmasters, motto and the aristocracy of service, campus, the Main Building, Kilachand Library, sustainability
-- **People:** the leadership team (including the Bursar), the Board of Governors, every house's Housemaster and Assistant Housemaster, teachers by subject, staff initials (try "Who is SKD?"), masters-in-charge of societies, activities and sports
+- **People:** the leadership team (including the Bursar), the Board of Governors, every house's Housemaster, Assistant Housemaster and Dame, teachers by subject, staff initials (try "Who is SKD?"), masters-in-charge of societies, activities and sports
 - **Houses:** all seven houses, how boys are placed, holding houses, inter-house competitions
 - **Admissions:** ages, the entrance test and group discussion, preparation, bursaries, fees, visits
 - **Life at Doon:** daily routine, academics and subjects, results, sport, Midterms, clubs, publications, service, Founder's Day
