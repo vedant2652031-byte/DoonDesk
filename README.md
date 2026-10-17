@@ -2,6 +2,8 @@
 
 Ask anything about **The Doon School, Dehradun**: admissions, houses, staff, the Autumn Term 2026 calendar, sport, Midterms, traditions and famous Old Boys, and get a clear answer straight away.
 
+**Live site:** https://vedant2652031-byte.github.io/doon-agent-site/ (classic version: [/classic/](https://vedant2652031-byte.github.io/doon-agent-site/classic/))
+
 DS-Agent is a single web page with a built-in knowledge base, so it runs in any browser with no server, no sign-up and no API key.
 
 > DS-Agent is an independent student project. It is not an official publication of The Doon School. For anything important (fees, dates, admissions) confirm with the school at [doonschool.com](https://www.doonschool.com).
