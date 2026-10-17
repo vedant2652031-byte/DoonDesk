@@ -25,9 +25,10 @@ DS-Agent is a single web page with a built-in knowledge base, so it runs in any 
 
 - **The school:** history and timeline, founder, all 11 Headmasters, motto and the aristocracy of service, campus, the Main Building, Kilachand Library, sustainability
 - **People:** the leadership team (including the Bursar), the Board of Governors, every house's Housemaster, Assistant Housemaster and Dame, teachers by subject, staff initials (try "Who is SKD?"), masters-in-charge of societies, activities and sports
-- **Houses:** all seven houses, how boys are placed, holding houses, inter-house competitions
+- **Houses:** all seven houses with their colours, mottos, locations, staff, Dames and room layouts; holding houses; house words like toye and caudi; how the inter-house cups and points work
 - **Admissions:** ages, the entrance test and group discussion, preparation, bursaries, fees, visits
-- **Life at Doon:** daily routine, academics and subjects, results, sport, Midterms, clubs, publications, service, Founder's Day
+- **Life at Doon:** forms (D to SC), the two terms, daily routine, academics, departments and subjects, results, sport and facilities, Midterms, clubs, activities and publications, Centres of Excellence, service, pastoral care and who to contact, keeping in touch with parents, Founder's Day and special programmes
+- **Campus:** the Main Field and Skinners, the Sports Complex, CDH, MDH and Café Aqueduct, the BML Munjal Auditorium, the Kilachand Library and the Wellness Centre
 - **Autumn Term 2026 calendar:** every key date, plus "What's coming up next?", which works out upcoming events from today's date
 - **Old Boys:** about 50 notable alumni by field, and any of them by name
 
@@ -52,4 +53,5 @@ The knowledge base lives inside each HTML file between the `/*ENGINE-START*/` an
 - Doon School Compendium (V2)
 - The Doon School Calendar: Autumn Term 2026
 - Notable Doon School Alumni (Old Boys) V3
+- Doon School Guide (Google Doc): houses, campus, sport, pastoral care and school life
 - [Wikipedia: The Doon School](https://en.wikipedia.org/wiki/The_Doon_School), for a few gaps
