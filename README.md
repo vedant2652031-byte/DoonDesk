@@ -2,7 +2,7 @@
 
 Ask anything about **The Doon School, Dehradun**: admissions, houses, staff, the Autumn Term 2026 calendar, sport, Midterms, traditions and famous Old Boys, and get a clear answer straight away.
 
-**Live site:** https://vedant2652031-byte.github.io/doon-agent-site/ (classic version: [/classic/](https://vedant2652031-byte.github.io/doon-agent-site/classic/))
+**Live site:** https://vedant2652031-byte.github.io/DoonDesk/ (classic version: [/classic/](https://vedant2652031-byte.github.io/DoonDesk/classic/))
 
 DoonDesk is a single web page with a built-in knowledge base, so it runs in any browser with no server, no sign-up and no API key.
 
@@ -19,7 +19,7 @@ DoonDesk is a single web page with a built-in knowledge base, so it runs in any 
 ## Use it
 
 - **On your computer:** download `index.html` and double-click it.
-- **As a website (free):** in this repo go to **Settings → Pages**, set **Source** to *Deploy from a branch*, choose **main** and **/ (root)**, and save. After a minute your site is live at `https://<your-username>.github.io/<repo-name>/`, and the classic version is at `…/classic/`.
+- **As a website (free):** in this repo go to **Settings → Pages**, set **Source** to *Deploy from a branch*, choose **main** and **/ (root)**, and save. After a minute your site is live at `https://<your-username>.github.io/DoonDesk/`, and the classic version is at `…/classic/`.
 
 ## What it can answer
 
