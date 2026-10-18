@@ -1866,8 +1866,36 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
     SKD:['Mr Samik Das','teaches Commerce and is Housemaster of Martyn House'],RSL:['Mr Rajat Sabharwal','teaches Commerce and is Assistant Housemaster of Martyn House'],
     VSM:['Mr Vishal Mohla','teaches Computer Science and is Housemaster of Oberoi House'],ARJ:['Dr Ankur Joshi','teaches Biology and is Assistant Housemaster of Oberoi House'],
     PKR:['Mr Parvinder Kumar','teaches Physics and is Housemaster of Tata House'],JTR:['Mr Jitendra Tiwari','teaches Physical Education and is Assistant Housemaster of Tata House'],KNS:['Ms Kanchan Shukla','is the Dame of Foot House']};
-  const MICI={}; [['Adventure Club','MMR DSI'],['Model United Nations','RDG MTG ADS'],['Public Speaking','NAS'],['Art','ARM'],['Computers','VSM SHM'],['Music','PRY ASA ARK SDS'],['Robotics','ATI'],
-    ['Athletics','IDS MIA'],['Basketball','JTR ADN'],['Cricket','MPT PTV ATI'],['Football','DSI KBT'],['Swimming','RHS NLB SHB'],['Tennis','DKM ADN']].forEach(([a,ii])=>ii.split(' ').forEach(i=>(MICI[i]=MICI[i]||[]).push(a)));
+  const MICL=[['Adventure Club','MMR DSI'],['Model United Nations','RDG MTG ADS'],['Public Speaking','NAS'],['Art','ARM'],['Computers','VSM SHM'],['Music','PRY ASA ARK SDS'],['Robotics','ATI'],
+    ['Athletics','IDS MIA'],['Basketball','JTR ADN'],['Cricket','MPT PTV ATI'],['Football','DSI KBT'],['Swimming','RHS NLB SHB'],['Tennis','DKM ADN']];
+  const MICI={}; MICL.forEach(([a,ii])=>ii.split(' ').forEach(i=>(MICI[i]=MICI[i]||[]).push(a)));
+  const MICK={'Adventure Club':['adventure club','adventure'],'Model United Nations':['model united nations','model un','mun'],'Public Speaking':['public speaking','debating','debate'],'Art':['art','arts'],
+    'Computers':['computers','computer','computing'],'Music':['music'],'Robotics':['robotics'],'Athletics':['athletics','athletic','track and field','track'],'Basketball':['basketball'],
+    'Cricket':['cricket'],'Football':['football','soccer'],'Swimming':['swimming','swim','pool'],'Tennis':['tennis','lawn tennis']};
+  const MIC_STU={'Music':'Music Captain','Model United Nations':'MUN President','Computers':'Computers','Art':'Art','Robotics':'Robotics','Public Speaking':'Public Speaking','Adventure Club':'Adventure Club'};
+  function micAnswer(q){
+    const ql=' '+q.toLowerCase().replace(/&/g,' and ').replace(/[^a-z\s]/g,' ').replace(/\s+/g,' ')+' ';
+    if(!/ (in ?charge|incharge|masters?|mic|mics|coach|coaches|coaching|teachers?|sir|maam|madam|runs?|responsible|looks after) /.test(ql)) return null;
+    if(/ (students?|boys?|captains?|prefects?|sic|leaders?) /.test(ql)) return null;
+    let best=null, bl=0;
+    for(const [a] of MICL) for(const k of MICK[a]||[a.toLowerCase()]){
+      if(k==='tennis' && / table tennis /.test(ql)) continue;
+      if(ql.includes(' '+k+' ') && k.length>bl){ best=a; bl=k.length; }
+    }
+    if(!best) return null;
+    const ii=MICL.find(x=>x[0]===best)[1].split(' ');
+    const who=ii.map(i=>STAFFI[i]?`**${STAFFI[i][0]}** (${i})`:`**${i}**`);
+    const list=who.length===1?who[0]:who.slice(0,-1).join(', ')+' and '+who[who.length-1];
+    let t=`The master${ii.length>1?'s':''}-in-charge of **${best}** this term ${ii.length>1?'are':'is'} ${list}.`;
+    if(ii.some(i=>!STAFFI[i])) t+=`\n\nThe calendar gives some masters only by their initials.`;
+    try{
+      const lab=MIC_STU[best]||best;
+      for(const g of LEAD.groups) for(const it of g.items){
+        if(it[0]===lab||it[0]===best){ const r=g.id==='sportscaptains'?`${best} Captain`:it[1].replace(/^Student-in-charge, /,'student-in-charge of '); t+=`\n\n${r.startsWith('student')?'The '+r:'The student **'+r+'**'} for 2026–27 ${it[2].length>1?'are':'is'} ${it[2].map(n=>'**'+n+'**').join(' and ')}.`; throw 0; }
+      }
+    }catch(e){}
+    return t+`\n\nSource: Autumn Term 2026 Calendar\n\nFOLLOWUPS: Who are the masters-in-charge of activities? | Who is ${ii[0]}?`;
+  }
   const PEOPLE=[
     ['Dr Jagpreet Singh','is the Headmaster, the school’s 11th, and Honorary Secretary of the Indian Public Schools’ Society'],
     ['Mr Kamal Ahuja','is the Deputy Headmaster'],['Gp Capt Sandeep Sethi (Retd.)','is the Bursar'],['Ms Stuti Kuthiala','is the Dean Pastoral'],
@@ -1986,6 +2014,7 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
     if(/\bwhen\b/i.test(q) && /\b(exams?|trials?|pre-?boards?|tests?)\b/i.test(q) && !/entrance|admission|join/i.test(q)){
       const ce=KB.find(x=>x.id==='calendar'); return {text:`${ce.a}\n\n${srcLine(ce)}\n\nFOLLOWUPS: ${ce.r.join(' | ')}`, hit:ce};
     }
+    const ma=micAnswer(q); if(ma) return {text:ma, hit:{id:'micone'}};
     const ra=roleAnswer(q); if(ra) return {text:ra, hit:{id:'role'}};
     const pa=personAnswer(q); if(pa) return {text:pa, hit:{id:'person'}};
     const ia=initialsAnswer(q); if(ia) return {text:ia, hit:{id:'initials'}};
