@@ -617,6 +617,110 @@ body.chatting .bubbles{opacity:.55}
 @media (max-width:480px){ .tools{justify-content:space-between} .tools .seg{width:auto;flex:1} .ai-chip{padding:0 10px} }
 .seg button{white-space:nowrap}
 @media (max-width:430px){ #aiChipLabel{display:none} .ai-chip::after{content:'AI'} .ai-chip{padding:0 11px;gap:5px} }
+/* ───────── visual answers ───────── */
+.vz-wrap{display:flex;flex-direction:column;gap:14px;margin-top:2px}
+.vz{border-radius:20px;padding:16px 16px 12px;background:rgba(0,0,0,.22);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),inset 0 1px 0 rgba(255,255,255,.06);animation:riseIn .7s var(--ease) backwards}
+.vz-h{margin:0 0 12px;font-size:13px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:var(--fg-3)}
+.vz-h2{margin-top:18px}
+.vz-src{margin:12px 0 0;font-size:11.5px;line-height:1.5;color:var(--fg-3)}
+.vz-src a,.vz-fig figcaption a{color:var(--fg-2);text-underline-offset:2px}
+.vz-note{margin:10px 0 0;font-size:13px;color:var(--fg-2)}
+/* photos */
+.vz-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.vz-fig{margin:0;display:flex;flex-direction:column;gap:7px;min-width:0}
+.vz-imgwrap{position:relative;display:block;border-radius:14px;overflow:hidden;aspect-ratio:4/3;background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+.vz-imgwrap img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s var(--ease)}
+.vz-imgwrap:hover img{transform:scale(1.04)}
+.vz-fallback{display:none;position:absolute;inset:0;place-items:center;text-align:center;padding:14px;font-size:13px;color:var(--fg-2)}
+.vz-broken .vz-imgwrap img{display:none}
+.vz-broken .vz-fallback{display:grid}
+.vz-fig figcaption{display:flex;flex-direction:column;gap:2px;font-size:12.5px;line-height:1.4;color:var(--fg-3)}
+.vz-fig figcaption b{font-size:13.5px;font-weight:600;color:var(--fg)}
+.vz-mini{max-width:260px;margin-top:8px}
+.vz-mini .vz-imgwrap{aspect-ratio:16/10}
+/* map */
+.vz-mapframe{border-radius:14px;overflow:hidden;aspect-ratio:16/10;background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+.vz-mapframe iframe{width:100%;height:100%;border:0;display:block;filter:saturate(.9)}
+.vz-dist{list-style:none;margin:12px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px}
+.vz-dist li{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.05);font-size:12.5px;color:var(--fg-3)}
+.vz-dist b{font-size:15px;color:var(--fg)}
+.vz-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.vz-links a{font-size:13px;font-weight:600;color:#fff;text-decoration:none;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.16)}
+.vz-links a:hover{background:rgba(255,255,255,.18)}
+/* timelines */
+.vz-tl{list-style:none;margin:0;padding:0 0 0 4px;position:relative;display:flex;flex-direction:column;gap:12px}
+.vz-tl::before{content:"";position:absolute;left:9px;top:6px;bottom:6px;width:2px;border-radius:2px;background:linear-gradient(#64D2FF,#0A84FF 60%,rgba(10,132,255,.2))}
+.vz-tl li{position:relative;padding-left:28px;display:grid;grid-template-columns:96px 1fr;gap:10px;align-items:start;animation:riseIn .6s var(--ease) backwards;animation-delay:calc(var(--i)*.05s)}
+.vz-tl li::before{content:"";position:absolute;left:4px;top:5px;width:12px;height:12px;border-radius:50%;background:#0A84FF;box-shadow:0 0 0 3px rgba(10,132,255,.25),0 0 12px rgba(10,132,255,.6)}
+.vz-tl li.past{opacity:.55}
+.vz-tl li.past::before{background:rgba(255,255,255,.4);box-shadow:none}
+.vz-yr{font-size:13px;font-weight:700;color:#8ED3FF;font-variant-numeric:tabular-nums}
+.vz-ev p{margin:0;font-size:14px;line-height:1.45;color:var(--fg)}
+.vz-hmbar{position:relative;height:58px;margin-top:4px}
+.vz-hm{position:absolute;top:0;left:var(--l);width:var(--w);height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;overflow:hidden;
+  background:hsl(calc(205 + var(--i)*7) 85% calc(48% + var(--i)*1.5%));box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 0 0 1px rgba(0,0,0,.35);animation:riseIn .6s var(--ease) backwards;animation-delay:calc(var(--i)*.05s)}
+.vz-hm span{font-size:10.5px;font-weight:700;color:#fff;white-space:nowrap;padding:0 3px;text-shadow:0 1px 2px rgba(0,0,0,.4)}
+.vz-ticks{position:absolute;left:0;right:0;bottom:0;height:20px;border-top:1px solid rgba(255,255,255,.12)}
+.vz-ticks i{position:absolute;top:4px;transform:translateX(-50%);font-style:normal;font-size:10.5px;color:var(--fg-3)}
+.vz-ticks i:first-child{transform:none}
+.vz-hmlist{list-style:none;margin:10px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:4px 14px;font-size:12.5px;color:var(--fg-3)}
+.vz-hmlist b{color:var(--fg-2);font-weight:600}
+/* term bar */
+.vz-termbar{position:relative;height:56px;margin-bottom:14px}
+.vz-tev{position:absolute;top:8px;height:18px;border-radius:5px;background:linear-gradient(180deg,#4AA8FF,#0A5CFF);box-shadow:0 0 0 1px rgba(0,0,0,.35);min-width:5px}
+.vz-today{position:absolute;top:0;bottom:20px;width:2px;background:#FFD24A;box-shadow:0 0 10px #FFD24A}
+.vz-today b{position:absolute;top:-2px;left:6px;font-size:10.5px;color:#FFD24A;white-space:nowrap}
+/* houses */
+.vz-hgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.vz-hbtn{border:none;background:none;padding:0;text-align:left;border-radius:16px;cursor:pointer;transition:transform .45s var(--spring)}
+.vz-hbtn:hover{transform:translateY(-2px)}
+.vz-hbtn:active{transform:scale(.97)}
+.vz-house{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:16px;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--hc) 34%,transparent),rgba(255,255,255,.03));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--hc) 55%,transparent),inset 0 1px 0 rgba(255,255,255,.1)}
+.vz-house>div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.vz-house b{font-size:15px;color:#fff}
+.vz-motto{font-size:13px;color:var(--fg-2);font-style:italic}
+.vz-meta{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--fg-3)}
+.vz-meta i{width:10px;height:10px;border-radius:3px;flex:none;box-shadow:0 0 0 1px rgba(255,255,255,.3)}
+.vz-sym{position:relative;width:38px;height:56px;flex:none;border-radius:6px;display:grid;place-items:center;overflow:hidden;background:var(--hc);box-shadow:0 4px 12px rgba(0,0,0,.35),inset 0 0 0 1px rgba(255,255,255,.25)}
+.vz-sym img{width:100%;height:100%;object-fit:contain;position:relative;z-index:1;background:var(--hc)}
+.vz-sym b{position:absolute;font-family:var(--serif);font-style:italic;font-weight:400;font-size:24px;color:#fff}
+.vz-onehouse .vz-hero{display:flex;align-items:center;gap:16px;padding:14px;border-radius:16px;margin-bottom:12px;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--hc) 42%,transparent),rgba(255,255,255,.03));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--hc) 60%,transparent)}
+.vz-onehouse .vz-hero>div{display:flex;flex-direction:column;gap:3px}
+.vz-onehouse .vz-hero b{font-size:20px;color:#fff;letter-spacing:-.02em}
+.vz-onehouse .vz-sym{width:52px;height:78px}
+.vz-kicker{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--fg-3)}
+/* admissions */
+.vz-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;counter-reset:s}
+.vz-steps li{position:relative;display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:14px;background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);animation:riseIn .6s var(--ease) backwards;animation-delay:calc(var(--i)*.08s)}
+.vz-steps li:not(:last-child)::after{content:"";position:absolute;right:-9px;top:24px;width:8px;height:8px;border-top:2px solid #4AA8FF;border-right:2px solid #4AA8FF;transform:rotate(45deg);z-index:1}
+.vz-num{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700;color:#fff;background:linear-gradient(160deg,#4AA8FF,#0A5CFF);box-shadow:0 0 12px rgba(10,132,255,.5)}
+.vz-steps b{font-size:14px;color:#fff}
+.vz-steps p{margin:3px 0 0;font-size:12.5px;line-height:1.45;color:var(--fg-2)}
+.vz-age{position:relative;height:66px;margin:6px 6px 0}
+.vz-agescale{position:absolute;left:0;right:0;bottom:0;height:18px;border-top:1px solid rgba(255,255,255,.15)}
+.vz-agescale i{position:absolute;top:3px;transform:translateX(-50%);font-style:normal;font-size:11px;color:var(--fg-3)}
+.vz-band{position:absolute;top:6px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;background:linear-gradient(180deg,rgba(74,168,255,.55),rgba(10,92,255,.45));box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
+.vz-band.b2{background:linear-gradient(180deg,rgba(100,210,255,.45),rgba(30,59,255,.45))}
+.vz-band b{margin-right:4px}
+/* forms */
+.vz-ladder{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;align-items:end}
+.vz-ladder li{display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px;border-radius:12px;text-align:center;background:linear-gradient(180deg,rgba(74,168,255,.32),rgba(10,92,255,.12));box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);min-height:calc(64px + var(--i)*12px);justify-content:flex-end;animation:riseIn .6s var(--ease) backwards;animation-delay:calc(var(--i)*.06s)}
+.vz-ladder b{font-size:18px;color:#fff}
+.vz-ladder span{font-size:12px;color:var(--fg-2)}
+.vz-ladder small{font-size:10.5px;line-height:1.25;color:var(--fg-3)}
+@media (max-width:720px){
+  .vz{padding:14px 12px 10px;border-radius:18px}
+  .vz-steps{grid-template-columns:minmax(0,1fr)}
+  .vz-steps li{flex-direction:row;align-items:flex-start}
+  .vz-steps li:not(:last-child)::after{right:auto;left:25px;top:auto;bottom:-8px;transform:rotate(135deg)}
+  .vz-tl li{grid-template-columns:1fr;gap:2px}
+  .vz-hm span{display:none}
+  .vz-ladder small{display:none}
+  .vz-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+}
+@media (prefers-reduced-motion:reduce){ .vz,.vz-tl li,.vz-hm,.vz-steps li,.vz-ladder li{animation:none} }
 </style>
 
 <script>document.documentElement.classList.add('js')</script>
@@ -2459,7 +2563,7 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
   function replay(){
     if(!turns.length) return;
     cwrap.classList.remove('intro'); document.body.classList.add('chatting'); $('#bar').prepend(cwrap); threadHead();
-    turns.forEach((t,i)=>{ if(t.role==='user') addMe(t.content); else setBot(addBot(),t.content,i===turns.length-1); });
+    turns.forEach((t,i)=>{ if(t.role==='user') addMe(t.content); else { const bb=addBot(); setBot(bb,t.content,i===turns.length-1); if(t.viz) renderViz(bb.wrap,t.viz); } });
   }
   function setBusy(v){
     busy=v; cwrap.classList.toggle('busy',v);
@@ -2481,6 +2585,194 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
       };
       tick();
     });
+  }
+  /* ───────── visual answers: photos, maps, timelines, house cards and diagrams ───────── */
+  const IMG_BASE='https://vedant2652031-byte.github.io/DoonDesk/img/';
+  const CC={'CC BY-SA 3.0':'https://creativecommons.org/licenses/by-sa/3.0/','CC BY-SA 4.0':'https://creativecommons.org/licenses/by-sa/4.0/','Public domain':'https://en.wikipedia.org/wiki/Public_domain'};
+  const PHOTO_SRC={"main-building-1915.jpg": "https://upload.wikimedia.org/wikipedia/commons/0/08/Main_Building_of_the_Doon_School_in_1915.jpg", "unesco-plaque.jpg": "https://upload.wikimedia.org/wikipedia/commons/c/c3/UNESCO_plaque_at_The_Doon_School.jpg", "cdh.jpg": "https://upload.wikimedia.org/wikipedia/commons/a/a7/Central_Dining_Hall%2C_The_Doon_School.jpg", "everest-2008.jpg": "https://upload.wikimedia.org/wikipedia/commons/1/13/Mt._Everest_Base_Camp_Expedition_-_2008%2C_The_Doon_School.jpg", "kashmir-hyderabad.jpg": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Kashmir_and_Hyderabad_House%2C_The_Doon_School.jpg", "foot-house.jpg": "https://upload.wikimedia.org/wikipedia/commons/d/d9/Foot_House%2C_The_Doon_School.jpg", "sym-hyderabad.png": "https://upload.wikimedia.org/wikipedia/commons/8/8c/Hyderabad_House_Doon_School.png", "sym-oberoi.png": "https://upload.wikimedia.org/wikipedia/commons/9/99/Oberoi_House_Doon_School.png", "sym-foot.png": "https://upload.wikimedia.org/wikipedia/commons/a/a7/Foot_House_Doon_School.png", "sym-martyn.png": "https://upload.wikimedia.org/wikipedia/commons/2/2c/Martyn_House_Doon_School.png"};
+  const C=(f,label,artist,lic,w,h)=>({src:PHOTO_SRC[f]||IMG_BASE+f,label,artist,lic,w,h,page:'https://commons.wikimedia.org/wiki/File:'+encodeURIComponent(PHOTO_FILES[f]).replace(/%20/g,'_')});
+  const PHOTO_FILES={
+    'main-building.jpg':'The main building, The Doon School, Dehradun, Uttarakhand, India (2011).jpg',
+    'main-building-1915.jpg':'Main Building of the Doon School in 1915.jpg',
+    'aerial-1919.jpg':'Aerial of The Doon School Main Building 1919.JPG',
+    'unesco-plaque.jpg':'UNESCO plaque at The Doon School.jpg',
+    'rose-bowl.jpg':'Amphitheatre at The Doon School.png',
+    'library.jpg':'DoonSchoolLibrary.jpg',
+    'main-field.jpg':'Main Field at The Doon School, Dehradun, India.jpg',
+    'main-gate.jpg':'The Main Gate of The Doon School.jpg',
+    'cdh.jpg':'Central Dining Hall, The Doon School.jpg',
+    'masters-1935.jpg':'The Doon School Masters in September 1935.png',
+    'nehru-1959.jpg':'Indira Gandhi and Jawaharlal Nehru, with JAK Martyn, at The Doon School, 1959.jpg',
+    'foot-mountbatten.jpg':'Arthur Foot and Lord Mountabatten at The Doon School.jpg',
+    'founders-day-2010.jpg':'Doon School 75th Founder\'s Day - DS75, 2010.jpg',
+    'everest-2008.jpg':'Mt. Everest Base Camp Expedition - 2008, The Doon School.jpg',
+    'tata-house.jpg':'Tata House at The Doon School.jpg',
+    'oberoi-house.jpg':'Oberoi House at The Doon School.jpg',
+    'kashmir-hyderabad.jpg':'Kashmir and Hyderabad House, The Doon School.jpg',
+    'foot-house.jpg':'Foot House, The Doon School.jpg',
+    'sym-hyderabad.png':'Hyderabad House Doon School.png','sym-kashmir.png':'Kashmir House Doon School.png','sym-oberoi.png':'Oberoi House Doon School.png',
+    'sym-foot.png':'Foot House Doon School.png','sym-martyn.png':'Martyn House Doon School.png'
+  };
+  const PH={
+    mainbuilding:C('main-building.jpg','The Main Building today','Merlaysamuel','CC BY-SA 3.0'),
+    mb1915:C('main-building-1915.jpg','The Main Building in 1915, when it housed the Forest Research Institute','Forest Research Institute Archives','Public domain'),
+    aerial1919:C('aerial-1919.jpg','Aerial view of the Main Building in 1919, before the school was founded','Unknown author','Public domain'),
+    unesco:C('unesco-plaque.jpg','The UNESCO Asia-Pacific heritage conservation plaque (2016)','UNESCOfreak','CC BY-SA 4.0'),
+    rosebowl:C('rose-bowl.jpg','The Rose Bowl, the open-air amphitheatre built in the 1930s','KramerVsSchramer','CC BY-SA 4.0'),
+    library:C('library.jpg','Inside the Kilachand Library','RickTyers','CC BY-SA 3.0'),
+    mainfield:C('main-field.jpg','The Main Field, with the Himalayan foothills behind','DehradunArchives','CC BY-SA 4.0'),
+    maingate:C('main-gate.jpg','The Main Gate on Mall Road','Aditya Oberai','CC BY-SA 4.0'),
+    cdh:C('cdh.jpg','The Central Dining Hall (CDH)','DoscoinDoon','CC BY-SA 3.0'),
+    masters1935:C('masters-1935.jpg','The school’s first teachers, September 1935','Unknown author','Public domain'),
+    nehru1959:C('nehru-1959.jpg','Jawaharlal Nehru and Indira Gandhi with Headmaster J.A.K. Martyn, 1959','Unknown author','Public domain'),
+    footmb:C('foot-mountbatten.jpg','Arthur Foot, the first Headmaster, with Mrs Foot and Lord Mountbatten','Unknown author','Public domain'),
+    fd2010:C('founders-day-2010.jpg','The 75th Founder’s Day (Platinum Jubilee), 2010','DehradunArchives','CC BY-SA 4.0'),
+    everest:C('everest-2008.jpg','A Doon School expedition to Everest Base Camp, 2008','Merlaysamuel','CC BY-SA 3.0'),
+    tata:C('tata-house.jpg','Tata House','DehradunArchives','CC BY-SA 4.0'),
+    oberoi:C('oberoi-house.jpg','Oberoi House','DehradunArchives','CC BY-SA 4.0'),
+    kashhyd:C('kashmir-hyderabad.jpg','Kashmir House and Hyderabad House','Vigortired','CC BY-SA 3.0'),
+    foothouse:C('foot-house.jpg','Foot House','DoscoinDoon','CC BY-SA 3.0')
+  };
+  const HOUSES=[
+    {id:'hyderabad',name:'Hyderabad',motto:'House of Nizams',colour:'Dark blue',hex:'#1F3A93',type:'Main house',sym:'sym-hyderabad.png',hm:'Mr Sudhir Thapa',photo:'kashhyd'},
+    {id:'jaipur',name:'Jaipur',motto:'House of Eagles',colour:'Green',hex:'#2E7D4F',type:'Main house',sym:null,hm:'Mr Pratyush Vaishnav'},
+    {id:'kashmir',name:'Kashmir',motto:'House of Gentlemen',colour:'Yellow',hex:'#E8B400',type:'Main house',sym:'sym-kashmir.png',hm:'Mr Manish Kant Pant',photo:'kashhyd'},
+    {id:'tata',name:'Tata',motto:'True as Steel',colour:'Red',hex:'#C62828',type:'Main house',sym:null,hm:'Mr Parvinder Kumar',photo:'tata'},
+    {id:'oberoi',name:'Oberoi',motto:'House of Honor',colour:'Light blue',hex:'#4FA3E0',type:'Main house',sym:'sym-oberoi.png',hm:'Mr Vishal Mohla',photo:'oberoi'},
+    {id:'foot',name:'Foot',motto:'Holding house for new boys',colour:'Dark teal',hex:'#0F5E63',type:'Holding house',sym:'sym-foot.png',hm:'Ms Ruchi Sahni',photo:'foothouse'},
+    {id:'martyn',name:'Martyn',motto:'Holding house for new boys',colour:'Dark forest green',hex:'#1E4D2B',type:'Holding house',sym:'sym-martyn.png',hm:'Mr Samik Das'}
+  ];
+  const vesc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const srcA=(k)=>SRC[k]&&SRC[k][1]?`<a href="${vesc(SRC[k][1])}" target="_blank" rel="noopener">${vesc(SRC[k][0])}</a>`:vesc(SRC[k]?SRC[k][0]:k);
+  const vfoot=(t)=>`<p class="vz-src">${t}</p>`;
+  function credit(p){ const lic=CC[p.lic]?`<a href="${CC[p.lic]}" target="_blank" rel="noopener">${vesc(p.lic)}</a>`:vesc(p.lic);
+    return `Photo: ${vesc(p.artist)} · ${lic} · <a href="${vesc(p.page)}" target="_blank" rel="noopener">Wikimedia Commons</a>`; }
+  function fig(k,cls){
+    const p=PH[k]; if(!p) return '';
+    return `<figure class="vz-fig ${cls||''}"><a class="vz-imgwrap" href="${vesc(p.page)}" target="_blank" rel="noopener" aria-label="Open the original photo: ${vesc(p.label)}"><img src="${vesc(p.src)}" alt="${vesc(p.label)}" loading="lazy" decoding="async" onerror="this.closest('figure').classList.add('vz-broken')"><span class="vz-fallback">Photo unavailable here. Open it on Wikimedia Commons ↗</span></a><figcaption><b>${vesc(p.label)}</b><span>${credit(p)}</span></figcaption></figure>`;
+  }
+  function gallery(keys,title){
+    return `<section class="vz vz-gallery"><h4 class="vz-h">${vesc(title)}</h4><div class="vz-grid">${keys.map(k=>fig(k)).join('')}</div></section>`;
+  }
+  /* map */
+  function mapCard(){
+    const lat=30.3338, lon=78.0306, bb='78.0240,30.3285,78.0372,30.3392';
+    return `<section class="vz vz-map"><h4 class="vz-h">Where Chandbagh is</h4>
+      <div class="vz-mapframe"><iframe title="Map of The Doon School campus, Dehradun" loading="lazy" referrerpolicy="no-referrer" src="https://www.openstreetmap.org/export/embed.html?bbox=${bb}&layer=mapnik&marker=${lat},${lon}"></iframe></div>
+      <ul class="vz-dist">
+        <li><b>The Doon School</b><span>Mall Road, Dehradun, Uttarakhand</span></li>
+        <li><b>≈ 2.4 km</b><span>to Dehradun Railway Station (straight line)</span></li>
+        <li><b>≈ 22 km</b><span>to Dehradun Jolly Grant Airport (straight line)</span></li>
+      </ul>
+      <div class="vz-links"><a href="https://www.openstreetmap.org/way/158385701" target="_blank" rel="noopener">Open in OpenStreetMap ↗</a><a href="https://www.google.com/maps/dir/?api=1&destination=The+Doon+School,+Mall+Road,+Dehradun" target="_blank" rel="noopener">Get directions ↗</a></div>
+      ${vfoot('Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>. Distances are straight-line estimates from OpenStreetMap coordinates; road distances are longer.')}</section>`;
+  }
+  /* history timeline */
+  const HM=[['Arthur E. Foot',1935,1948],['J.A.K. Martyn',1948,1966],['C.J. Miller',1966,1970],['Eric J. Simeon',1970,1979],['Gulab Ramchandani',1979,1988],['Shomie R. Das',1988,1996],['John A. Mason',1996,2003],['Kanti Bajpai',2003,2009],['Peter McLaughlin',2009,2016],['Matthew Raggett',2016,2020],['Jagpreet Singh',2020,null]];
+  const EVENTS=[
+    ['1911','The Main Building is completed for the Forest Research Institute','mb1915'],
+    ['1928','S. R. Das registers the Indian Public Schools’ Society to fund the school',null],
+    ['10 Sep 1935','The school opens; Viceroy Lord Willingdon inaugurates it on 27 October','masters1935'],
+    ['1937','The first houses are renamed after early donors: Hyderabad, Jaipur, Kashmir and Tata',null],
+    ['1948–1966','The Martyn years: the school grows after Independence','nehru1959'],
+    ['1970s','Eric Simeon becomes the first Indian Headmaster',null],
+    ['Late 1980s','Oberoi House is added as the fifth main house',null],
+    ['2000s','The IB Diploma is offered alongside Indian boards',null],
+    ['2016','The Main Building’s restoration wins a UNESCO Asia-Pacific heritage award','unesco'],
+    ['2020','Dr Jagpreet Singh becomes the 11th Headmaster',null]
+  ];
+  function timeline(){
+    const now=new Date().getFullYear(), start=1935, span=now-start;
+    const bars=HM.map(([n,a,b],i)=>{ const e=b||now; return `<div class="vz-hm" style="--l:${((a-start)/span*100).toFixed(2)}%;--w:${(((e-a)||.6)/span*100).toFixed(2)}%;--i:${i}" title="${vesc(n)} (${a}–${b||'present'})">${(e-a)/span>.055?`<span>${vesc(n.split(' ').slice(-1)[0])}</span>`:''}</div>`; }).join('');
+    const ticks=[1935,1950,1965,1980,1995,2010,2025].filter(y=>y<=now).map(y=>`<i style="left:${((y-start)/span*100).toFixed(2)}%">${y}</i>`).join('');
+    const ev=EVENTS.map(([y,t,ph],i)=>`<li style="--i:${i}"><span class="vz-yr">${vesc(y)}</span><div class="vz-ev"><p>${vesc(t)}</p>${ph?fig(ph,'vz-mini'):''}</div></li>`).join('');
+    return `<section class="vz vz-timeline"><h4 class="vz-h">The school’s story at a glance</h4>
+      <ol class="vz-tl">${ev}</ol>
+      <h4 class="vz-h vz-h2">Headmasters, 1935 to today</h4>
+      <div class="vz-hmbar" role="img" aria-label="Timeline of the eleven Headmasters from 1935 to today">${bars}<div class="vz-ticks">${ticks}</div></div>
+      <ul class="vz-hmlist">${HM.map(([n,a,b])=>`<li><b>${vesc(n)}</b> ${a}–${b||'present'}</li>`).join('')}</ul>
+      ${vfoot('Sources: '+srcA('history')+' · '+srcA('compendium')+' · '+srcA('wiki'))}</section>`;
+  }
+  /* houses */
+  function symbol(h,big){
+    if(h.sym) return `<a class="vz-sym" href="https://commons.wikimedia.org/wiki/File:${encodeURIComponent(PHOTO_FILES[h.sym]).replace(/%20/g,'_')}" target="_blank" rel="noopener" title="${vesc(h.name)} House symbol (open the source)"><img src="${PHOTO_SRC[h.sym]||IMG_BASE+h.sym}" alt="${vesc(h.name)} House symbol" loading="lazy" onerror="this.parentNode.classList.add('vz-nosym');this.remove()"><b>${vesc(h.name[0])}</b></a>`;
+    return `<span class="vz-sym vz-nosym" title="No symbol image available"><b>${vesc(h.name[0])}</b></span>`;
+  }
+  function houseCard(h){
+    return `<div class="vz-house" style="--hc:${h.hex}">${symbol(h)}<div><b>${vesc(h.name)} House</b><span class="vz-motto">${h.type==='Main house'?'“'+vesc(h.motto)+'”':vesc(h.motto)}</span><span class="vz-meta"><i style="background:${h.hex}"></i>${vesc(h.colour)} · ${vesc(h.type)}</span></div></div>`;
+  }
+  function housesGrid(){
+    return `<section class="vz vz-houses"><h4 class="vz-h">The seven houses</h4><div class="vz-hgrid">${HOUSES.map(h=>`<button type="button" class="vz-hbtn" data-ask="Tell me about ${vesc(h.name)} House">${houseCard(h)}</button>`).join('')}</div>
+      ${vfoot('Colours and mottos: '+srcA('guide')+'. House symbols: <a href="https://commons.wikimedia.org/wiki/Category:The_Doon_School" target="_blank" rel="noopener">Wikimedia Commons</a> (CC BY-SA 4.0, LogoBrummel). Jaipur and Tata show a plain colour badge because no symbol image was available. Shades are approximate.')}</section>`;
+  }
+  function oneHouse(id){
+    const h=HOUSES.find(x=>x.id===id); if(!h) return '';
+    return `<section class="vz vz-onehouse" style="--hc:${h.hex}"><div class="vz-hero">${symbol(h,true)}<div><span class="vz-kicker">${vesc(h.type)}</span><b>${vesc(h.name)} House</b><span class="vz-motto">${h.type==='Main house'?'“'+vesc(h.motto)+'”':vesc(h.motto)}</span><span class="vz-meta"><i style="background:${h.hex}"></i>House colour: ${vesc(h.colour)} · Housemaster: ${vesc(h.hm)}</span></div></div>
+      ${h.photo?fig(h.photo):''}
+      ${vfoot('House details: '+srcA('guide')+' · '+srcA('calendar')+(h.sym?'. Symbol: Wikimedia Commons (CC BY-SA 4.0, LogoBrummel)':'. No symbol image was available, so a colour badge is shown.')+' Shade is approximate.')}</section>`;
+  }
+  /* admissions */
+  function admissions(){
+    const st=[
+      ['Register online','At doonschool.com, before the deadline (around 1 September in recent years).','Step 1'],
+      ['Written test','English, Mathematics, Reasoning & Case Study and Science, one hour each. 2026 calendar: 9 August.','Step 2'],
+      ['Group discussion and interview','About twice as many boys as places are shortlisted to meet the Headmaster and senior staff, usually in November.','Step 3'],
+      ['Offer','Sent a few days after the process ends. Marks are not shared.','Step 4']];
+    return `<section class="vz vz-adm"><h4 class="vz-h">How admission works</h4>
+      <ol class="vz-steps">${st.map(([t,d,s],i)=>`<li style="--i:${i}"><span class="vz-num">${i+1}</span><div><b>${vesc(t)}</b><p>${vesc(d)}</p></div></li>`).join('')}</ol>
+      <h4 class="vz-h vz-h2">Who can apply</h4>
+      <div class="vz-age" role="img" aria-label="Age bands: Class 7 for boys aged 11 to 12, Class 8 for boys aged 12 to 13">
+        <div class="vz-agescale"><i style="left:0">10</i><i style="left:25%">11</i><i style="left:50%">12</i><i style="left:75%">13</i><i style="left:100%">14</i></div>
+        <div class="vz-band" style="left:25%;width:25%"><b>Class 7</b> (D Form)</div>
+        <div class="vz-band b2" style="left:50%;width:25%"><b>Class 8</b> (C Form)</div>
+      </div>
+      <p class="vz-note">Age is counted as of September of the year of the entrance exam. Dates and centres change every year, so confirm them with the Admissions Office.</p>
+      ${vfoot('Sources: '+srcA('process')+' · '+srcA('faq')+' · '+srcA('tests')+' · '+srcA('calendar'))}</section>`;
+  }
+  /* forms ladder */
+  function forms(){
+    const F=[['D','7','Entry year · holding house'],['C','8','Second entry point'],['B','9',''],['A','10',''],['S','11',''],['SC','12','Senior-most form']];
+    return `<section class="vz vz-forms"><h4 class="vz-h">From D Form to SC Form</h4><ol class="vz-ladder">${F.map(([f,c,n],i)=>`<li style="--i:${i}"><b>${f}</b><span>Class ${c}</span>${n?`<small>${vesc(n)}</small>`:''}</li>`).join('')}</ol>${vfoot('Source: '+srcA('guide'))}</section>`;
+  }
+  /* term calendar */
+  function termCal(){
+    const t0=dOf('2026-07-13'), t1=dOf('2026-12-06'), span=t1-t0, today=new Date(); today.setHours(0,0,0,0);
+    const pos=d=>Math.min(100,Math.max(0,(d-t0)/span*100));
+    const months=['2026-08-01','2026-09-01','2026-10-01','2026-11-01','2026-12-01'].map(s=>`<i style="left:${pos(dOf(s)).toFixed(2)}%">${MON[dOf(s).getMonth()].slice(0,3)}</i>`).join('');
+    const ev=CAL.map(([a,b,n],i)=>{ const past=dOf(b)<today; return `<li class="${past?'past':''}" style="--i:${i}"><span class="vz-yr">${fmt(a,b)}</span><div class="vz-ev"><p>${vesc(n)}</p></div></li>`; }).join('');
+    const tp=pos(today), inTerm=today>=t0&&today<=t1;
+    return `<section class="vz vz-term"><h4 class="vz-h">Autumn Term 2026</h4>
+      <div class="vz-termbar">${CAL.map(([a,b,n])=>`<span class="vz-tev" style="left:${pos(dOf(a)).toFixed(2)}%;width:${Math.max(.9,pos(dOf(b))-pos(dOf(a))).toFixed(2)}%" title="${vesc(n)}"></span>`).join('')}${inTerm?`<span class="vz-today" style="left:${tp.toFixed(2)}%"><b>Today</b></span>`:''}<div class="vz-ticks">${months}</div></div>
+      <ol class="vz-tl">${ev}</ol>${vfoot('Source: Autumn Term 2026 Calendar')}</section>`;
+  }
+  const VIZ={
+    timeline, map:mapCard, houses:housesGrid, admissions, forms, term:termCal,
+    campus:()=>gallery(['mainbuilding','rosebowl','library','mainfield','cdh','maingate'],'Around Chandbagh'),
+    mainbuilding:()=>gallery(['mainbuilding','mb1915','aerial1919','unesco'],'The Main Building, then and now'),
+    library:()=>gallery(['library'],'The Kilachand Library'),
+    dining:()=>gallery(['cdh'],'The Central Dining Hall'),
+    fields:()=>gallery(['mainfield'],'The Main Field'),
+    rosebowl:()=>gallery(['rosebowl','fd2010'],'The Rose Bowl and Founder’s Day'),
+    founders:()=>gallery(['fd2010','rosebowl'],'Founder’s Day'),
+    midterm:()=>gallery(['everest'],'On Midterm'),
+    foot:()=>gallery(['footmb','masters1935'],'The early years'),
+    martynyears:()=>gallery(['nehru1959'],'The Martyn years')
+  };
+  ['hyderabad','jaipur','kashmir','tata','oberoi','foot','martyn'].forEach(h=>VIZ['house-'+h]=()=>oneHouse(h));
+  const VIZMAP={history:['timeline'],timeline:['timeline'],founder:['timeline'],headmaster:['timeline'],foot:['foot','timeline'],
+    campus:['map','campus'],location:['map'],visit:['map'],contact:['map'],facilities:['campus'],mainbuilding:['mainbuilding'],awards:['mainbuilding'],
+    library:['library'],dining:['dining'],fields:['fields'],traditions:['rosebowl'],foundersday:['founders'],midterm:['midterm'],
+    houses:['houses'],placement:['houses'],housenames:['houses'],holding:['house-foot','house-martyn'],dames:['houses'],housemasters:['houses'],interhouse:['houses'],cups:['houses'],
+    process:['admissions'],age:['admissions'],testcontent:['admissions'],interview:['admissions'],policies:['admissions'],
+    forms:['forms'],calendar:['term'],terms:['term'],newboy:['house-foot','house-martyn']};
+  ['hyderabad','jaipur','kashmir','tata','oberoi','foot','martyn'].forEach(h=>{ VIZMAP['h-'+h]=['house-'+h]; VIZMAP['rh-'+h]=['house-'+h]; });
+  function vizFor(hit){ if(!hit||!hit.id) return null; const v=VIZMAP[hit.id]; return v?v.join(','):null; }
+  function renderViz(wrap,key){
+    if(!key) return; const old=wrap.querySelector('.vz-wrap'); if(old) old.remove();
+    const html=key.split(',').map(k=>VIZ[k]?VIZ[k]():'').join(''); if(!html) return;
+    const d=document.createElement('div'); d.className='vz-wrap'; d.innerHTML=html;
+    const fol=wrap.querySelector('.follow'); wrap.insertBefore(d,fol||null);
+    d.querySelectorAll('[data-ask]').forEach(b=>b.addEventListener('click',()=>ask(b.dataset.ask)));
   }
   async function showThinking(b,steps,signal,extra){
     const t0=performance.now();
@@ -2625,8 +2917,10 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
         setBot(b,text,true);
         if(gemNote) note(b,gemNote,true);
       }
+      const viz=vizFor(local.hit);
+      if(viz) renderViz(b.wrap,viz);
       toBottom();
-      turns.push({role:'assistant',content:text});
+      turns.push(viz?{role:'assistant',content:text,viz}:{role:'assistant',content:text});
     }catch(e){
       b.wrap.classList.remove('thinking');
       if(e&&e.text){ setBot(b,e.text,false); turns.push({role:'assistant',content:e.text}); }

@@ -38,6 +38,8 @@ DoonDesk is a single web page with a built-in knowledge base, so it runs in any 
 - **Basic conversation:** greetings, "how are you", jokes, fun facts about Doon, and more
 - **Thinking:** when no single note answers a question, DoonDesk searches every topic, pieces together what it can, shows its steps, and says plainly when it doesn't know
 
+- **Visual answers:** where they help, answers include campus photos and a map, a history timeline with a headmasters chart, house cards in each house's colours and symbols, an admissions step diagram with age bands, a forms ladder and the term calendar. Every photo is labelled and links to its source (see [CREDITS.md](CREDITS.md))
+
 Each answer shows where its information came from and suggests follow-up questions.
 
 ## How answers work
