@@ -1,25 +1,25 @@
-# DoonDesk
+# DS-Agent Pro
 
 Ask anything about **The Doon School, Dehradun**: admissions, houses, staff, the Autumn Term 2026 calendar, sport, Midterms, traditions and famous Old Boys, and get a clear answer straight away.
 
-**Live site:** https://vedant2652031-byte.github.io/DoonDesk/ (classic version: [/classic/](https://vedant2652031-byte.github.io/DoonDesk/classic/))
+**Live site:** https://vedant2652031-byte.github.io/ds-agent-pro/ (classic version: [/classic/](https://vedant2652031-byte.github.io/ds-agent-pro/classic/))
 
-DoonDesk is a single web page with a built-in knowledge base, so it runs in any browser with no server, no sign-up and no API key.
+DS-Agent is a single web page with a built-in knowledge base, so it runs in any browser with no server, no sign-up and no API key.
 
-> DoonDesk is an independent student project. It is not an official publication of The Doon School. For anything important (fees, dates, admissions) confirm with the school at [doonschool.com](https://www.doonschool.com).
+> DS-Agent is an independent student project. It is not an official publication of The Doon School. For anything important (fees, dates, admissions) confirm with the school at [doonschool.com](https://www.doonschool.com).
 
 ## What's in this repo
 
 | File | What it is |
 |---|---|
-| `index.html` | **DoonDesk**: the main site. Blue-and-black liquid-glass design, login page, floating glass bubbles, scroll animations, works on phones, tablets and computers. |
-| `classic/index.html` | **DoonDesk Classic**: the earlier version, with the original design. |
+| `index.html` | **DS-Agent Pro**: the main site. Blue-and-black liquid-glass design, login page, floating glass bubbles, scroll animations, works on phones, tablets and computers. |
+| `classic/index.html` | **DS-Agent Classic**: the earlier version, with the original design. |
 | `.nojekyll` | Tells GitHub Pages to serve the files exactly as they are. |
 
 ## Use it
 
 - **On your computer:** download `index.html` and double-click it.
-- **As a website (free):** in this repo go to **Settings → Pages**, set **Source** to *Deploy from a branch*, choose **main** and **/ (root)**, and save. After a minute your site is live at `https://<your-username>.github.io/DoonDesk/`, and the classic version is at `…/classic/`.
+- **As a website (free):** in this repo go to **Settings → Pages**, set **Source** to *Deploy from a branch*, choose **main** and **/ (root)**, and save. After a minute your site is live at `https://<your-username>.github.io/ds-agent-pro/`, and the classic version is at `…/classic/`.
 
 ## What it can answer
 
@@ -31,12 +31,15 @@ DoonDesk is a single web page with a built-in knowledge base, so it runs in any 
 - **Campus:** the Main Field and Skinners, the Sports Complex, CDH, MDH and Café Aqueduct, the BML Munjal Auditorium, the Kilachand Library and the Wellness Centre
 - **Autumn Term 2026 calendar:** every key date, plus "What's coming up next?", which works out upcoming events from today's date
 - **Old Boys:** about 50 notable alumni by field, and any of them by name
+- **Student leaders 2026–27:** the School Captains, each house's House Captain and prefects, sports captains, students-in-charge of activities, music, SUPW, clubs and societies, and the editors of every publication. Ask by role ("Who is the cricket captain?") or by name
+- **Masters-in-charge:** ask about one sport or activity ("Who is in charge of cricket?") to get just its masters, with the student captain
+- **Basic conversation:** greetings, "how are you", jokes, fun facts about Doon, and more
 
 Each answer shows where its information came from and suggests follow-up questions.
 
 ## How answers work
 
-- **School notes (always on):** DoonDesk matches your question against its knowledge base and answers instantly. It works offline and anywhere.
+- **School notes (always on):** DS-Agent matches your question against its knowledge base and answers instantly. It works offline and anywhere.
 - **AI (only inside Claude):** when the page is opened inside Claude and the notes don't cover a question, it asks Claude, giving it the school notes to work from.
 
 ## Accounts
@@ -54,4 +57,5 @@ The knowledge base lives inside each HTML file between the `/*ENGINE-START*/` an
 - The Doon School Calendar: Autumn Term 2026
 - Notable Doon School Alumni (Old Boys) V3
 - Doon School Guide (Google Doc): houses, campus, sport, pastoral care and school life
+- [School website: Leadership](https://www.doonschool.com/about-us/leadership/): the 2026–27 student leadership boards
 - [Wikipedia: The Doon School](https://en.wikipedia.org/wiki/The_Doon_School), for a few gaps
