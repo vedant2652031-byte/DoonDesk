@@ -2794,49 +2794,85 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
   /* ───────── Gemini AI (a key saved on this device, or a shared proxy) ───────── */
   const GEMINI_PROXY='';   // set to your Cloudflare Worker URL to turn AI on for every visitor
   const GEM_KEY_LS='doondesk-gemini-key';
-  const GEM_MODELS=['gemini-flash-latest','gemini-2.5-flash','gemini-2.5-flash-lite'];
+  const GEM_MODELS=[
+    ['gemini-flash-latest','Gemini Flash'],
+    ['gemini-3-flash-preview','Gemini 3 Flash'],
+    ['gemini-2.5-flash','Gemini 2.5 Flash'],
+    ['gemini-3.1-flash-lite','Gemini 3.1 Flash-Lite'],
+    ['gemini-flash-lite-latest','Gemini Flash-Lite'],
+    ['gemini-2.5-flash-lite','Gemini 2.5 Flash-Lite']
+  ];
+  const gemName=id=>(GEM_MODELS.find(m=>m[0]===id)||[id,id])[1];
   let gemKey=''; try{ gemKey=localStorage.getItem(GEM_KEY_LS)||''; }catch(e){}
-  let gemModel=GEM_MODELS[0], gemDown=0;
+  let gemModel=GEM_MODELS[0][0], gemDown=0, gemRest={};
+  try{ gemRest=JSON.parse(localStorage.getItem('doondesk-gemini-rest')||'{}')||{}; }catch(e){}
+  const saveRest=()=>{ try{ localStorage.setItem('doondesk-gemini-rest',JSON.stringify(gemRest)); }catch(e){} };
+  const resting=id=>gemRest[id] && gemRest[id]>Date.now();
   const gemOn=()=>!!(gemKey||GEMINI_PROXY) && Date.now()>gemDown;
-  async function geminiStream(system, contents, signal, onText){
-    let lastErr=null;
-    const order=[gemModel,...GEM_MODELS.filter(x=>x!==gemModel)];
-    for(const model of order){
+  function restFor(err){
+    const m=(err&&err.message)||'';
+    let ms=60000;
+    const d=m.match(/retry in ([\d.]+)\s*s/i)||m.match(/"retryDelay":\s*"(\d+)s"/); if(d) ms=Math.ceil(parseFloat(d[1])*1000)+1500;
+    if(err&&err.retry) ms=err.retry;
+    if(/per ?day|PerDay|daily/i.test(m)){ const t=new Date(); const reset=new Date(Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),t.getUTCDate()+(t.getUTCHours()>=8?1:0),8,0,0)); ms=Math.max(ms,reset-t); }
+    return Math.min(ms,24*3600e3);
+  }
+  async function geminiStream(system, contents, signal, onText, onSwitch){
+    let lastErr=null, tried=0, sawLimit=false;
+    const order=[...GEM_MODELS.map(m=>m[0])].sort((a,b)=>(a===gemModel?-1:b===gemModel?1:0));
+    const avail=order.filter(id=>!resting(id));
+    const soonestRest=()=>Math.min(...GEM_MODELS.map(m=>gemRest[m[0]]||0).filter(t=>t>Date.now()));
+    if(!avail.length) throw {status:429,message:'All models resting',allBusyUntil:soonestRest()};
+    const list=avail;
+    for(const model of list){
+      if(tried && onSwitch) onSwitch(gemName(model), lastErr);
+      tried++;
       const body={systemInstruction:{parts:[{text:system}]},contents,generationConfig:{temperature:.4,maxOutputTokens:4096}};
       let res;
-      if(gemKey){
-        res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse`,{method:'POST',signal,headers:{'Content-Type':'application/json','x-goog-api-key':gemKey},body:JSON.stringify(body)});
-      } else {
-        res=await fetch(GEMINI_PROXY,{method:'POST',signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({...body,model})});
-      }
+      try{
+        if(gemKey) res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse`,{method:'POST',signal,headers:{'Content-Type':'application/json','x-goog-api-key':gemKey},body:JSON.stringify(body)});
+        else res=await fetch(GEMINI_PROXY,{method:'POST',signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({...body,model})});
+      }catch(e){ if(signal&&signal.aborted) throw e; lastErr={status:0,message:String(e)}; continue; }
       if(!res.ok){
-        let msg=''; try{ const j=await res.json(); msg=(j.error&&j.error.message)||''; }catch(e){}
-        const err={status:res.status,message:msg};
-        if(res.status===404 || (res.status===400 && /model|not found|not supported/i.test(msg) && !/api key/i.test(msg))){ lastErr=err; continue; }
+        let msg='', retry=0; try{ const j=await res.json(); const er=j.error||{}; msg=er.message||''; (er.details||[]).forEach(dt=>{ if(dt.retryDelay) retry=Math.ceil(parseFloat(dt.retryDelay)*1000)+1500; if(dt.violations) msg+=' '+JSON.stringify(dt.violations); }); }catch(e){}
+        const err={status:res.status,message:msg,retry,model};
+        if(res.status===429){ gemRest[model]=Date.now()+restFor(err); saveRest(); lastErr=err; sawLimit=true; continue; }
+        if(res.status===404 || res.status===500 || res.status===503 || res.status===504 || (res.status===400 && /model|not found|not supported/i.test(msg) && !/api key/i.test(msg))){
+          if(res.status===404||res.status===400){ gemRest[model]=Date.now()+6*3600e3; saveRest(); } else { gemRest[model]=Date.now()+30000; }
+          lastErr=err; continue;
+        }
         throw err;
       }
-      gemModel=model;
       const rd=res.body.getReader(), dec=new TextDecoder(); let buf='', out='', finish='';
-      for(;;){
-        const {value,done}=await rd.read(); if(done) break;
-        buf+=dec.decode(value,{stream:true});
-        let i; while((i=buf.indexOf('\n'))>=0){
-          const line=buf.slice(0,i).trim(); buf=buf.slice(i+1);
-          if(!line.startsWith('data:')) continue;
-          let j=null; try{ j=JSON.parse(line.slice(5)); }catch(e){ continue; }
-          if(j.error) throw {status:j.error.code||500,message:j.error.message||''};
-          const c=j.candidates&&j.candidates[0];
-          if(c){ (c.content&&c.content.parts||[]).forEach(pt=>{ if(pt.text && !pt.thought){ out+=pt.text; onText&&onText(out); } }); if(c.finishReason) finish=c.finishReason; }
+      try{
+        for(;;){
+          const {value,done}=await rd.read(); if(done) break;
+          buf+=dec.decode(value,{stream:true});
+          let i; while((i=buf.indexOf('\n'))>=0){
+            const line=buf.slice(0,i).trim(); buf=buf.slice(i+1);
+            if(!line.startsWith('data:')) continue;
+            let j=null; try{ j=JSON.parse(line.slice(5)); }catch(e){ continue; }
+            if(j.error) throw {status:j.error.code||500,message:j.error.message||'',model};
+            const c=j.candidates&&j.candidates[0];
+            if(c){ (c.content&&c.content.parts||[]).forEach(pt=>{ if(pt.text && !pt.thought){ out+=pt.text; onText&&onText(out); } }); if(c.finishReason) finish=c.finishReason; }
+          }
         }
+      }catch(e){
+        if(signal&&signal.aborted) throw e;
+        if(!out && e && (e.status===429||e.status===503||e.status===500)){ if(e.status===429){ gemRest[model]=Date.now()+restFor(e); saveRest(); sawLimit=true; } lastErr=e; continue; }
+        if(out) return {text:out,truncated:true,model};
+        throw e;
       }
-      if(!out.trim()) throw {status:502,message:finish==='SAFETY'?'blocked':'empty'};
-      return {text:out, truncated:finish==='MAX_TOKENS'};
+      if(!out.trim()){ if(finish==='SAFETY') throw {status:502,message:'blocked',model}; lastErr={status:502,message:'empty',model}; continue; }
+      gemModel=model;
+      return {text:out, truncated:finish==='MAX_TOKENS', model};
     }
+    if(sawLimit){ const until=soonestRest(); throw {status:429,message:(lastErr&&lastErr.message)||'',allBusyUntil:isFinite(until)?until:Date.now()+60000}; }
     throw lastErr||{status:404,message:'No Gemini model available'};
   }
   function gemErrText(e){
     if(!e) return 'Gemini didn’t answer, so here’s the answer from the school notes.';
-    if(e.status===429) return 'Gemini’s free limit is used up for the moment, so here’s the answer from the school notes. It usually resets within a minute (or by tomorrow for the daily limit).';
+    if(e.status===429){ const w=e.allBusyUntil?Math.max(1,Math.round((e.allBusyUntil-Date.now())/60000)):0; return 'Every Gemini model has used up its free limit for now, so here’s the answer from the school notes.'+(w?(w<90?` The first one should be free again in about ${w} minute${w===1?'':'s'}.`:' The daily limits reset overnight.'):''); }
     if((e.status===400 && /api key/i.test(e.message||'')) || e.status===401 || e.status===403) return 'Gemini rejected the API key. Check it under ✦ Gemini. Here’s the answer from the school notes.';
     return 'Gemini didn’t answer this time, so here’s the answer from the school notes.';
   }
@@ -2857,6 +2893,7 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
       const local=localAnswer(q,prevQ,mode);
       let finThink=null, gemNote='';
       const quickOnly=local.hit && /^(greet|thanks)$/.test(local.hit.id);
+      if(!sample && (gemKey||GEMINI_PROXY) && !gemOn() && !quickOnly && Date.now()>(window.__gemNoteAt||0)){ window.__gemNoteAt=Date.now()+5*60000; gemNote=gemErrText({status:429,allBusyUntil:gemDown}); }
       if(!sample && gemOn() && !quickOnly){
         const {res}=rank(q, prevQ);
         const rel=res.filter(x=>x.score>.8).slice(0,8);
@@ -2865,7 +2902,7 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
         finThink=await showThinking(b,steps,ctl.signal,['Asking Gemini to think it through']);
         const aiCtl=new AbortController(); let timedOut=false, gotText=false;
         const onAbort=()=>aiCtl.abort(); ctl.signal.addEventListener('abort',onAbort,{once:true});
-        const timer=setTimeout(()=>{ if(!gotText){ timedOut=true; aiCtl.abort(); } },25000);
+        const timer=setTimeout(()=>{ if(!gotText){ timedOut=true; aiCtl.abort(); } },40000);
         try{
           const notes=rel.map(x=>`### ${x.e.t}\n${x.e.a}\n(Source: ${x.e.s.map(k=>SRC[k][0]+(SRC[k][1]?' '+SRC[k][1]:'')).join(' , ')})`).join('\n\n');
           const best=local.hit?`\n\nDOONDESK'S OWN LOOKUP (an exact match from the notes; trust it):\n${local.text.replace(/\nFOLLOWUPS:[\s\S]*$/,'')}`:'';
@@ -2873,13 +2910,14 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
           const hist=turns.slice(-10); while(hist.length&&hist[0].role!=='user') hist.shift();
           const contents=hist.map(t=>({role:t.role==='assistant'?'model':'user',parts:[{text:t.content}]}));
           let lastScroll=0;
-          const r=await geminiStream(sys,contents,aiCtl.signal,txt=>{ if(!gotText&&finThink){ finThink(); finThink=null; b.wrap.classList.remove('thinking'); } gotText=true; setBot(b,txt,false); const now=performance.now(); if(now-lastScroll>400){ lastScroll=now; toBottom(); } });
-          text=r.text; label(b,m.label+' · Gemini + school notes'); setBot(b,text,true);
+          const onSwitch=(name,err)=>{ const ol=b.wrap.querySelector('.thought ol'); if(!ol) return; ol.querySelectorAll('li').forEach(li=>li.classList.add('done')); const li=document.createElement('li'); li.innerHTML=(err&&err.status===429?'That model’s free limit is used up, so trying ':'That model isn’t available, so trying ')+'<strong>'+esc(name)+'</strong>'; ol.appendChild(li); toBottom(); };
+          const r=await geminiStream(sys,contents,aiCtl.signal,txt=>{ if(!gotText&&finThink){ finThink(); finThink=null; b.wrap.classList.remove('thinking'); } gotText=true; setBot(b,txt,false); const now=performance.now(); if(now-lastScroll>400){ lastScroll=now; toBottom(); } },onSwitch);
+          text=r.text; label(b,m.label+' · '+gemName(r.model)+' + school notes'); setBot(b,text,true);
           if(r.truncated) note(b,'The answer was cut short. Ask a narrower question for the rest.');
         }catch(e){
           if(ctl.signal.aborted && !timedOut) throw {code:'cancelled'};
           if(e&&(e.status===401||e.status===403||(e.status===400&&/api key/i.test(e.message||'')))) gemDown=Date.now()+60000;
-          if(e&&e.status===429) gemDown=Date.now()+20000;
+          if(e&&e.status===429&&e.allBusyUntil) gemDown=e.allBusyUntil;
           gemNote=timedOut?'Gemini took too long, so here’s the answer from the school notes.':gemErrText(e);
           text=null; if(finThink){ finThink(); finThink=null; }
         }finally{ clearTimeout(timer); ctl.signal.removeEventListener('abort',onAbort); }

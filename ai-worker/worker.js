@@ -6,7 +6,7 @@
 const ALLOWED_ORIGINS = [
   'https://vedant2652031-byte.github.io',
 ];
-const MODELS = ['gemini-flash-latest', 'gemini-2.5-flash', 'gemini-2.5-flash-lite'];
+const MODELS = ['gemini-flash-latest', 'gemini-3-flash-preview', 'gemini-2.5-flash', 'gemini-3.1-flash-lite', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite'];
 const MAX_BODY = 120000;       // characters; stops oversized requests
 const MAX_OUTPUT_TOKENS = 4096;
 

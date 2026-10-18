@@ -33,7 +33,8 @@ Once that's live, the ✦ button shows **Gemini on** for everyone.
 
 ### Good to know
 
-- The Worker only accepts requests from the DoonDesk website, and only for Gemini's free Flash models.
+- **Model fallback:** DoonDesk tries Gemini's free models in turn (Gemini Flash, 3 Flash, 2.5 Flash, 3.1 Flash-Lite, Flash-Lite, 2.5 Flash-Lite). Each model has its own free limit, so when one runs out it moves to the next, and remembers to rest the used-up one until its limit resets. Only when all of them are used up does it fall back to the built-in answers.
+- The Worker only accepts requests from the DoonDesk website, and only for Gemini's free Flash and Flash-Lite models. If you set the Worker up before this change, paste in the new `worker.js` again so it allows the newer models.
 - Gemini's free tier has limits on requests per minute and per day. If they're reached, DoonDesk quietly uses its built-in answers until they reset.
 - Cloudflare's free plan allows about 100,000 Worker requests a day, far more than DoonDesk needs.
 - To switch the AI off, delete the `GEMINI_KEY` secret or the Worker.
