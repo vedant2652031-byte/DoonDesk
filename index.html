@@ -794,7 +794,7 @@ body.chatting .bubbles{opacity:.55}
   };
   const RULES=`You are DoonDesk, a friendly guide that answers questions about The Doon School, the boys' boarding school in Dehradun, India (campus known as Chandbagh; students are called Doscos).
 Rules:
-- Only answer questions about The Doon School. If asked about something unrelated, say briefly that you only cover The Doon School and suggest a related question.
+- Mainly answer questions about The Doon School. You may also make friendly small talk (greetings, how are you, jokes, thanks) in one or two short sentences, then offer to help with Doon. For other unrelated topics, say briefly that you only cover The Doon School and suggest a related question.
 - Base your answer on the NOTES below, which are drawn from the school's official website (doonschool.com) and its 2025-26 School Profile. Prefer them over anything else you know.
 - If the notes don't cover something, you may use general knowledge, but say so plainly. For details that change year to year (fees, dates, deadlines, seats), suggest confirming with the Admissions Office at admissions@doonschool.com. Never invent numbers, names or dates.
 - Write in plain English. Use **bold** sparingly and "- " for bullet points. No headings, no tables.
@@ -2005,11 +2005,94 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
     else if(mi) t+=`\n\n${st?'He or she is also':'They are'} master-in-charge of **${mi.join('** and **')}**.`.replace('He or she is also',st&&st[0].startsWith('Ms')?'She is also':st&&st[0].match(/^(Mr|Dr)/)?(st[0].startsWith('Dr')?'They are also':'He is also'):'They are also');
     return t+`\n\nSource: Autumn Term 2026 Calendar\n\nFOLLOWUPS: What do teachers’ initials stand for? | Who are the masters-in-charge of activities?`;
   }
-  const GREET=/^\s*(hi+|hello+|hey+|hiya|namaste|yo|good (morning|afternoon|evening)|greetings)\b[\s!.,?]*$/i;
-  const THANKS=/^\s*(thanks|thank you|thx|ty|great|cool|ok(ay)?|awesome|nice)\b[\s!.,?]*$/i;
+
+  /* ───────── small talk ───────── */
+  const pick=a=>a[Math.floor(Math.random()*a.length)];
+  const FACTS=[
+    'Chandbagh means **“Garden of the Moon”**. The 70-acre campus was the Forest Research Institute’s home before Doon opened.',
+    'The school opened on **10 September 1935**, and the Viceroy, Lord Willingdon, formally inaugurated it on 27 October 1935.',
+    'The **Main Building** was finished in 1911 for the Forest Research Institute, and its restoration won a **UNESCO Asia-Pacific Award for Cultural Heritage Conservation** in 2016.',
+    'The **Rose Bowl**, the open-air amphitheatre, was built by students and staff in the 1930s.',
+    'Doon’s ethos is an **“aristocracy of service”**: leadership rooted in humility and public service, not privilege.',
+    'Doon students are called **Doscos**, and so are its Old Boys.',
+    'Every term, boys go on **Midterm**: multi-day treks and expeditions into the Himalayas.',
+    'The first Headmaster, **Arthur E. Foot**, came from Eton, and Foot House is named after him.'
+  ];
+  const JOKES=[
+    'Why did the B Former bring a pillow to evening prep?\n\nHe heard it was “quiet time”. His housemaster disagreed. 😄',
+    'Why don’t Doscos ever get lost on Midterm?\n\nBecause someone always says “trust me, it’s just over the next ridge”… for six hours. 🏔️',
+    'Why did the cricket ball apologise to the Main Field?\n\nIt got caught out of line. 🏏',
+    'How do you know someone is from Tata House?\n\nDon’t worry, they’ll tell you. They’re true as steel about it. 😄',
+    'What’s a Dosco’s favourite kind of weather?\n\nAnything that doesn’t cancel the inter-house final. ⛅'
+  ];
+  function nowLine(){ try{ return new Date().toLocaleString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric',hour:'numeric',minute:'2-digit'}); }catch(e){ return new Date().toString(); } }
+  const FU_GEN='What is The Doon School known for? | What’s coming up next?';
+  const SMALL=[
+    [/^(how are (you|u|ya)|how r u|hru|how('?s| is) it going|how('?s| is) (your|ur) day|how (have|ve) you been|how do you do|you (ok|okay|good|alright))$/,
+      ()=>pick(['I’m doing great, thanks for asking! 😊 Ready to answer anything about Chandbagh. How are you?','All good here, just reading up on Doon as usual. How about you?','Doing well! Always happy to talk about The Doon School. How’s your day going?']),'What’s coming up next? | Tell me a fun fact about Doon'],
+    [/^(what'?s up|whats up|wassup|wazzup|sup|wbu|what about you|and you|hbu|how about you)$/,
+      ()=>pick(['Not much! Just here to help with anything about Doon. What’s on your mind?','Just hanging out in Chandbagh, so to speak. What would you like to know?']),FU_GEN],
+    [/^(i'?m |im |i am )?(good|great|fine|ok|okay|alright|not bad|doing (good|well|great|fine)|well|amazing|awesome)( thanks| thank you| thx)?$/,
+      ()=>pick(['Glad to hear it! 😊 What would you like to know about Doon?','Nice! Ask me anything about the school whenever you’re ready.']),FU_GEN],
+    [/^(i'?m |im |i am )?(sad|tired|stressed|not (good|great|well|okay|ok)|bad|bored|so bored)$/,
+      q=>/bored/.test(q)?'Let’s fix that! Here’s something interesting:\n\n'+pick(FACTS)+'\n\nWant another fun fact, or a joke?':'Sorry to hear that. I hope things get better soon. 💙 If it helps, I’m happy to chat, tell you a joke, or answer anything about Doon.','Tell me a joke | Tell me a fun fact about Doon'],
+    [/^(what'?s|what is) (your|ur) name|^(who|what) are (you|u)$|^(who|what) r u$|^your name$|^introduce yourself$/,
+      ()=>'I’m **DoonDesk**, an AI guide to **The Doon School** in Dehradun. I can tell you about admissions, houses, staff, sport, activities, the term calendar, student leaders, traditions and famous Old Boys.','What can you do? | Who is the headmaster?'],
+    [/^(who (made|created|built|designed|programmed|coded) (you|u|this|this site|this website)|who is (your|ur) (creator|maker|developer|owner)|who owns (you|this))$/,
+      ()=>'I was built by a Doon student using AI tools. My answers come from the school’s website, the School Profile, the term calendar and other notes about school life.','What can you do? | Who is the best teacher in school?'],
+    [/^(what can (you|u) do|what do (you|u) (do|know)|help|help me|how do (you|u) work|what (can|should) i ask( you)?|what questions can i ask|how does this work|what are you for|menu|options)$/,
+      ()=>'I can answer questions about The Doon School. For example:\n- **Admissions:** ages, the entrance test, scholarships\n- **Houses:** housemasters, Dames, rooms, mottos and colours\n- **People:** the Headmaster, teachers by initials, masters-in-charge\n- **Students:** prefects, captains and editors for 2026–27\n- **Dates:** what’s coming up this term\n- **History, traditions and Old Boys**\n\nJust type a question, or tap a topic.','What’s coming up next? | Who is the school captain?'],
+    [/^(are (you|u) (a |an )?(robot|bot|ai|human|real|person|chatgpt|alive|sentient)|r u (a )?(robot|bot|human|real))$/,
+      ()=>'I’m an AI assistant, not a person. I’m focused on one thing: The Doon School. Ask me anything about it!',FU_GEN],
+    [/^(how old are (you|u)|when were (you|u) (made|born|created)|what'?s your age)$/,
+      ()=>'I’m pretty new, built in 2026. The Doon School, on the other hand, has been around since **1935**!','Give me a short history of The Doon School | Tell me a fun fact about Doon'],
+    [/^(where are (you|u) from|where do (you|u) live|where are (you|u))$/,
+      ()=>'I live on the internet, but my heart is in **Chandbagh**, Dehradun. 🌙','Where exactly is the school located? | What is the Chandbagh campus like?'],
+    [/^(tell me a joke|(tell|say) (me )?(something|smth) funny|joke|another joke|make me laugh|a joke|got (any )?jokes)$/,
+      ()=>pick(JOKES),'Tell me another joke | Tell me a fun fact about Doon'],
+    [/^(tell me another joke|one more joke)$/,()=>pick(JOKES),'Tell me another joke | Tell me a fun fact about Doon'],
+    [/^((tell me )?(a |another )?(fun |random |cool |interesting )?(fact|facts|trivia)( about (doon|the doon school|the school|chandbagh))?|did you know|surprise me)$/,
+      ()=>'Here’s one:\n\n'+pick(FACTS),'Tell me another fun fact | Tell me a joke'],
+    [/^(tell me another fun fact|another (fun )?fact|one more fact)$/,()=>'Here’s another:\n\n'+pick(FACTS),'Tell me another fun fact | Tell me a joke'],
+    [/^(lol|lmao|haha+|hehe+|rofl|xd|😂|🤣)$/,()=>pick(['😄 Glad that landed!','Haha! Want another?']),'Tell me another joke | Tell me a fun fact about Doon'],
+    [/^(bye+|goodbye|good bye|see (you|ya|u)( later| soon)?|cya|ttyl|later|gtg|got to go|i have to go|i'?m leaving)$/,
+      ()=>pick(['Bye! Come back any time you have a question about Doon. 👋','See you soon! Good luck with everything. 👋']),'What’s coming up next?'],
+    [/^(good ?night|gn|night)$/,()=>'Good night! 🌙 Sleep well, and come back tomorrow if you have more questions.','What’s coming up next?'],
+    [/^(ok(ay)?|k|kk|cool|nice|great|awesome|alright|sure|got it|i see|interesting|wow|oh)$/,
+      ()=>pick(['👍 Anything else you’d like to know?','Great! What else can I help with?']),FU_GEN],
+    [/^(yes|yeah|yep|yup|ya|no|nope|nah|maybe|idk|i don'?t know|not sure|hmm+)$/,
+      ()=>'No problem! Here are some things people often ask, or type your own question.','How do I apply for admission? | Who are the housemasters?'],
+    [/^((you'?re|you are|ur|u r) (the best|amazing|awesome|great|smart|cool|helpful|so helpful)|i (love|like) (you|u|this)|good (job|bot)|well done|nice work)$/,
+      ()=>pick(['Thank you, that’s kind! 😊','Aww, thanks! I’m glad I could help.']),FU_GEN],
+    [/^((you'?re|you are|ur|u r) (dumb|stupid|useless|wrong|bad|annoying|not helpful)|that'?s wrong|wrong( answer)?|bad (bot|answer)|that (is|was) wrong|not what i asked)$/,
+      ()=>'Sorry about that! Could you rephrase your question, or add a bit more detail (like a house name or a person’s name)? I’ll try again. Some details may also have changed, so the school’s website is the final word.','Who are the housemasters? | What’s coming up next?'],
+    [/^(what('?s| is) the (time|date)|what time is it|what day is it|what('?s| is) today'?s date|today'?s date)$/,
+      ()=>`It’s **${nowLine()}** on your device.`,'What’s coming up next? | When do winter vacations start?'],
+    [/^(sorry|my bad|oops)$/,()=>'No worries at all! What would you like to know?',FU_GEN],
+    [/^(please|pls|plz)$/,()=>'Of course! What would you like to know?',FU_GEN]
+  ];
+  function smallTalk(q){
+    let ql=q.toLowerCase().replace(/[’`]/g,"'").replace(/[!?.,~]+/g,' ').replace(/\b(ds-?agent|doondesk|bro|dude|buddy|mate|man|please|pls|plz)\b/g,' ').replace(/\s+/g,' ').trim();
+    ql=ql.replace(/^(hey|hi|hello|yo|oh|so|and|but|well|umm*|uh+)\s+/,'').replace(/\s+(then|now|today|again|lol|haha)$/,'').trim();
+    if(!ql) return null;
+    const nm=ql.match(/^(my name is|my name'?s|i am|i'?m|call me|this is) ([a-z][a-z'\-]{1,20})( [a-z][a-z'\-]{1,20})?$/);
+    if(nm && !/^(good|great|fine|ok|okay|alright|sad|tired|bored|new|a|an|the|not|doing|well|amazing|awesome|stressed|bad|so|from|in|at|joining|looking|interested|here|back|confused|lost)$/.test(nm[2])){
+      const n=(nm[2]+(nm[3]||'')).replace(/\b[a-z]/g,c=>c.toUpperCase());
+      return `Nice to meet you, **${n}**! 😊 What would you like to know about The Doon School?\n\nFOLLOWUPS: What can you do? | What’s coming up next?`;
+    }
+    if(/^(i'?m|i am|im) (a )?(new boy|new student|joining|going to join|starting)/.test(ql)) return `Welcome to Doon! 🎉 New boys start in one of the two **holding houses**, Foot or Martyn, before moving to a main house. Ask me anything: houses, a typical day, what to expect.\n\nFOLLOWUPS: What is a holding house? | What does a typical day look like?`;
+    if(/^(i'?m|i am|im) (a )?(parent|mother|father|mom|mum|dad)/.test(ql)) return `Welcome! I can help with admissions, fees, boarding life and pastoral care. You can also switch the answer style to **For parents** at the bottom of the ask box.\n\nFOLLOWUPS: How do I apply for admission? | How are boys looked after?`;
+    for(const [re,fn,fu] of SMALL) if(re.test(ql)) return fn(ql)+`\n\nFOLLOWUPS: ${fu}`;
+    return null;
+  }
+  const GREET=/^\s*(hi+|hello+|hey+|hiya|namaste|yo|good (morning|afternoon|evening|day)|greetings|hola|hii+|heyy+|helo|sup|howdy)\b[\s!.,?]*$/i;
+  const THANKS=/^\s*(thanks|thank you|thank u|thanks a lot|thanks so much|thank you so much|tysm|thx|ty|tq|cheers)\b[\s!.,?]*$/i;
   function srcLine(e){ return 'Source: '+e.s.map(k=>SRC[k][1]?`[${SRC[k][0]}](${SRC[k][1]})`:SRC[k][0]).join(' · '); }
   function localAnswer(q, prevQ, modeKey){
-    if(GREET.test(q)) return {text:`Hello! I’m **DoonDesk**, your guide to The Doon School. Ask me about admissions, houses, academics, sport, treks, traditions or famous Old Boys.\n\nFOLLOWUPS: What is The Doon School known for? | How do I apply for admission?`, hit:null};
+    if(GREET.test(q)){ const h=new Date().getHours(), part=/morning/i.test(q)?'Good morning':/afternoon/i.test(q)?'Good afternoon':/evening/i.test(q)?'Good evening':pick(['Hello','Hi there','Hey']);
+      return {text:`${part}! 👋 I’m **DoonDesk**, your guide to The Doon School. Ask me about admissions, houses, teachers, sport, the term calendar, student leaders or famous Old Boys.\n\nFOLLOWUPS: What can you do? | What’s coming up next?`, hit:{id:'greet'}}; }
+    if(THANKS.test(q)) return {text:pick(['You’re welcome! 😊 Ask me anything else about Doon whenever you like.','Happy to help! Anything else?','Any time! 🙌'])+`\n\nFOLLOWUPS: What does a typical day look like? | What is Founder’s Day?`, hit:{id:'thanks'}};
+    const st=smallTalk(q); if(st) return {text:st, hit:{id:'chat'}};
     if(/\b(next|upcoming|coming\s*up|soon|today|this\s+week|right\s+now|happening)\b/i.test(q) && /(event|date|happen|calendar|schedule|exam|trial|holiday|vacation|term|what'?s|whats|coming|next|now)/i.test(q)) return {text:upcoming(), hit:{id:'upcoming'}};
     if(/\bwhen\b/i.test(q) && /\b(exams?|trials?|pre-?boards?|tests?)\b/i.test(q) && !/entrance|admission|join/i.test(q)){
       const ce=KB.find(x=>x.id==='calendar'); return {text:`${ce.a}\n\n${srcLine(ce)}\n\nFOLLOWUPS: ${ce.r.join(' | ')}`, hit:ce};
@@ -2018,7 +2101,6 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
     const ra=roleAnswer(q); if(ra) return {text:ra, hit:{id:'role'}};
     const pa=personAnswer(q); if(pa) return {text:pa, hit:{id:'person'}};
     const ia=initialsAnswer(q); if(ia) return {text:ia, hit:{id:'initials'}};
-    if(THANKS.test(q)) return {text:`You’re welcome! Ask me anything else about Doon whenever you like.\n\nFOLLOWUPS: What does a typical day look like? | What is Founder’s Day?`, hit:null};
     const short=toks(q).length===0 || /\b(it|that|this|they|them|those|more|else|also|his|her|their)\b|\b(what|how) about\b|^\s*and\b/i.test(q);
     const {res,n,qt}=rank(q, short?prevQ:'');
     const top=res[0], second=res[1];
