@@ -571,6 +571,29 @@ body.chatting .bubbles{opacity:.55}
 .thought li.done::before{background:rgba(255,255,255,.5);box-shadow:none;animation:none}
 .thought li strong{color:var(--fg-2);font-weight:600}
 @media (prefers-reduced-motion:reduce){ .thought li,.thought li::before{animation:none} }
+
+/* Gemini AI */
+.ai-chip{height:32px;padding:0 12px 0 10px;border:none;border-radius:999px;display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--fg-2);
+  background:rgba(255,255,255,.08);box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 0 0 1px rgba(255,255,255,.08);margin-right:auto;margin-left:8px;white-space:nowrap}
+.ai-chip:hover{color:#fff;background:rgba(255,255,255,.14)}
+.ai-chip .spark{font-size:13px;line-height:1;background:linear-gradient(135deg,#7FD3FF,#4A8BFF,#B48CFF);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ai-chip.on{color:#fff;background:linear-gradient(135deg,rgba(74,139,255,.45),rgba(180,140,255,.35));box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 0 18px rgba(74,139,255,.35)}
+.ai-chip.on .spark{color:#fff;background:none;-webkit-background-clip:initial;background-clip:initial}
+.ai-mark{width:60px;height:60px;flex:none;border-radius:23%;display:grid;place-items:center;font-size:28px;color:#fff;
+  background:linear-gradient(140deg,#4A8BFF,#7B5CFF 60%,#C08CFF);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 10px 24px rgba(0,0,0,.45)}
+.ai-body{padding:6px 26px 24px;display:flex;flex-direction:column;gap:14px}
+.ai-status{margin:0;font-size:14.5px;line-height:1.5;color:var(--fg-2)}
+.ai-status b{color:#fff}
+#aiForm{display:flex;flex-direction:column;gap:12px}
+.ai-row{display:flex;gap:10px;flex-wrap:wrap}
+.ai-row>*{flex:1;min-width:150px}
+.ai-row [hidden]{display:none}
+.ai-fine{margin:0;font-size:12.5px;line-height:1.5;color:var(--fg-3)}
+.ai-fine a{color:var(--fg-2)}
+@media (max-width:720px){ .ai-chip{margin-left:0} .ai-body{padding:4px 20px 20px} }
+@media (max-width:480px){ .tools{justify-content:space-between} .tools .seg{width:auto;flex:1} .ai-chip{padding:0 10px} }
+.seg button{white-space:nowrap}
+@media (max-width:430px){ #aiChipLabel{display:none} .ai-chip::after{content:'AI'} .ai-chip{padding:0 11px;gap:5px} }
 </style>
 
 <script>document.documentElement.classList.add('js')</script>
@@ -633,6 +656,7 @@ body.chatting .bubbles{opacity:.55}
               <button type="button" data-mode="detailed" aria-pressed="true">Detailed</button>
               <button type="button" data-mode="explain" aria-pressed="false">For parents</button>
             </div>
+            <button type="button" class="ai-chip press" id="aiChip" aria-haspopup="dialog"><span class="spark" aria-hidden="true">✦</span><span id="aiChipLabel">Connect AI</span></button>
             <span class="hint">Press <kbd>Enter</kbd> to ask</span>
           </div>
         </form>
@@ -736,6 +760,30 @@ body.chatting .bubbles{opacity:.55}
   </div>
   <ul class="sh-list" id="shList"></ul>
   <p class="sh-note">Pick a question, or close this and type your own.</p>
+</dialog>
+
+<dialog class="sheet g ai-sheet" id="aiSheet" aria-labelledby="aiTitle" data-lens="sheet">
+  <div class="sh-head">
+    <span class="ai-mark" aria-hidden="true">✦</span>
+    <div><h2 id="aiTitle">Gemini AI</h2><p id="aiMeta">Let an AI answer using all of DoonDesk’s school notes</p></div>
+    <button class="sh-close g press" id="aiClose" type="button" aria-label="Close">
+      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <div class="ai-body">
+    <p class="ai-status" id="aiStatus"></p>
+    <form id="aiForm" autocomplete="off">
+      <div class="field"><label for="aiKey">Your Gemini API key</label>
+        <div class="pw"><input id="aiKey" type="password" placeholder="Paste your key (starts with AIza…)" maxlength="200" spellcheck="false" autocapitalize="off"></div>
+      </div>
+      <div class="ai-row">
+        <button type="submit" class="auth-submit press" id="aiSave">Save and test</button>
+        <button type="button" class="guest g soft press" id="aiRemove">Remove key</button>
+      </div>
+      <div class="auth-msg" id="aiMsg" role="status"></div>
+    </form>
+    <p class="ai-fine">Your key is saved only in this browser on this device and is sent only to Google. It is never added to the website, so other visitors can’t see or use it. Get a free key at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com</a>.</p>
+  </div>
 </dialog>
 
 <div class="auth" id="auth" role="dialog" aria-modal="true" aria-labelledby="authTitle" hidden>
@@ -2428,6 +2476,55 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
   function label(b,txt){ const sm=b.wrap.querySelector('.who small'); if(sm) sm.textContent='· '+txt; }
   function lastUserQ(){ for(let i=turns.length-1;i>=0;i--) if(turns[i].role==='user') return turns[i].content; return ''; }
 
+  /* ───────── Gemini AI (a key saved on this device, or a shared proxy) ───────── */
+  const GEMINI_PROXY='';   // set to your Cloudflare Worker URL to turn AI on for every visitor
+  const GEM_KEY_LS='doondesk-gemini-key';
+  const GEM_MODELS=['gemini-flash-latest','gemini-2.5-flash','gemini-2.5-flash-lite'];
+  let gemKey=''; try{ gemKey=localStorage.getItem(GEM_KEY_LS)||''; }catch(e){}
+  let gemModel=GEM_MODELS[0], gemDown=0;
+  const gemOn=()=>!!(gemKey||GEMINI_PROXY) && Date.now()>gemDown;
+  async function geminiStream(system, contents, signal, onText){
+    let lastErr=null;
+    const order=[gemModel,...GEM_MODELS.filter(x=>x!==gemModel)];
+    for(const model of order){
+      const body={systemInstruction:{parts:[{text:system}]},contents,generationConfig:{temperature:.4,maxOutputTokens:4096}};
+      let res;
+      if(gemKey){
+        res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse`,{method:'POST',signal,headers:{'Content-Type':'application/json','x-goog-api-key':gemKey},body:JSON.stringify(body)});
+      } else {
+        res=await fetch(GEMINI_PROXY,{method:'POST',signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({...body,model})});
+      }
+      if(!res.ok){
+        let msg=''; try{ const j=await res.json(); msg=(j.error&&j.error.message)||''; }catch(e){}
+        const err={status:res.status,message:msg};
+        if(res.status===404 || (res.status===400 && /model|not found|not supported/i.test(msg) && !/api key/i.test(msg))){ lastErr=err; continue; }
+        throw err;
+      }
+      gemModel=model;
+      const rd=res.body.getReader(), dec=new TextDecoder(); let buf='', out='', finish='';
+      for(;;){
+        const {value,done}=await rd.read(); if(done) break;
+        buf+=dec.decode(value,{stream:true});
+        let i; while((i=buf.indexOf('\n'))>=0){
+          const line=buf.slice(0,i).trim(); buf=buf.slice(i+1);
+          if(!line.startsWith('data:')) continue;
+          let j=null; try{ j=JSON.parse(line.slice(5)); }catch(e){ continue; }
+          if(j.error) throw {status:j.error.code||500,message:j.error.message||''};
+          const c=j.candidates&&j.candidates[0];
+          if(c){ (c.content&&c.content.parts||[]).forEach(pt=>{ if(pt.text && !pt.thought){ out+=pt.text; onText&&onText(out); } }); if(c.finishReason) finish=c.finishReason; }
+        }
+      }
+      if(!out.trim()) throw {status:502,message:finish==='SAFETY'?'blocked':'empty'};
+      return {text:out, truncated:finish==='MAX_TOKENS'};
+    }
+    throw lastErr||{status:404,message:'No Gemini model available'};
+  }
+  function gemErrText(e){
+    if(!e) return 'Gemini didn’t answer, so here’s the answer from the school notes.';
+    if(e.status===429) return 'Gemini’s free limit is used up for the moment, so here’s the answer from the school notes. It usually resets within a minute (or by tomorrow for the daily limit).';
+    if((e.status===400 && /api key/i.test(e.message||'')) || e.status===401 || e.status===403) return 'Gemini rejected the API key. Check it under ✦ Gemini. Here’s the answer from the school notes.';
+    return 'Gemini didn’t answer this time, so here’s the answer from the school notes.';
+  }
   async function ask(q){
     q=(q||'').trim(); if(!q||busy) return;
     const first=!chatting();
@@ -2443,9 +2540,37 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
     let text=null;
     try{
       const local=localAnswer(q,prevQ,mode);
-      let finThink=null;
-      if(!local.hit && local.think){ b.wrap.classList.remove('thinking'); b.wrap.classList.add('thinking'); finThink=await showThinking(b,local.think,ctl.signal,sample?['Asking Claude to think it through with the school notes']:null); }
-      if(sample && !local.hit){
+      let finThink=null, gemNote='';
+      const quickOnly=local.hit && /^(greet|thanks)$/.test(local.hit.id);
+      if(!sample && gemOn() && !quickOnly){
+        const {res}=rank(q, prevQ);
+        const rel=res.filter(x=>x.score>.8).slice(0,8);
+        const steps=['Searching the school notes', rel.length?`Found related notes: ${rel.slice(0,3).map(x=>'**'+x.e.t+'**').join(', ')}${rel.length>3?' and more':''}`:'No close notes found, so the AI will say what it doesn’t know'];
+        b.wrap.classList.add('thinking');
+        finThink=await showThinking(b,steps,ctl.signal,['Asking Gemini to think it through']);
+        const aiCtl=new AbortController(); let timedOut=false, gotText=false;
+        const onAbort=()=>aiCtl.abort(); ctl.signal.addEventListener('abort',onAbort,{once:true});
+        const timer=setTimeout(()=>{ if(!gotText){ timedOut=true; aiCtl.abort(); } },25000);
+        try{
+          const notes=rel.map(x=>`### ${x.e.t}\n${x.e.a}\n(Source: ${x.e.s.map(k=>SRC[k][0]+(SRC[k][1]?' '+SRC[k][1]:'')).join(' , ')})`).join('\n\n');
+          const best=local.hit?`\n\nDOONDESK'S OWN LOOKUP (an exact match from the notes; trust it):\n${local.text.replace(/\nFOLLOWUPS:[\s\S]*$/,'')}`:'';
+          const sys=RULES+`\n- Today's date is ${new Date().toDateString()}.\n- If the notes don't contain the answer, say so honestly instead of guessing.\n\nNOTES:\n${notes||'(No matching notes.)'}${best}\n\nAnswer style: ${m.rule}`;
+          const hist=turns.slice(-10); while(hist.length&&hist[0].role!=='user') hist.shift();
+          const contents=hist.map(t=>({role:t.role==='assistant'?'model':'user',parts:[{text:t.content}]}));
+          let lastScroll=0;
+          const r=await geminiStream(sys,contents,aiCtl.signal,txt=>{ if(!gotText&&finThink){ finThink(); finThink=null; b.wrap.classList.remove('thinking'); } gotText=true; setBot(b,txt,false); const now=performance.now(); if(now-lastScroll>400){ lastScroll=now; toBottom(); } });
+          text=r.text; label(b,m.label+' · Gemini + school notes'); setBot(b,text,true);
+          if(r.truncated) note(b,'The answer was cut short. Ask a narrower question for the rest.');
+        }catch(e){
+          if(ctl.signal.aborted && !timedOut) throw {code:'cancelled'};
+          if(e&&(e.status===401||e.status===403||(e.status===400&&/api key/i.test(e.message||'')))) gemDown=Date.now()+60000;
+          if(e&&e.status===429) gemDown=Date.now()+20000;
+          gemNote=timedOut?'Gemini took too long, so here’s the answer from the school notes.':gemErrText(e);
+          text=null; if(finThink){ finThink(); finThink=null; }
+        }finally{ clearTimeout(timer); ctl.signal.removeEventListener('abort',onAbort); }
+      }
+      if(text===null && !finThink && !gemNote && !local.hit && local.think){ b.wrap.classList.remove('thinking'); b.wrap.classList.add('thinking'); finThink=await showThinking(b,local.think,ctl.signal,sample?['Asking Claude to think it through with the school notes']:null); }
+      if(text===null && sample && !local.hit){
         const aiCtl=new AbortController(); let timedOut=false, gotText=false;
         const onAbort=()=>aiCtl.abort(); ctl.signal.addEventListener('abort',onAbort,{once:true});
         const timer=setTimeout(()=>{ if(!gotText){ timedOut=true; aiCtl.abort(); } },30000);
@@ -2475,6 +2600,7 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
         await typeOut(b,ans.text,ctl.signal);
         text=ans.text; label(b,m.label+(local.think?' · Thought it through':' · School notes'));
         setBot(b,text,true);
+        if(gemNote) note(b,gemNote,true);
       }
       toBottom();
       turns.push({role:'assistant',content:text});
@@ -2729,7 +2855,7 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
   /* ───────── ripples ───────── */
   document.addEventListener('pointerdown',e=>{
     if(reduced) return;
-    const h=e.target.closest('.qchip,.fchip,.sh-list button,.wfoot,.big-cta,.cta,.seg button,.send');
+    const h=e.target.closest('.qchip,.fchip,.sh-list button,.wfoot,.big-cta,.cta,.seg button,.send,.ai-chip');
     if(!h) return;
     const r=h.getBoundingClientRect(), sp=document.createElement('span');
     sp.className='ripple'+(h.matches('.big-cta,.cta,.send.ready,.send.stop')?' dark':'');
@@ -2897,6 +3023,46 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
     document.addEventListener('click',e=>{ if(!m.hidden && !e.target.closest('#mMenu,#menuBtn')) close(); });
     document.addEventListener('keydown',e=>{ if(e.key==='Escape' && !m.hidden){ close(); btn.focus(); } });
     addEventListener('resize',()=>{ if(innerWidth>900) close(); });
+  })();
+
+  /* ───────── AI settings ───────── */
+  (function(){
+    const chip=$('#aiChip'), lab=$('#aiChipLabel'), dlg=$('#aiSheet'), keyI=$('#aiKey'), msg=$('#aiMsg'), st=$('#aiStatus'), saveB=$('#aiSave'), rm=$('#aiRemove');
+    function sync(){
+      const on=!!(gemKey||GEMINI_PROXY);
+      chip.classList.toggle('on',on); lab.textContent=on?'Gemini on':'Connect AI';
+      chip.setAttribute('aria-label',on?'Gemini AI is on. Open AI settings':'Connect Gemini AI');
+      st.innerHTML=gemKey?'<b>Gemini is on</b> on this device. It answers using DoonDesk’s school notes, and falls back to the notes if Gemini is busy.'
+        :GEMINI_PROXY?'<b>Gemini is on for everyone</b> through DoonDesk’s shared connection. You can also add your own key to use your own free allowance.'
+        :'DoonDesk answers from its school notes. Add a free <b>Gemini API key</b> to let an AI read those notes and answer in its own words, follow up naturally and handle trickier questions.';
+      rm.hidden=!gemKey; keyI.value=gemKey?'••••••••'+gemKey.slice(-4):'';
+    }
+    chip.onclick=()=>{ msg.textContent=''; msg.className='auth-msg'; sync(); dlg.showModal(); watchLens(dlg); setTimeout(()=>{ if(!gemKey) keyI.focus(); },reduced?0:200); };
+    $('#aiClose').onclick=()=>dlg.close();
+    dlg.addEventListener('click',e=>{ if(e.target===dlg) dlg.close(); });
+    keyI.addEventListener('focus',()=>{ if(keyI.value.startsWith('••')) keyI.value=''; });
+    $('#aiForm').addEventListener('submit',async e=>{
+      e.preventDefault();
+      const k=keyI.value.trim();
+      if(!k||k.startsWith('••')){ if(gemKey){ msg.className='auth-msg ok'; msg.textContent='Your key is already saved.'; } else { msg.className='auth-msg'; msg.textContent='Paste your Gemini API key first.'; } return; }
+      if(!/^[A-Za-z0-9_\-]{20,}$/.test(k)){ msg.className='auth-msg'; msg.textContent='That doesn’t look like a Gemini API key. It’s usually a long code starting with “AIza”.'; return; }
+      saveB.disabled=true; saveB.innerHTML='<span class="spin" aria-hidden="true"></span><span class="sr">Testing</span>'; msg.className='auth-msg ok'; msg.textContent='Testing the key with Gemini…';
+      const old=gemKey; gemKey=k; gemDown=0;
+      try{
+        const c=new AbortController(); const t=setTimeout(()=>c.abort(),20000);
+        await geminiStream('Reply with the single word OK.',[{role:'user',parts:[{text:'Say OK'}]}],c.signal); clearTimeout(t);
+        try{ localStorage.setItem(GEM_KEY_LS,k); }catch(e){}
+        msg.className='auth-msg ok'; msg.textContent='It works! Gemini will now answer your questions using the school notes.';
+        sync(); setTimeout(()=>{ if(dlg.open) dlg.close(); },1400);
+      }catch(err){
+        gemKey=old; msg.className='auth-msg';
+        if(err&&err.status===429){ try{ localStorage.setItem(GEM_KEY_LS,k); }catch(e){} gemKey=k; sync(); msg.textContent='Saved. The key looks right, but Gemini’s free limit is used up right now, so it will start working in a minute or so.'; }
+        else msg.textContent=err&&(err.status===400||err.status===401||err.status===403)?'Gemini rejected that key. Check you copied all of it from aistudio.google.com.'
+          :'Couldn’t reach Gemini. Check your internet connection and try again.';
+      }finally{ saveB.disabled=false; saveB.textContent='Save and test'; }
+    });
+    rm.onclick=()=>{ gemKey=''; try{ localStorage.removeItem(GEM_KEY_LS); }catch(e){} msg.className='auth-msg ok'; msg.textContent='Key removed from this device.'; sync(); };
+    sync();
   })();
 
   /* ───────── boot ───────── */

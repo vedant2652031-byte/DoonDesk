@@ -14,6 +14,8 @@ DoonDesk is a single web page with a built-in knowledge base, so it runs in any 
 |---|---|
 | `index.html` | **DoonDesk**: the main site. Blue-and-black liquid-glass design, login page, floating glass bubbles, scroll animations, works on phones, tablets and computers. |
 | `classic/index.html` | **DoonDesk Classic**: the earlier version, with the original design. |
+| `ai-worker/worker.js` | The optional Cloudflare Worker that keeps a Gemini API key secret. See `AI-SETUP.md`. |
+| `AI-SETUP.md` | How to turn on Gemini AI. |
 | `.nojekyll` | Tells GitHub Pages to serve the files exactly as they are. |
 
 ## Use it
@@ -41,7 +43,8 @@ Each answer shows where its information came from and suggests follow-up questio
 ## How answers work
 
 - **School notes (always on):** DoonDesk matches your question against its knowledge base and answers instantly. It works offline and anywhere.
-- **AI (only inside Claude):** when the page is opened inside Claude and the notes don't cover a question, it asks Claude, giving it the school notes to work from.
+- **Gemini AI (optional):** with a Gemini API key connected, Gemini reads the matching school notes and answers in its own words. If Gemini is busy or its free limit runs out, DoonDesk falls back to the school notes. See **[AI-SETUP.md](AI-SETUP.md)** to connect it just for yourself or for every visitor (through the free Cloudflare connector in `ai-worker/`).
+- **Claude (inside Claude only):** when the page is opened inside Claude, it can ask Claude instead.
 
 ## Accounts
 
