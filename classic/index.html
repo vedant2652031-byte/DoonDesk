@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="DS-Agent Classic: ask anything about The Doon School, Dehradun.">
+<meta name="description" content="DoonDesk Classic: ask anything about The Doon School, Dehradun.">
 <style>:root{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
-<title>DS-Agent Classic</title>
+<title>DoonDesk Classic</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -330,7 +330,7 @@ body.chatting .bar{display:flex}
 
 <div class="edge top" aria-hidden="true"></div>
 <header class="nav g" id="nav" data-lens="nav">
-  <button class="logo press" id="homeBtn" type="button" aria-label="DS-Agent, back to start"><span class="mark" aria-hidden="true">D</span>DS-Agent</button>
+  <button class="logo press" id="homeBtn" type="button" aria-label="DoonDesk, back to start"><span class="mark" aria-hidden="true">D</span>DoonDesk</button>
   <nav class="links" id="links" aria-label="Sections">
     <span class="lensdot" aria-hidden="true"></span>
     <a href="#ask">Ask</a><a href="#preview">How it works</a><a href="#topics">Topics</a><a href="#about">About</a>
@@ -387,11 +387,11 @@ body.chatting .bar{display:flex}
       </div>
       <div class="stage">
         <div class="window g" id="win" data-lens="window">
-          <div class="wbar" style="position:relative"><i></i><i></i><i></i><b>DS-Agent</b><small>Example</small></div>
+          <div class="wbar" style="position:relative"><i></i><i></i><i></i><b>DoonDesk</b><small>Example</small></div>
           <div class="wbody">
             <div class="me g">When was The Doon School founded?</div>
             <div class="bot g soft">
-              <div class="who"><span class="orb" aria-hidden="true"></span>DS-Agent <small>· Detailed</small></div>
+              <div class="who"><span class="orb" aria-hidden="true"></span>DoonDesk <small>· Detailed</small></div>
               <div class="answer"><p>The Doon School opened in <strong>1935</strong> on the old Chandbagh estate in Dehradun.</p><p>It grew out of the vision of <strong>Satish Ranjan Das</strong>, and <strong>Arthur Foot</strong> was its first headmaster.</p></div>
               <div class="follow" id="exFollow"></div>
             </div>
@@ -425,7 +425,7 @@ body.chatting .bar{display:flex}
       <div class="head">
         <span class="eyebrow g" data-reveal>About the school</span>
         <h2 data-reveal style="--d:.08s">A school with a <em>long memory.</em></h2>
-        <p data-reveal style="--d:.16s">DS-Agent’s answers come from the school’s own website and its 2025–26 School Profile. Details that change each year, like fees and dates, are worth confirming with the school.</p>
+        <p data-reveal style="--d:.16s">DoonDesk’s answers come from the school’s own website and its 2025–26 School Profile. Details that change each year, like fees and dates, are worth confirming with the school.</p>
       </div>
       <div class="facts g" data-reveal style="--d:.1s">
         <div class="fact"><b>1935</b><span>Founded by S. R. Das’s vision</span></div>
@@ -437,13 +437,13 @@ body.chatting .bar{display:flex}
 
     <section class="closing">
       <h2 data-reveal>Got a question about <em>Chandbagh?</em></h2>
-      <button class="big-cta press" id="bigCta" type="button" data-reveal style="--d:.12s">Ask DS-Agent
+      <button class="big-cta press" id="bigCta" type="button" data-reveal style="--d:.12s">Ask DoonDesk
         <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </button>
     </section>
 
     <footer>
-      <span>DS-Agent · An unofficial guide to The Doon School, built from information on doonschool.com</span>
+      <span>DoonDesk · An unofficial guide to The Doon School, built from information on doonschool.com</span>
       <span>Official information: <a href="https://www.doonschool.com" target="_blank" rel="noopener">doonschool.com</a></span>
     </footer>
   </div>
@@ -499,7 +499,7 @@ body.chatting .bar{display:flex}
     detailed:{label:'Detailed',tier:'default',rule:'Give a clear, well-organised answer. Use short paragraphs and a bulleted list where it helps. Keep it under 250 words.'},
     explain:{label:'For parents',tier:'default',rule:'Write for a parent considering the school: warm, plain language, practical detail, and point out what they should confirm directly with the admissions office. Under 250 words.'}
   };
-  const RULES=`You are DS-Agent, a friendly guide that answers questions about The Doon School, the boys' boarding school in Dehradun, India (campus known as Chandbagh; students are called Doscos).
+  const RULES=`You are DoonDesk, a friendly guide that answers questions about The Doon School, the boys' boarding school in Dehradun, India (campus known as Chandbagh; students are called Doscos).
 Rules:
 - Only answer questions about The Doon School. If asked about something unrelated, say briefly that you only cover The Doon School and suggest a related question.
 - Base your answer on the NOTES below, which are drawn from the school's official website (doonschool.com) and its 2025-26 School Profile. Prefer them over anything else you know.
@@ -1035,7 +1035,7 @@ It has well-lit dorms with attached bathrooms, a common room, rooms for evening 
   const THANKS=/^\s*(thanks|thank you|thx|ty|great|cool|ok(ay)?|awesome|nice)\b[\s!.,?]*$/i;
   function srcLine(e){ return 'Source: '+e.s.map(k=>`[${SRC[k][0]}](${SRC[k][1]})`).join(' · '); }
   function localAnswer(q, prevQ, modeKey){
-    if(GREET.test(q)) return {text:`Hello! I’m **DS-Agent**, your guide to The Doon School. Ask me about admissions, houses, academics, sport, treks, traditions or famous Old Boys.\n\nFOLLOWUPS: What is The Doon School known for? | How do I apply for admission?`, hit:null};
+    if(GREET.test(q)) return {text:`Hello! I’m **DoonDesk**, your guide to The Doon School. Ask me about admissions, houses, academics, sport, treks, traditions or famous Old Boys.\n\nFOLLOWUPS: What is The Doon School known for? | How do I apply for admission?`, hit:null};
     if(THANKS.test(q)) return {text:`You’re welcome! Ask me anything else about Doon whenever you like.\n\nFOLLOWUPS: What does a typical day look like? | What is Founder’s Day?`, hit:null};
     const short=toks(q).length<=2 || /\b(it|that|this|they|them|those|more|else|also)\b/i.test(q);
     const {res,n,qt}=rank(q, short?prevQ:'');
@@ -1204,7 +1204,7 @@ It has well-lit dorms with attached bathrooms, a common room, rooms for evening 
   function addMe(t){ const d=document.createElement('div'); d.className='me g msg'; d.textContent=t; thread.appendChild(d); toBottom(); }
   function addBot(){
     const w=document.createElement('div'); w.className='bot g msg';
-    w.innerHTML=`<div class="who"><span class="orb" aria-hidden="true"></span>DS-Agent <small>· ${MODES[mode].label}</small></div><div class="answer"></div>`;
+    w.innerHTML=`<div class="who"><span class="orb" aria-hidden="true"></span>DoonDesk <small>· ${MODES[mode].label}</small></div><div class="answer"></div>`;
     thread.appendChild(w); spec(w); toBottom();
     return {wrap:w, ans:w.querySelector('.answer')};
   }
