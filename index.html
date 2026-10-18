@@ -774,7 +774,7 @@ body.chatting .bubbles{opacity:.55}
     <p class="ai-status" id="aiStatus"></p>
     <form id="aiForm" autocomplete="off">
       <div class="field"><label for="aiKey">Your Gemini API key</label>
-        <div class="pw"><input id="aiKey" type="password" placeholder="Paste your key (starts with AIza…)" maxlength="200" spellcheck="false" autocapitalize="off"></div>
+        <div class="pw"><input id="aiKey" type="password" placeholder="Paste your key (starts with AQ. or AIza)" maxlength="200" spellcheck="false" autocapitalize="off"></div>
       </div>
       <div class="ai-row">
         <button type="submit" class="auth-submit press" id="aiSave">Save and test</button>
@@ -3045,7 +3045,7 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
       e.preventDefault();
       const k=keyI.value.trim();
       if(!k||k.startsWith('••')){ if(gemKey){ msg.className='auth-msg ok'; msg.textContent='Your key is already saved.'; } else { msg.className='auth-msg'; msg.textContent='Paste your Gemini API key first.'; } return; }
-      if(!/^[A-Za-z0-9_\-]{20,}$/.test(k)){ msg.className='auth-msg'; msg.textContent='That doesn’t look like a Gemini API key. It’s usually a long code starting with “AIza”.'; return; }
+      if(/\s/.test(k) || k.length<20){ msg.className='auth-msg'; msg.textContent='That doesn’t look like a whole Gemini API key. Copy the full key from aistudio.google.com (it usually starts with “AQ.” or “AIza”).'; return; }
       saveB.disabled=true; saveB.innerHTML='<span class="spin" aria-hidden="true"></span><span class="sr">Testing</span>'; msg.className='auth-msg ok'; msg.textContent='Testing the key with Gemini…';
       const old=gemKey; gemKey=k; gemDown=0;
       try{
@@ -3057,7 +3057,8 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
       }catch(err){
         gemKey=old; msg.className='auth-msg';
         if(err&&err.status===429){ try{ localStorage.setItem(GEM_KEY_LS,k); }catch(e){} gemKey=k; sync(); msg.textContent='Saved. The key looks right, but Gemini’s free limit is used up right now, so it will start working in a minute or so.'; }
-        else msg.textContent=err&&(err.status===400||err.status===401||err.status===403)?'Gemini rejected that key. Check you copied all of it from aistudio.google.com.'
+        else msg.textContent=err&&/ACCESS_TOKEN_TYPE_UNSUPPORTED/i.test(err.message||'')?'Google says this type of key can’t be used yet on your account. Try creating a new key in a new project at aistudio.google.com.'
+          :err&&(err.status===400||err.status===401||err.status===403)?'Gemini rejected that key. Check you copied all of it from aistudio.google.com.'
           :'Couldn’t reach Gemini. Check your internet connection and try again.';
       }finally{ saveB.disabled=false; saveB.textContent='Save and test'; }
     });
