@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#64D2FF"/><stop offset=".45" stop-color="#0A84FF"/><stop offset="1" stop-color="#1E3BFF"/>
+    </linearGradient>
+    <radialGradient id="h" cx=".35" cy=".28" r=".55"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+  </defs>
+  <circle cx="32" cy="32" r="31" fill="url(#g)"/>
+  <circle cx="32" cy="32" r="31" fill="url(#h)"/>
+  <text x="32" y="44" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="36" fill="#fff">D</text>
+</svg>
