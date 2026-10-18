@@ -721,6 +721,13 @@ body.chatting .bubbles{opacity:.55}
   .vz-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
 }
 @media (prefers-reduced-motion:reduce){ .vz,.vz-tl li,.vz-hm,.vz-steps li,.vz-ladder li{animation:none} }
+
+.vz-wide .vz-imgwrap{aspect-ratio:3/1}
+.vz-hbtn{display:flex;flex-direction:column;overflow:hidden;background:rgba(255,255,255,.03);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--hc) 45%,transparent)}
+.vz-hbtn .vz-house{border-radius:0 0 16px 16px;box-shadow:none}
+.vz-hphoto{display:block;aspect-ratio:3/1;overflow:hidden;border-radius:16px 16px 0 0;border-bottom:3px solid var(--hc)}
+.vz-hphoto img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s var(--ease)}
+.vz-hbtn:hover .vz-hphoto img{transform:scale(1.05)}
 </style>
 
 <script>document.documentElement.classList.add('js')</script>
@@ -2633,23 +2640,27 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
     kashhyd:C('kashmir-hyderabad.jpg','Kashmir House and Hyderabad House','Vigortired','CC BY-SA 3.0'),
     foothouse:C('foot-house.jpg','Foot House','DoscoinDoon','CC BY-SA 3.0')
   };
+  [['hyderabad','Hyderabad House'],['jaipur','Jaipur House'],['kashmir','Kashmir House'],['tata','Tata House'],['oberoi','Oberoi House'],['foot','Foot House'],['martyn','Martyn House']].forEach(([id,label])=>{
+    PH['hp_'+id]={src:IMG_BASE+'house-'+id+'.jpg',label,page:IMG_BASE+'house-'+id+'.jpg',wide:true,
+      credit:`Photo added by the DoonDesk team · <a href="${SRC.housepages[1]}" target="_blank" rel="noopener">More on the school website</a>`};
+  });
   const HOUSES=[
-    {id:'hyderabad',name:'Hyderabad',motto:'House of Nizams',colour:'Dark blue',hex:'#1F3A93',type:'Main house',sym:'sym-hyderabad.png',hm:'Mr Sudhir Thapa',photo:'kashhyd'},
-    {id:'jaipur',name:'Jaipur',motto:'House of Eagles',colour:'Green',hex:'#2E7D4F',type:'Main house',sym:null,hm:'Mr Pratyush Vaishnav'},
-    {id:'kashmir',name:'Kashmir',motto:'House of Gentlemen',colour:'Yellow',hex:'#E8B400',type:'Main house',sym:'sym-kashmir.png',hm:'Mr Manish Kant Pant',photo:'kashhyd'},
-    {id:'tata',name:'Tata',motto:'True as Steel',colour:'Red',hex:'#C62828',type:'Main house',sym:null,hm:'Mr Parvinder Kumar',photo:'tata'},
-    {id:'oberoi',name:'Oberoi',motto:'House of Honor',colour:'Light blue',hex:'#4FA3E0',type:'Main house',sym:'sym-oberoi.png',hm:'Mr Vishal Mohla',photo:'oberoi'},
-    {id:'foot',name:'Foot',motto:'Holding house for new boys',colour:'Dark teal',hex:'#0F5E63',type:'Holding house',sym:'sym-foot.png',hm:'Ms Ruchi Sahni',photo:'foothouse'},
-    {id:'martyn',name:'Martyn',motto:'Holding house for new boys',colour:'Dark forest green',hex:'#1E4D2B',type:'Holding house',sym:'sym-martyn.png',hm:'Mr Samik Das'}
+    {id:'hyderabad',name:'Hyderabad',motto:'House of Nizams',colour:'Dark blue',hex:'#1F3A93',type:'Main house',sym:'sym-hyderabad.png',hm:'Mr Sudhir Thapa',photo:'hp_hyderabad'},
+    {id:'jaipur',name:'Jaipur',motto:'House of Eagles',colour:'Green',hex:'#2E7D4F',type:'Main house',sym:null,hm:'Mr Pratyush Vaishnav',photo:'hp_jaipur'},
+    {id:'kashmir',name:'Kashmir',motto:'House of Gentlemen',colour:'Yellow',hex:'#E8B400',type:'Main house',sym:'sym-kashmir.png',hm:'Mr Manish Kant Pant',photo:'hp_kashmir'},
+    {id:'tata',name:'Tata',motto:'True as Steel',colour:'Red',hex:'#C62828',type:'Main house',sym:null,hm:'Mr Parvinder Kumar',photo:'hp_tata'},
+    {id:'oberoi',name:'Oberoi',motto:'House of Honor',colour:'Light blue',hex:'#4FA3E0',type:'Main house',sym:'sym-oberoi.png',hm:'Mr Vishal Mohla',photo:'hp_oberoi'},
+    {id:'foot',name:'Foot',motto:'Holding house for new boys',colour:'Dark teal',hex:'#0F5E63',type:'Holding house',sym:'sym-foot.png',hm:'Ms Ruchi Sahni',photo:'hp_foot'},
+    {id:'martyn',name:'Martyn',motto:'Holding house for new boys',colour:'Dark forest green',hex:'#1E4D2B',type:'Holding house',sym:'sym-martyn.png',hm:'Mr Samik Das',photo:'hp_martyn'}
   ];
   const vesc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const srcA=(k)=>SRC[k]&&SRC[k][1]?`<a href="${vesc(SRC[k][1])}" target="_blank" rel="noopener">${vesc(SRC[k][0])}</a>`:vesc(SRC[k]?SRC[k][0]:k);
   const vfoot=(t)=>`<p class="vz-src">${t}</p>`;
-  function credit(p){ const lic=CC[p.lic]?`<a href="${CC[p.lic]}" target="_blank" rel="noopener">${vesc(p.lic)}</a>`:vesc(p.lic);
+  function credit(p){ if(p.credit) return p.credit; const lic=CC[p.lic]?`<a href="${CC[p.lic]}" target="_blank" rel="noopener">${vesc(p.lic)}</a>`:vesc(p.lic);
     return `Photo: ${vesc(p.artist)} · ${lic} · <a href="${vesc(p.page)}" target="_blank" rel="noopener">Wikimedia Commons</a>`; }
   function fig(k,cls){
     const p=PH[k]; if(!p) return '';
-    return `<figure class="vz-fig ${cls||''}"><a class="vz-imgwrap" href="${vesc(p.page)}" target="_blank" rel="noopener" aria-label="Open the original photo: ${vesc(p.label)}"><img src="${vesc(p.src)}" alt="${vesc(p.label)}" loading="lazy" decoding="async" onerror="this.closest('figure').classList.add('vz-broken')"><span class="vz-fallback">Photo unavailable here. Open it on Wikimedia Commons ↗</span></a><figcaption><b>${vesc(p.label)}</b><span>${credit(p)}</span></figcaption></figure>`;
+    return `<figure class="vz-fig ${p.wide?'vz-wide ':''}${cls||''}"><a class="vz-imgwrap" href="${vesc(p.page)}" target="_blank" rel="noopener" aria-label="Open the original photo: ${vesc(p.label)}"><img src="${vesc(p.src)}" alt="${vesc(p.label)}" loading="lazy" decoding="async" onerror="this.closest('figure').classList.add('vz-broken')"><span class="vz-fallback">Photo unavailable here. Open it on Wikimedia Commons ↗</span></a><figcaption><b>${vesc(p.label)}</b><span>${credit(p)}</span></figcaption></figure>`;
   }
   function gallery(keys,title){
     return `<section class="vz vz-gallery"><h4 class="vz-h">${vesc(title)}</h4><div class="vz-grid">${keys.map(k=>fig(k)).join('')}</div></section>`;
@@ -2702,8 +2713,8 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
     return `<div class="vz-house" style="--hc:${h.hex}">${symbol(h)}<div><b>${vesc(h.name)} House</b><span class="vz-motto">${h.type==='Main house'?'“'+vesc(h.motto)+'”':vesc(h.motto)}</span><span class="vz-meta"><i style="background:${h.hex}"></i>${vesc(h.colour)} · ${vesc(h.type)}</span></div></div>`;
   }
   function housesGrid(){
-    return `<section class="vz vz-houses"><h4 class="vz-h">The seven houses</h4><div class="vz-hgrid">${HOUSES.map(h=>`<button type="button" class="vz-hbtn" data-ask="Tell me about ${vesc(h.name)} House">${houseCard(h)}</button>`).join('')}</div>
-      ${vfoot('Colours and mottos: '+srcA('guide')+'. House symbols: <a href="https://commons.wikimedia.org/wiki/Category:The_Doon_School" target="_blank" rel="noopener">Wikimedia Commons</a> (CC BY-SA 4.0, LogoBrummel). Jaipur and Tata show a plain colour badge because no symbol image was available. Shades are approximate.')}</section>`;
+    return `<section class="vz vz-houses"><h4 class="vz-h">The seven houses</h4><div class="vz-hgrid">${HOUSES.map(h=>`<button type="button" class="vz-hbtn" style="--hc:${h.hex}" data-ask="Tell me about ${vesc(h.name)} House">${h.photo&&PH[h.photo]?`<span class="vz-hphoto"><img src="${vesc(PH[h.photo].src)}" alt="${vesc(PH[h.photo].label)}" loading="lazy" onerror="this.parentNode.remove()"></span>`:''}${houseCard(h)}</button>`).join('')}</div>
+      ${vfoot('Colours and mottos: '+srcA('guide')+'. House photos: added by the DoonDesk team. House symbols: <a href="https://commons.wikimedia.org/wiki/Category:The_Doon_School" target="_blank" rel="noopener">Wikimedia Commons</a> (CC BY-SA 4.0, LogoBrummel). Jaipur and Tata show a plain colour badge because no symbol image was available. Shades are approximate.')}</section>`;
   }
   function oneHouse(id){
     const h=HOUSES.find(x=>x.id===id); if(!h) return '';

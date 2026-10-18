@@ -28,6 +28,10 @@ DoonDesk shows photos from [Wikimedia Commons](https://commons.wikimedia.org/wik
 | Foot House symbol | LogoBrummel | CC BY-SA 4.0 | Wikimedia | [Foot House Doon School.png](https://commons.wikimedia.org/wiki/File:Foot_House_Doon_School.png) |
 | Martyn House symbol | LogoBrummel | CC BY-SA 4.0 | Wikimedia | [Martyn House Doon School.png](https://commons.wikimedia.org/wiki/File:Martyn_House_Doon_School.png) |
 
+## House photos
+
+The photos of the seven houses (`img/house-*.jpg`: Hyderabad, Jaipur, Kashmir, Tata, Oberoi, Foot and Martyn) were added by the DoonDesk team.
+
 Map data © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright), available under the Open Database Licence.
 
 Licences: [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/), [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Public-domain photos are marked as such on Wikimedia Commons.
