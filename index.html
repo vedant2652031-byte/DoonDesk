@@ -1303,7 +1303,7 @@ Every year group has daily PE, coached by qualified sports staff and professiona
 - **Inter-house:** the houses compete in an **inter-house boxing** competition. The school Weekly reports it with the term's other inter-house events, such as basketball, tennis, squash and badminton. In 2016 it was held late in the Autumn Term, just before exam week.
 - **Inter-school:** Doon boxers compete at the **IPSC Boxing Tournament** in **weight categories** within age groups (Under-14, Under-17 and Under-19).
 - **Boxing Captain 2026–27:** **Viraj Singh**
-- **Master-in-charge:** the Autumn Term 2026 calendar doesn't name one for boxing. The Sports Department can tell you who coaches it (the Director of Sports is **Mr Inderjit Singh**).`,s:['sportsyear','weekly2455','weekly2446','leaders'],r:['Who is the boxing captain?','What sports are played at Doon?','How does inter-house sport work?']},
+- **Master-in-charge:** **Mr Sudhir Thapa** (SRT), who teaches Mathematics and is Housemaster of Hyderabad House.`,s:['sportsyear','weekly2455','weekly2446','leaders'],r:['Who is the boxing captain?','What sports are played at Doon?','How does inter-house sport work?']},
 
 
   {id:'sportstars',t:'Sporting achievements',k:'achievement national state medal olympic abhinav bindra champion represent',q:['What have Doon sportsmen achieved?'],
@@ -1581,7 +1581,7 @@ House staff:
 
 Ask about any set of initials, for example “Who is SKD?”`,s:['calendar'],r:['Who are the housemasters?','Who are the masters-in-charge of activities?']},
 
-  {id:'mic',t:'Masters-in-charge of societies, activities and sports',k:'masterincharge mic incharge charge coach coaches running runs activity activities society societies adventure club mun model united nations public speaking art computers music robotics athletics basketball cricket football swimming tennis',q:['Who are the masters-in-charge of activities?','Who coaches football?','Who is in charge of cricket?','Who runs the Adventure Club?','Who is in charge of Model United Nations?'],
+  {id:'mic',t:'Masters-in-charge of societies, activities and sports',k:'masterincharge mic incharge charge coach coaches running runs activity activities society societies adventure club mun model united nations public speaking art computers music robotics athletics basketball cricket football swimming tennis squash chess table tennis boxing',q:['Who are the masters-in-charge of activities?','Who coaches football?','Who is in charge of cricket?','Who runs the Adventure Club?','Who is in charge of Model United Nations?'],
    a:`Masters-in-charge this term, by their initials:
 
 **Societies**
@@ -1601,7 +1601,11 @@ Ask about any set of initials, for example “Who is SKD?”`,s:['calendar'],r:[
 - Cricket: MPT (Mr Manish Kant Pant), PTV (Mr Pratyush Vaishnav), ATI
 - Football: DSI, KBT (Mr Keshav Bhatt)
 - Swimming: RHS (Ms Ruchi Sahni), NLB, SHB
-- Tennis: DKM, ADN`,s:['calendar'],r:['What do teachers’ initials stand for?','What sports are played at Doon?']},
+- Tennis: DKM, ADN
+- Squash: RSL (Mr Rajat Sabharwal), ADJ (Anshu Dhar Jayal)
+- Chess: SHA (Mr Syed Mohd Hasan Ahtesham)
+- Table Tennis: SSW (Mr Srinavas Swamy)
+- Boxing: SRT (Mr Sudhir Thapa)`,s:['calendar'],r:['What do teachers’ initials stand for?','What sports are played at Doon?']},
 
   {id:'calendar',t:'Autumn Term 2026 calendar',k:'calendar dates date schedule term autumn 2026 begin begins start starts end ends vacation vacations holiday holidays winter break leave go going home events event chess tournament young entrepreneurs conference yec admission independence mun conference chuckerbutty memorial debates debate trials midyear pre-board preboard pre board',q:['What are the important dates this term?','When are the exams this term?','When does the Autumn Term begin?','When do winter vacations start?','When is the MUN conference?','When are the Chuckerbutty Debates?','When are the pre-boards?'],
    a:`Important dates for the **Autumn Term 2026**:
@@ -2066,7 +2070,7 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
     if(next.length) out+='**Coming up next:**\n'+next.map(c=>{ const n=Math.round((dOf(c[0])-t)/864e5); return `- **${fmt(c[0],c[1])}:** ${c[2]} (${n===1?'tomorrow':'in '+n+' days'})`; }).join('\n');
     return out+`\n\nSource: Autumn Term 2026 Calendar\n\nFOLLOWUPS: What are the important dates this term? | When do winter vacations start?`;
   }
-  const STAFFI={RHS:['Ms Ruchi Sahni','teaches Biology and is Housemaster of Foot House'],JRB:['Mr Justin Rahul Burrett','teaches English and is Assistant Housemaster of Foot House'],NRT:['Ms Neha Rawat','teaches Spanish and is a master in Foot House'],
+  const STAFFI={ADJ:['Anshu Dhar Jayal','is a master at Doon'],SHA:['Mr Syed Mohd Hasan Ahtesham','is a master at Doon'],SSW:['Mr Srinavas Swamy','is a master at Doon'],RHS:['Ms Ruchi Sahni','teaches Biology and is Housemaster of Foot House'],JRB:['Mr Justin Rahul Burrett','teaches English and is Assistant Housemaster of Foot House'],NRT:['Ms Neha Rawat','teaches Spanish and is a master in Foot House'],
     SRT:['Mr Sudhir Thapa','teaches Mathematics and is Housemaster of Hyderabad House'],HGT:['Mr Harshal Gunwant','teaches Computer Science and is Assistant Housemaster of Hyderabad House'],
     PTV:['Mr Pratyush Vaishnav','teaches History and is Housemaster of Jaipur House'],KBT:['Mr Keshav Bhatt','teaches History and is Assistant Housemaster of Jaipur House'],
     MPT:['Mr Manish Kant Pant','teaches Chemistry and is Housemaster of Kashmir House'],SAS:['Mr Satya Shrava Sharma','teaches Hindi and is Assistant Housemaster of Kashmir House'],
@@ -2074,11 +2078,11 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
     VSM:['Mr Vishal Mohla','teaches Computer Science and is Housemaster of Oberoi House'],ARJ:['Dr Ankur Joshi','teaches Biology and is Assistant Housemaster of Oberoi House'],
     PKR:['Mr Parvinder Kumar','teaches Physics and is Housemaster of Tata House'],JTR:['Mr Jitendra Tiwari','teaches Physical Education and is Assistant Housemaster of Tata House'],KNS:['Ms Kanchan Shukla','is the Dame of Foot House']};
   const MICL=[['Adventure Club','MMR DSI'],['Model United Nations','RDG MTG ADS'],['Public Speaking','NAS'],['Art','ARM'],['Computers','VSM SHM'],['Music','PRY ASA ARK SDS'],['Robotics','ATI'],
-    ['Athletics','IDS MIA'],['Basketball','JTR ADN'],['Cricket','MPT PTV ATI'],['Football','DSI KBT'],['Swimming','RHS NLB SHB'],['Tennis','DKM ADN']];
+    ['Athletics','IDS MIA'],['Basketball','JTR ADN'],['Cricket','MPT PTV ATI'],['Football','DSI KBT'],['Swimming','RHS NLB SHB'],['Tennis','DKM ADN'],['Squash','RSL ADJ'],['Chess','SHA'],['Table Tennis','SSW'],['Boxing','SRT']];
   const MICI={}; MICL.forEach(([a,ii])=>ii.split(' ').forEach(i=>(MICI[i]=MICI[i]||[]).push(a)));
   const MICK={'Adventure Club':['adventure club','adventure'],'Model United Nations':['model united nations','model un','mun'],'Public Speaking':['public speaking','debating','debate'],'Art':['art','arts'],
     'Computers':['computers','computer','computing'],'Music':['music'],'Robotics':['robotics'],'Athletics':['athletics','athletic','track and field','track'],'Basketball':['basketball'],
-    'Cricket':['cricket'],'Football':['football','soccer'],'Swimming':['swimming','swim','pool'],'Tennis':['tennis','lawn tennis']};
+    'Cricket':['cricket'],'Football':['football','soccer'],'Swimming':['swimming','swim','pool'],'Tennis':['tennis','lawn tennis'],'Squash':['squash'],'Chess':['chess'],'Table Tennis':['table tennis','tt','ping pong'],'Boxing':['boxing','boxer','boxers']};
   const MIC_STU={'Music':'Music Captain','Model United Nations':'MUN President','Computers':'Computers','Art':'Art','Robotics':'Robotics','Public Speaking':'Public Speaking','Adventure Club':'Adventure Club'};
   function micAnswer(q){
     const ql=' '+q.toLowerCase().replace(/&/g,' and ').replace(/[^a-z\s]/g,' ').replace(/\s+/g,' ')+' ';
