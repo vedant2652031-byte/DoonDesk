@@ -1010,6 +1010,9 @@ Rules:
     houses:['House Life','https://www.doonschool.com/pastoral-care/house-life/'],
     martyn:['Martyn House','https://www.doonschool.com/pastoral-care/house-life/martyn-house/'],
     sports:['Sports','https://www.doonschool.com/academic-life/departments/sports/'],
+    sportsyear:['School website: Sports at Doon','https://www.doonschool.com/?p=29669'],
+    weekly2455:['The Doon School Weekly, Issue 2455','https://www.doonschool.com/wp-content/uploads/2016/12/2455.pdf'],
+    weekly2446:['The Doon School Weekly, Issue 2446','https://www.doonschool.com/wp-content/uploads/2016/09/2446-The-Doon-School-Weekly.pdf'],
     activities:['Activities and Outdoor Pursuits','https://www.doonschool.com/life-at-doon/activities-and-outdoor-pursuits/'],
     service:['Service','https://www.doonschool.com/life-at-doon/service/'],
     oldboys:['Old Boys','https://www.doonschool.com/alumni/old-boys/'],
@@ -1292,7 +1295,15 @@ Between 2021 and 2025, Doscos received offers from more than 150 US universities
 - **No inter-school competition:** golf, triathlon, rock climbing and padel
 - The school counts **golf** and **cycling** as activities, and **chess** happens in activity time rather than sports time.
 
-Every year group has daily PE, coached by qualified sports staff and professional coaches. Teams play inter-house, inter-school, IPSC and district-to-national fixtures.`,s:['guide','sports','profile'],r:['How do the inter-house cups work?','What is in the Sports Complex?']},
+Every year group has daily PE, coached by qualified sports staff and professional coaches. Teams play inter-house, inter-school, IPSC and district-to-national fixtures.`,s:['guide','sports','profile'],r:['How do the inter-house cups work?','What is in the Sports Complex?','Tell me about boxing at Doon']},
+
+  {id:'boxing',t:'Boxing at Doon',k:'boxing boxer boxers box ring gloves bout bouts punch weight category categories ipsc boxing tournament',q:['Is there boxing at Doon?','Tell me about boxing at Doon','Is there inter-house boxing?','Do Doon boys box against other schools?'],
+   a:`Yes. **Boxing** is one of Doon's **year-round sports**.
+
+- **Inter-house:** the houses compete in an **inter-house boxing** competition. The school Weekly reports it with the term's other inter-house events, such as basketball, tennis, squash and badminton. In 2016 it was held late in the Autumn Term, just before exam week.
+- **Inter-school:** Doon boxers compete at the **IPSC Boxing Tournament** in **weight categories** within age groups (Under-14, Under-17 and Under-19).
+- **Boxing Captain 2026–27:** **Viraj Singh**
+- **Master-in-charge:** the Autumn Term 2026 calendar doesn't name one for boxing. The Sports Department can tell you who coaches it (the Director of Sports is **Mr Inderjit Singh**).`,s:['sportsyear','weekly2455','weekly2446','leaders'],r:['Who is the boxing captain?','What sports are played at Doon?','How does inter-house sport work?']},
 
 
   {id:'sportstars',t:'Sporting achievements',k:'achievement national state medal olympic abhinav bindra champion represent',q:['What have Doon sportsmen achieved?'],
@@ -2078,7 +2089,17 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
       if(k==='tennis' && / table tennis /.test(ql)) continue;
       if(ql.includes(' '+k+' ') && k.length>bl){ best=a; bl=k.length; }
     }
-    if(!best) return null;
+    if(!best){
+      // A sport with a captain but no master-in-charge in the calendar: say so honestly
+      const sg=LEAD.groups.find(g=>g.id==='sportscaptains'); let sp=null, sl=0;
+      if(sg) for(const it of sg.items) for(const k of it[3]||[]){
+        if(k==='gym'||k==='pt') continue;
+        if(ql.includes(' '+k+' ') && k.length>sl){ sp=it; sl=k.length; }
+      }
+      if(!sp) return null;
+      const nm=sp[2].map(n=>'**'+n+'**').join(' and ');
+      return `The Autumn Term 2026 calendar doesn't name a master-in-charge for **${sp[0]}**.\n\nThe **${sp[1]}** for 2026–27 ${sp[2].length>1?'are':'is'} ${nm}. The Sports Department can tell you who coaches it; the Director of Sports is **Mr Inderjit Singh**.\n\nSource: Autumn Term 2026 Calendar\n\nFOLLOWUPS: Who are the masters-in-charge of activities? | Who are the sports captains?`;
+    }
     const ii=MICL.find(x=>x[0]===best)[1].split(' ');
     const who=ii.map(i=>STAFFI[i]?`**${STAFFI[i][0]}** (${i})`:`**${i}**`);
     const list=who.length===1?who[0]:who.slice(0,-1).join(', ')+' and '+who[who.length-1];
