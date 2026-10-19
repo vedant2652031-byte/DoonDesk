@@ -703,7 +703,8 @@ body.chatting .bubbles{opacity:.55}
 .vz-agescale i{position:absolute;top:3px;transform:translateX(-50%);font-style:normal;font-size:11px;color:var(--fg-3)}
 .vz-band{position:absolute;top:6px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;background:linear-gradient(180deg,rgba(74,168,255,.55),rgba(10,92,255,.45));box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
 .vz-band.b2{background:linear-gradient(180deg,rgba(100,210,255,.45),rgba(30,59,255,.45))}
-.vz-band b{margin-right:4px}
+.vz-band{white-space:nowrap;overflow:hidden}
+@media (max-width:720px){ .vz-band span{display:none} }
 /* forms */
 .vz-ladder{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;align-items:end}
 .vz-ladder li{display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px;border-radius:12px;text-align:center;background:linear-gradient(180deg,rgba(74,168,255,.32),rgba(10,92,255,.12));box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);min-height:calc(64px + var(--i)*12px);justify-content:flex-end;animation:riseIn .6s var(--ease) backwards;animation-delay:calc(var(--i)*.06s)}
@@ -2734,8 +2735,8 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
       <h4 class="vz-h vz-h2">Who can apply</h4>
       <div class="vz-age" role="img" aria-label="Age bands: Class 7 for boys aged 11 to 12, Class 8 for boys aged 12 to 13">
         <div class="vz-agescale"><i style="left:0">10</i><i style="left:25%">11</i><i style="left:50%">12</i><i style="left:75%">13</i><i style="left:100%">14</i></div>
-        <div class="vz-band" style="left:25%;width:25%"><b>Class 7</b> (D Form)</div>
-        <div class="vz-band b2" style="left:50%;width:25%"><b>Class 8</b> (C Form)</div>
+        <div class="vz-band" style="left:25%;width:25%"><b>Class 7</b><span>&nbsp;(D Form)</span></div>
+        <div class="vz-band b2" style="left:50%;width:25%"><b>Class 8</b><span>&nbsp;(C Form)</span></div>
       </div>
       <p class="vz-note">Age is counted as of September of the year of the entrance exam. Dates and centres change every year, so confirm them with the Admissions Office.</p>
       ${vfoot('Sources: '+srcA('process')+' · '+srcA('faq')+' · '+srcA('tests')+' · '+srcA('calendar'))}</section>`;
