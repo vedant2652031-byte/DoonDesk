@@ -3091,7 +3091,14 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
   function lastUserQ(){ for(let i=turns.length-1;i>=0;i--) if(turns[i].role==='user') return turns[i].content; return ''; }
 
   /* ───────── Gemini AI (a key saved on this device, or a shared proxy) ───────── */
-  const GEMINI_PROXY='';   // set to your Cloudflare Worker URL to turn AI on for every visitor
+  // Shared AI for every visitor: a Vercel Function (api/gemini.mjs) adds the key on the server.
+  // It only switches on once GEMINI_KEY has been added in Vercel; until then the site works as before.
+  const GEMINI_PROXY_URL=(()=>{ try{ const hn=location.hostname; if(hn==='doondesk.vercel.app') return '/api/gemini'; if(hn==='vedant2652031-byte.github.io') return 'https://doondesk.vercel.app/api/gemini'; }catch(e){} return ''; })();
+  let GEMINI_PROXY='';
+  const SHARED_DAILY=15;   // AI questions per device per day on the shared connection
+  const sharedLeft=()=>{ try{ const d=JSON.parse(localStorage.getItem('doondesk-shared-ai')||'{}'); return d.day===new Date().toDateString()?SHARED_DAILY-(d.n||0):SHARED_DAILY; }catch(e){ return SHARED_DAILY; } };
+  const sharedUse=()=>{ try{ const day=new Date().toDateString(); const d=JSON.parse(localStorage.getItem('doondesk-shared-ai')||'{}'); localStorage.setItem('doondesk-shared-ai',JSON.stringify({day,n:(d.day===day?(d.n||0):0)+1})); }catch(e){} };
+  if(GEMINI_PROXY_URL) fetch(GEMINI_PROXY_URL,{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{ if(j&&j.ready){ GEMINI_PROXY=GEMINI_PROXY_URL; window.__aiSync&&window.__aiSync(); } }).catch(()=>{});
   const GEM_KEY_LS='doondesk-gemini-key';
   const GEM_MODELS=[
     ['gemini-flash-latest','Gemini Flash'],
@@ -3126,7 +3133,7 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
     for(const model of list){
       if(tried && onSwitch) onSwitch(gemName(model), lastErr);
       tried++;
-      const body={systemInstruction:{parts:[{text:system}]},contents,generationConfig:{temperature:.4,maxOutputTokens:4096}};
+      const body={systemInstruction:{parts:[{text:system}]},contents,generationConfig:{temperature:.4,maxOutputTokens:gemKey?4096:2048}};
       let res;
       try{
         if(gemKey) res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse`,{method:'POST',signal,headers:{'Content-Type':'application/json','x-goog-api-key':gemKey},body:JSON.stringify(body)});
@@ -3135,6 +3142,7 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
       if(!res.ok){
         let msg='', retry=0; try{ const j=await res.json(); const er=j.error||{}; msg=er.message||''; (er.details||[]).forEach(dt=>{ if(dt.retryDelay) retry=Math.ceil(parseFloat(dt.retryDelay)*1000)+1500; if(dt.violations) msg+=' '+JSON.stringify(dt.violations); }); }catch(e){}
         const err={status:res.status,message:msg,retry,model};
+        if(!gemKey && (res.status===501||res.status===403)){ GEMINI_PROXY=''; window.__aiSync&&window.__aiSync(); throw {status:501,silent:true}; }
         if(res.status===429){ gemRest[model]=Date.now()+restFor(err); saveRest(); lastErr=err; sawLimit=true; continue; }
         if(res.status===404 || res.status===500 || res.status===503 || res.status===504 || (res.status===400 && /model|not found|not supported/i.test(msg) && !/api key/i.test(msg))){
           if(res.status===404||res.status===400){ gemRest[model]=Date.now()+6*3600e3; saveRest(); } else { gemRest[model]=Date.now()+30000; }
@@ -3193,7 +3201,10 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
       let finThink=null, gemNote='';
       const quickOnly=local.hit && /^(greet|thanks)$/.test(local.hit.id);
       if(!sample && (gemKey||GEMINI_PROXY) && !gemOn() && !quickOnly && Date.now()>(window.__gemNoteAt||0)){ window.__gemNoteAt=Date.now()+5*60000; gemNote=gemErrText({status:429,allBusyUntil:gemDown}); }
-      if(!sample && gemOn() && !quickOnly){
+      const shared=!gemKey && !!GEMINI_PROXY;
+      const useAI=!sample && gemOn() && !quickOnly && !(shared && (local.hit || sharedLeft()<=0));
+      if(useAI){
+        if(shared) sharedUse();
         const {res}=rank(q, prevQ);
         const rel=res.filter(x=>x.score>.8).slice(0,8);
         const steps=['Searching the school notes', rel.length?`Found related notes: ${rel.slice(0,3).map(x=>'**'+x.e.t+'**').join(', ')}${rel.length>3?' and more':''}`:'No close notes found, so the AI will say what it doesn’t know'];
@@ -3217,7 +3228,7 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
           if(ctl.signal.aborted && !timedOut) throw {code:'cancelled'};
           if(e&&(e.status===401||e.status===403||(e.status===400&&/api key/i.test(e.message||'')))) gemDown=Date.now()+60000;
           if(e&&e.status===429&&e.allBusyUntil) gemDown=e.allBusyUntil;
-          gemNote=timedOut?'Gemini took too long, so here’s the answer from the school notes.':gemErrText(e);
+          gemNote=e&&e.silent?'':timedOut?'Gemini took too long, so here’s the answer from the school notes.':gemErrText(e);
           text=null; if(finThink){ finThink(); finThink=null; }
         }finally{ clearTimeout(timer); ctl.signal.removeEventListener('abort',onAbort); }
       }
@@ -3687,7 +3698,7 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
       chip.classList.toggle('on',on); lab.textContent=on?'Gemini on':'Connect AI';
       chip.setAttribute('aria-label',on?'Gemini AI is on. Open AI settings':'Connect Gemini AI');
       st.innerHTML=gemKey?'<b>Gemini is on</b> on this device. It answers using DoonDesk’s school notes, and falls back to the notes if Gemini is busy.'
-        :GEMINI_PROXY?'<b>Gemini is on for everyone</b> through DoonDesk’s shared connection. You can also add your own key to use your own free allowance.'
+        :GEMINI_PROXY?'<b>Gemini is on for everyone</b> through DoonDesk’s shared connection. DoonDesk answers from its school notes first and asks Gemini only when the notes don’t cover a question (up to '+SHARED_DAILY+' a day on each device). Add your own key to use Gemini for every question.'
         :'DoonDesk answers from its school notes. Add a free <b>Gemini API key</b> to let an AI read those notes and answer in its own words, follow up naturally and handle trickier questions.';
       rm.hidden=!gemKey; keyI.value=gemKey?'••••••••'+gemKey.slice(-4):'';
     }
@@ -3716,6 +3727,7 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
           :'Couldn’t reach Gemini. Check your internet connection and try again.';
       }finally{ saveB.disabled=false; saveB.textContent='Save and test'; }
     });
+    window.__aiSync=sync;
     rm.onclick=()=>{ gemKey=''; try{ localStorage.removeItem(GEM_KEY_LS); }catch(e){} msg.className='auth-msg ok'; msg.textContent='Key removed from this device.'; sync(); };
     sync();
   })();

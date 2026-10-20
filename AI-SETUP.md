@@ -13,9 +13,35 @@ There are two ways to connect it.
 
 The key stays in that browser only. Other visitors still get the built-in answers.
 
-## Option 2: For every visitor (about 10 minutes, free)
+## Option 2: For every visitor, on Vercel (5 minutes, free) ← recommended
 
-This uses a free **Cloudflare Worker**: a tiny program that sits between DoonDesk and Google and keeps your key hidden.
+DoonDesk's Vercel site includes a small server function, [`api/gemini.mjs`](api/gemini.mjs), that adds your key on the server. Visitors never see the key, and nobody has to type anything.
+
+1. Go to [vercel.com](https://vercel.com) and open the **doondesk** project.
+2. Open **Settings** → **Environment Variables**.
+3. Add a variable:
+   - **Key:** `GEMINI_KEY`
+   - **Value:** your Gemini API key
+   - **Environments:** Production (you can tick all three)
+   - Click **Save**.
+4. Open **Deployments**, click **⋯** on the top deployment and choose **Redeploy**. The key only takes effect after a redeploy.
+
+That's it. The ✦ button now shows **Gemini on** for everyone, on both doondesk.vercel.app and the GitHub Pages site. To switch it off, delete the variable and redeploy.
+
+### How it saves the free allowance
+
+Google's free limits are **per project**, shared by every visitor, so the shared connection is careful with them:
+
+- Questions DoonDesk's notes already answer get the instant built-in answer. Gemini is only asked when the notes don't cover a question.
+- Each device can ask Gemini up to **15** questions a day on the shared connection; after that it uses the built-in answers.
+- When a model's limit runs out, DoonDesk moves to the next free model, then to the built-in answers. Daily limits reset at midnight Pacific time (about 1:30 pm in India).
+- The function only accepts requests from the DoonDesk websites, only for the free Flash and Flash-Lite models, and caps the length of answers.
+
+For a big event, check your limits at [aistudio.google.com/rate-limit](https://aistudio.google.com/rate-limit). Turning on billing for the Google project raises the limits a lot.
+
+## Option 3: Cloudflare Worker (older alternative)
+
+This does the same job on Cloudflare instead of Vercel.
 
 1. **Create a Cloudflare account** at [dash.cloudflare.com/sign-up](https://dash.cloudflare.com/sign-up) (free plan).
 2. In the dashboard, open **Workers & Pages** → **Create** → **Create Worker**. Name it `doondesk-ai` and click **Deploy**.
