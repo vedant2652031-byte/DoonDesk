@@ -88,7 +88,9 @@ export default {
     const ts = terms(q);
     if (!ts.length) return json(200, { q, terms: ts, results: [] }, 'public, s-maxage=86400');
 
-    const [school, wiki] = await Promise.all([fromSchool(ts).catch(() => []), fromWikipedia(ts).catch(() => [])]);
+    const errs = [];
+    const [school, wiki] = await Promise.all([fromSchool(ts).catch(e => { errs.push('school: ' + e.message); return []; }), fromWikipedia(ts).catch(e => { errs.push('wiki: ' + e.message); return []; })]);
+    if (new URL(request.url).searchParams.get('debug') === '1') return json(200, { q, terms: ts, results: [...school, ...wiki], errs });
     const results = [...school, ...wiki].slice(0, 5);
     // Cached at Vercel's edge for a day, so repeated questions don't search again.
     return json(200, { q, terms: ts, results }, 'public, s-maxage=86400, stale-while-revalidate=604800');
