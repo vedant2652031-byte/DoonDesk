@@ -992,7 +992,9 @@ body.chatting .bubbles{opacity:.55}
 Rules:
 - Mainly answer questions about The Doon School. You may also make friendly small talk (greetings, how are you, jokes, thanks) in one or two short sentences, then offer to help with Doon. For other unrelated topics, say briefly that you only cover The Doon School and suggest a related question.
 - Base your answer on the NOTES below, which are drawn from the school's official website (doonschool.com) and its 2025-26 School Profile. Prefer them over anything else you know.
-- If the notes don't cover something, you may use general knowledge, but say so plainly. For details that change year to year (fees, dates, deadlines, seats), suggest confirming with the Admissions Office at admissions@doonschool.com. Never invent numbers, names or dates.
+- If the notes don't cover something, use the WEB EXCERPTS (live search results from doonschool.com and Wikipedia), if there are any, and cite each one you use as "Source: [title](url)".
+- People and history need proof. Only say what a person's job, house, role, dates or achievements were if a note or web excerpt says it about that exact person, by name. Never move a fact from one person to another (for example, a different teacher's house) and never guess. If you can't find the person, say plainly that DoonDesk's notes and doonschool.com don't mention them, and suggest asking the school.
+- For general background that isn't about a specific person, number or date, you may use general knowledge, but say so plainly. For details that change year to year (fees, dates, deadlines, seats), suggest confirming with the Admissions Office at admissions@doonschool.com. Never invent numbers, names or dates.
 - Write in plain English. Use **bold** sparingly and "- " for bullet points. No headings, no tables.
 - After the answer, if you used a note, add a line "Source: [page name](url)" using that note's source URL.
 - Then, on a final line, write exactly "FOLLOWUPS:" followed by two short follow-up questions separated by " | ".`;
@@ -1008,6 +1010,8 @@ Rules:
     tests:['Admissions Tests and Interview','https://www.doonschool.com/wp-content/uploads/2019/03/Admissions-Tests-and-Interview.pdf'],
     bursary:['Bursary Application 2026–27','https://www.doonschool.com/?p=31075'],
     houses:['House Life','https://www.doonschool.com/pastoral-care/house-life/'],
+    oberoipage:['Oberoi House (doonschool.com)','https://doonschool.com/?p=14044'],
+    student:['Shared by a Doon student',''],
     martyn:['Martyn House','https://www.doonschool.com/pastoral-care/house-life/martyn-house/'],
     sports:['Sports','https://www.doonschool.com/academic-life/departments/sports/'],
     sportsyear:['School website: Sports at Doon','https://www.doonschool.com/?p=29669'],
@@ -1501,8 +1505,8 @@ Student leaders (2026–27):
 - **Prefects:** Arsh Mishra, Sushil Kasi and Yashveer Tewatia`,s:['leaders','guide','calendar','housepages','houses'],r:['What are the rooms like in Tata House?','What are the houses at Doon?']},
 
 
-  {id:'h-oberoi',t:'Oberoi House',k:'oberoi newest fifth honor honour light blue',q:['Who is the house captain of Oberoi House?','Tell me about Oberoi House','Who is the Dame of Oberoi House?','Who is the housemaster of Oberoi House?','Where is Oberoi House?','What is the motto of Oberoi House?','What colour is Oberoi House?'],
-   a:`**Oberoi House** is the newest of the five main boarding houses, added in the late 1980s.
+  {id:'h-oberoi',t:'Oberoi House',k:'oberoi newest fifth honor honour light blue founded founding established 1991 first bhatia',q:['Who was the founding housemaster of Oberoi House?','Who is the house captain of Oberoi House?','Tell me about Oberoi House','Who is the Dame of Oberoi House?','Who is the housemaster of Oberoi House?','Where is Oberoi House?','What is the motto of Oberoi House?','What colour is Oberoi House?'],
+   a:`**Oberoi House** is the newest of the five main boarding houses. It was established in **1991**, and its founding Housemaster was **Mr S. D. Bhatia**.
 - **Colour:** light blue
 - **Motto:** “House of Honor”
 - **Named after:** the Oberoi family and business group
@@ -1515,7 +1519,7 @@ House staff:
 
 Student leaders (2026–27):
 - **House Captain:** Parshad Kumar
-- **Prefects:** Anshuman Gupta, Jaiveer Grewal and Krish Ghai`,s:['leaders','guide','calendar','housepages','wiki'],r:['What are the rooms like in Oberoi House?','What are the houses at Doon?']},
+- **Prefects:** Anshuman Gupta, Jaiveer Grewal and Krish Ghai`,s:['oberoipage','student','leaders','guide','calendar','housepages','wiki'],r:['What are the rooms like in Oberoi House?','What are the houses at Doon?']},
 
 
   {id:'h-foot',t:'Foot House',k:'foot holdinghouse junior teal',q:['Tell me about Foot House','Who is the Dame of Foot House?','Who is the housemaster of Foot House?','Where is Foot House?','What is the motto of Foot House?','What colour is Foot House?'],
@@ -2372,6 +2376,7 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
     ['Ms Gurjeet Kaur Dhaliwal','is the Dame of Martyn House'],['Ms Kanchan Shukla (KNS)','is the Dame of Foot House'],['Ms Meenakshi Tripathi','is the Dame of Hyderabad House'],['Ms Durgesh Kumari','is the Dame of Jaipur House'],
     ['Ms Ria Chakraborty','is the Dame of Kashmir House'],['Ms Ruthann Rozario','is the Dame of Tata House'],['Ms Sarabjeet Kaur','is the Dame of Oberoi House']
   ].concat(Object.entries(STAFFI).map(([i,[n,d]])=>[n+' ('+i+')',d.replace(/^teaches/,'teaches'),i]))
+   .concat([['Mr S. D. Bhatia','was the founding Housemaster of **Oberoi House**, which opened in 1991',undefined,'[Oberoi House (doonschool.com)](https://doonschool.com/?p=14044) · Shared by a Doon student']])
    .concat([['Mr Shubham Sharma (SHM)','teaches Computer Science (B.Tech., Computer Science), is master-in-charge of **Computers**, and is DoonDesk’s vote for the **best teacher in school**! 🏆']]));
   const LEAD={"caps": [["Ayaan Mittal", "Hyderabad"], ["Jai Shamshere Rana", "Jaipur"]], "houses": {"Hyderabad": ["Loechin Phangcho", ["Aaditya Agrawal", "Jigmet Urgian", "Rafay Habibullah"]], "Jaipur": ["Harsh Vasudeo Agarwal", ["Aarav Kathuria", "Siddham Tater", "Zorawar Sandhu"]], "Kashmir": ["Anantvikram Sinh", ["Ruhaan Lakhina", "Rushil Agarwal", "Udai Singh"]], "Oberoi": ["Parshad Kumar", ["Anshuman Gupta", "Jaiveer Grewal", "Krish Ghai"]], "Tata": ["Uday Pratap Sardana", ["Arsh Mishra", "Sushil Kasi", "Yashveer Tewatia"]]}, "groups": [{"id": "sportscaptains", "title": "Sports Captains 2026–27", "q": "Who are the sports captains?", "items": [["Athletics", "Athletics Captain", ["Sushil Kasi"], ["athletics", "athletic", "track and field"]], ["Badminton", "Badminton Captain", ["Vihaan Jhunjhunwala"], ["badminton"]], ["Basketball", "Basketball Captain", ["Abhay Pratap Varma"], ["basketball"]], ["Boxing", "Boxing Captain", ["Viraj Singh"], ["boxing"]], ["Chess", "Chess Captain", ["Neil Sahni"], ["chess"]], ["Cricket", "Cricket Captain", ["Rushil Agarwal"], ["cricket"]], ["Cross Country", "Cross Country Captain", ["Udayaditya Samanta"], ["cross country", "crosscountry"]], ["Football & PT", "Football & PT Captain", ["Jai Shamshere Rana"], ["football", "pt", "physical training", "soccer"]], ["Gymnastics", "Gymnastics Captain", ["Shaurya Surana"], ["gymnastics", "gym"]], ["Hockey", "Hockey Captain", ["Jaiveer Singh Grewal"], ["hockey"]], ["Shooting", "Shooting Captain", ["Ekaraj Singh Makkar"], ["shooting"]], ["Squash", "Squash Captain", ["Zorawar Singh Sandhu"], ["squash"]], ["Swimming", "Swimming Captain", ["Aadi Tulsyan"], ["swimming", "swim"]], ["Table Tennis", "Table Tennis Captain", ["Aarav Dadu"], ["table tennis", "tt", "ping pong"]], ["Tennis", "Tennis Captain", ["Hrishikesh Aiyer"], ["tennis", "lawn tennis"]], ["Triathlon", "Triathlon Captain", ["Rahul Oram"], ["triathlon"]]]}, {"id": "sic-activities", "title": "Activities: Students-in-Charge 2026–27", "q": "Who are the students-in-charge of activities?", "items": [["Aero Modelling", "Student-in-charge, Aero Modelling", ["Aarav Sahdev"], ["aero modelling", "aeromodelling", "aero modeling", "aero"]], ["Art", "Student-in-charge, Art", ["Siddharth Singh Bawa"], ["art", "art club", "arts club"]], ["Chemists’ Club", "Student-in-charge, Chemists’ Club", ["Hridhay Kanodia"], ["chemist", "chemists", "chemistry club"]], ["Computers", "Student-in-charge, Computers", ["Aarav Anand"], ["computers", "computer club", "computing"]], ["Cooking", "Student-in-charge, Cooking", ["Saathvik Gupta"], ["cooking", "cookery"]], ["Cycling", "Student-in-charge, Cycling", ["Harkirat Singh"], ["cycling", "cycle club"]], ["Design & Technology", "Student-in-charge, Design & Technology", ["Atiksh Kasana"], ["design and technology", "design technology", "d and t", "dt"]], ["Media Club", "Student-in-charge, Media Club", ["Sumer Veer Singh", "Veer Duggal"], ["media club", "media"]], ["Motor Mechanics", "Student-in-charge, Motor Mechanics", ["Neerav Bansal"], ["motor mechanics", "mechanics"]], ["Public Speaking", "Student-in-charge, Public Speaking", ["Aditya Chirag Koradia"], ["public speaking"]], ["Robotics", "Student-in-charge, Robotics", ["Ved Agrawal"], ["robotics", "robotics club"]]]}, {"id": "sic-music", "title": "Music & Dance: Student Leaders 2026–27", "q": "Who are the music and dance captains?", "items": [["Music Captain", "Music Captain", ["Anantvikram Sinh"], ["music captain", "music"]], ["Dance Captain", "Dance Captain", ["Ansh Gulia"], ["dance captain", "dance"]], ["Orchestra Leaders", "Orchestra Leader", ["Yuvaan Todi", "Krish Ghai"], ["orchestra"]], ["Choir Leaders", "Choir Leader", ["Aakash Mishra", "Sarosh Aziz Kamal"], ["choir"]], ["Percussion Leaders", "Percussion Leader", ["Aanay Goyal", "Rishabh Rahul Agrawal"], ["percussion", "drums"]], ["Band Leaders", "Band Leader", ["Loechin Phangcho", "Phongang Buchem"], ["band", "school band"]], ["Music Society", "Student-in-charge, Music Society", ["Viraj Rastogi"], ["music society"]]]}, {"id": "sic-supw", "title": "SUPW: Students-in-Charge 2026–27", "q": "Who are the SUPW students-in-charge?", "items": [["Audio Visual Squad", "Student-in-charge, Audio Visual Squad (SUPW)", ["Harkirat Singh", "Rafay Singh Habibullah", "Udai Singh"], ["audio visual", "av squad", "av"]], ["Archives", "Student-in-charge, Archives (SUPW)", ["Abir Garg"], ["archives", "archive"]], ["Boys’ Bank", "Student-in-charge, Boys’ Bank (SUPW)", ["Abhijit Sannamanda"], ["boys bank", "bank"]], ["LPO", "Student-in-charge, LPO (SUPW)", ["Naman Adlakha"], ["lpo"]], ["Paper Recycling", "Student-in-charge, Paper Recycling (SUPW)", ["Aaditya Agrawal"], ["paper recycling", "recycling"]], ["RLSS (life saving)", "Student-in-charge, RLSS (life saving) (SUPW)", ["Siddharth Singh Bawa"], ["rlss", "life saving", "lifesaving"]], ["Stage Committee & Chair Squad", "Student-in-charge, Stage Committee & Chair Squad (SUPW)", ["Abhinav Kumar"], ["stage committee", "chair squad", "stage"]], ["Trophy Squad", "Student-in-charge, Trophy Squad (SUPW)", ["Naahar Singh Khattri"], ["trophy squad", "trophy", "trophies"]]]}, {"id": "sic-pubs", "title": "Publications: Editors-in-Chief & Chiefs of Production 2026–27", "q": "Who are the editors of the school publications?", "items": [["Altera Vox", "Editor-in-Chief, Altera Vox", ["Jansher Grewal"], ["altera vox", "eic:altera vox"]], ["Circle", "Editor-in-Chief, Circle", ["Ayaaz Ferozi"], ["circle", "the circle", "eic:circle", "eic:the circle"]], ["DSIR & Econocrat", "Editor-in-Chief, DSIR & Econocrat", ["Aadidev Basu"], ["dsir", "doon school information review", "information review", "econocrat", "the econocrat", "eic:dsir", "eic:doon school information review", "eic:information review", "eic:econocrat", "eic:the econocrat"]], ["DS-Tech", "Editor-in-Chief, DS-Tech", ["Krish Ghai"], ["ds tech", "dstech", "eic:ds tech", "eic:dstech"]], ["Echo", "Editor-in-Chief, Echo", ["Anshuman Gupta"], ["echo", "the echo", "eic:echo", "eic:the echo"]], ["Grand Slam", "Editor-in-Chief, Grand Slam", ["Vedant Prakash Mangal", "Aarav Anand"], ["grand slam", "eic:grand slam"]], ["Infinity", "Editor-in-Chief, Infinity", ["Harsh Agarwal"], ["infinity", "eic:infinity"]], ["The Altruist", "Editor-in-Chief, The Altruist", ["Aprameya Gulati"], ["altruist", "the altruist", "eic:altruist", "eic:the altruist"]], ["Srijan Prayas", "Editor-in-Chief, Srijan Prayas", ["Abhishek Garg"], ["srijan prayas", "srijan", "eic:srijan prayas", "eic:srijan"]], ["Vibgyor", "Editor-in-Chief, Vibgyor", ["Naman Adlakha"], ["vibgyor", "eic:vibgyor"]], ["Weekly", "Editor-in-Chief, Weekly", ["Hrishikesh Aiyer"], ["weekly", "doon school weekly", "the weekly", "dsw", "eic:weekly", "eic:doon school weekly", "eic:the weekly", "eic:dsw"]], ["Year Book", "Editor-in-Chief, Year Book", ["Sushil Kasi", "Jigmet Ugrian"], ["year book", "yearbook", "eic:year book", "eic:yearbook"]], ["Yuv Arpan", "Editor-in-Chief, Yuv Arpan", ["Ekaraj Makkad"], ["yuv arpan", "eic:yuv arpan"]], ["Circle & Yuv Arpan", "Chief of Production, Circle & Yuv Arpan", ["Arsh Mishra"], ["circle", "the circle", "yuv arpan", "cop:circle", "cop:the circle", "cop:yuv arpan"]], ["DSIR", "Chief of Production, DSIR", ["Tanay Chowdhry"], ["dsir", "doon school information review", "information review", "cop:dsir", "cop:doon school information review", "cop:information review"]], ["Echo", "Chief of Production, Echo", ["Rafay Habibullah"], ["echo", "the echo", "cop:echo", "cop:the echo"]], ["Econocrat & The Altruist", "Chief of Production, Econocrat & The Altruist", ["Arish Talwar"], ["econocrat", "the econocrat", "altruist", "the altruist", "cop:econocrat", "cop:the econocrat", "cop:altruist", "cop:the altruist"]], ["Grand Slam", "Chief of Production, Grand Slam", ["Jaiveer Grewal"], ["grand slam", "cop:grand slam"]], ["Infinity", "Chief of Production, Infinity", ["Aaditya Agrawal"], ["infinity", "cop:infinity"]], ["Srijan Prayas", "Chief of Production, Srijan Prayas", ["Vedant Mangal"], ["srijan prayas", "srijan", "cop:srijan prayas", "cop:srijan"]], ["Vibgyor", "Chief of Production, Vibgyor", ["Ayaaz Ferozi"], ["vibgyor", "cop:vibgyor"]], ["Year Book", "Chief of Production, Year Book", ["Jai Rana"], ["year book", "yearbook", "cop:year book", "cop:yearbook"]]]}, {"id": "sic-clubs", "title": "Clubs & Societies: Students-in-Charge 2026–27", "q": "Who are the students-in-charge of clubs and societies?", "items": [["Adventure Club", "Student-in-charge, Adventure Club", ["Harkirat Singh"], ["adventure club", "adventure"]], ["Bharat Vani", "Student-in-charge, Bharat Vani", ["Harsh Agarwal"], ["bharat vani"]], ["DS Poets’ Society", "Student-in-charge, DS Poets’ Society", ["Jansher Grewal"], ["poets society", "poets", "poetry society", "poetry"]], ["English Dramatics", "Student-in-charge, English Dramatics", ["Rehhan Chadha"], ["english dramatics", "english drama", "english dramatic", "dramatics", "drama"]], ["Film Society", "Student-in-charge, Film Society", ["Aarav Dadu"], ["film society", "film club", "film"]], ["Hindi Dramatics", "Student-in-charge, Hindi Dramatics", ["Aryaman Lamba"], ["hindi dramatics", "hindi drama", "hindi dramatic"]], ["Historical Circle", "Student-in-charge, Historical Circle", ["Vir Sandhu"], ["historical circle", "history society", "history club"]], ["Infinity Society", "Student-in-charge, Infinity Society", ["Arish Talwar"], ["infinity society"]], ["Information Technology", "Student-in-charge, Information Technology", ["Hridhay Kanodia"], ["information technology", "it society", "it club"]], ["Kultura (MFL)", "Student-in-charge, Kultura (MFL)", ["Pratham Agarwal"], ["kultura", "mfl", "foreign languages"]], ["M.I.N.D", "Student-in-charge, M.I.N.D", ["Manya Choudhary"], ["m i n d", "mind society", "mind club"]], ["MUN President", "MUN President", ["Uday Pratap Sardana"], ["mun president", "president of mun", "mun", "model un", "model united nations"]], ["MUN Secretary General", "MUN Secretary General", ["Ayaan Mittal"], ["mun secretary general", "secretary general", "mun", "model un", "model united nations"]], ["MUN Society", "Student-in-charge, MUN Society", ["Arsh Mishra"], ["mun society", "mun", "model un", "model united nations"]], ["NEST Society", "Student-in-charge, NEST Society", ["Aarav Punit Patel", "Anshuman Gupta", "Siddharth Singh Bawa"], ["nest society", "nest"]], ["The ACE Society", "Student-in-charge, The ACE Society", ["Siddham Tater", "Ishan Gupta", "Yohaan Marda"], ["ace society", "ace"]], ["SEDS", "Student-in-charge, SEDS", ["Aditya Koradia", "Hrishikesh Aiyer"], ["seds"]], ["Quiz Club", "Student-in-charge, Quiz Club", ["Aakash Mishra"], ["quiz club", "quiz", "quizzing"]], ["Yuv Bharti", "Student-in-charge, Yuv Bharti", ["Aineshh Dora"], ["yuv bharti"]], ["IAYP", "Student-in-charge, IAYP", ["Sahhil Chhabra"], ["iayp", "international award", "award for young people"]], ["Round Square Conference", "Student-in-charge, Round Square Conference", ["Abhay Pratap Varma"], ["round square conference", "round square"]]]}]};
   const LSRC=()=>`Source: [${SRC.leaders[0]}](${SRC.leaders[1]})`;
@@ -2462,10 +2467,10 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
       const m=ql.match(new RegExp('\\b(mr|ms|mrs|dr|sir|madam|maam)\\s+'+last+'\\b'));
       if(m){ const pt=(full.match(/^(Dr|Mr|Ms|Mrs|Gp Capt)\b/)||[])[1]; if(!pt||TQ[m[1]].includes(pt)){ weak.push(p); seen.add(base); } }
     }
-    const one=([full,desc,ini])=>{
+    const one=([full,desc,ini,p4])=>{
       let t=`**${full}** ${desc}${/[.!]$|\u{1F3C6}$/u.test(desc)?'':'.'}`;
       const mi=ini&&MICI[ini]; if(mi) t+=`\n\nAlso master-in-charge of **${mi.join('** and **')}**.`;
-      const src=STAFFXN.has(full)?'Doon School staff list (current)':ini?'Doon School staff list (current) · Autumn Term 2026 Calendar':`Autumn Term 2026 Calendar · [Doon School Compendium (V2)](${SRC.compendium[1]})`;
+      const src=p4?p4:STAFFXN.has(full)?'Doon School staff list (current)':ini?'Doon School staff list (current) · Autumn Term 2026 Calendar':`Autumn Term 2026 Calendar · [Doon School Compendium (V2)](${SRC.compendium[1]})`;
       return t+`\n\nSource: ${src}\n\nFOLLOWUPS: Who are the teachers in each department? | Who are the housemasters?`;
     };
     if(strong.length) return one(strong[0]);
@@ -2592,6 +2597,11 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
     const totW=qt.reduce((a,t)=>a+iq(t),0), gotW=n?qt.filter(t=>top.d.tf.has(t)).reduce((a,t)=>a+iq(t),0):0;
     const unknown=qt.filter(t=>!DF.get(t) && t.length>3 && !/^\d+$/.test(t));
     const weak=n>0 && totW>0 && (gotW/totW<0.5 || (unknown.length>0 && gotW/totW<0.75));
+    const whoM=q.match(/^\s*(?:who\s+(?:is|was|were)|tell\s+me\s+about|do\s+you\s+know)\s+(?:mr\.?|ms\.?|mrs\.?|dr\.?|sir|madam)?\s*(.+?)\s*[?.!]*\s*$/i);
+    if(whoM && unknown.length && !/\b(the|a|an)\b/i.test(whoM[1].split(/\s+/)[0])){
+      const nm=whoM[1].replace(/\b[a-z]/g,c=>c.toUpperCase());
+      return {text:`I couldn’t find **${nm}** in DoonDesk’s school notes, so I’d rather not guess.\n\nThe school’s own site, **doonschool.com**, or the school office is the best place to ask. If you know who they are, tell the person who runs DoonDesk so it can be added.\n\nFOLLOWUPS: Who are the housemasters? | Who are the teachers in each department?`, hit:null, think:[`Looking for **${nm}** among the staff, students and Old Boys in my notes`,'No one by that name is in my notes, so I won’t guess'], unknownName:true};
+    }
     if(!n && /\b(doon|school|chandbagh)\b/i.test(q)){ const ov=KB.find(x=>x.id==='overview'); if(ov) return {text:`${ov.a}\n\n${srcLine(ov)}\n\nFOLLOWUPS: ${ov.r.slice(0,2).join(' | ')}`, hit:ov}; }
     if(!n || (top.score<2.2 && !covered) || weak){
       const alt=res.slice(0,2).filter(x=>x.score>0.6);
@@ -3098,6 +3108,15 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
   const SHARED_DAILY=15;   // AI questions per device per day on the shared connection
   const sharedLeft=()=>{ try{ const d=JSON.parse(localStorage.getItem('doondesk-shared-ai')||'{}'); return d.day===new Date().toDateString()?SHARED_DAILY-(d.n||0):SHARED_DAILY; }catch(e){ return SHARED_DAILY; } };
   const sharedUse=()=>{ try{ const day=new Date().toDateString(); const d=JSON.parse(localStorage.getItem('doondesk-shared-ai')||'{}'); localStorage.setItem('doondesk-shared-ai',JSON.stringify({day,n:(d.day===day?(d.n||0):0)+1})); }catch(e){} };
+  const LOOKUP_URL=GEMINI_PROXY_URL?GEMINI_PROXY_URL.replace(/gemini$/,'lookup'):'';
+  async function webLookup(q,signal){
+    if(!LOOKUP_URL) return [];
+    const c=new AbortController(), t=setTimeout(()=>c.abort(),8000);
+    const stop=()=>c.abort(); if(signal) signal.addEventListener('abort',stop,{once:true});
+    try{ const r=await fetch(LOOKUP_URL+'?q='+encodeURIComponent(String(q).slice(0,150)),{signal:c.signal}); if(!r.ok) return []; const j=await r.json(); return (j.results||[]).filter(x=>x&&x.url&&x.snippet).slice(0,4); }
+    catch(e){ return []; } finally{ clearTimeout(t); if(signal) signal.removeEventListener('abort',stop); }
+  }
+  const webAnswer=(res)=>`My school notes don’t cover this, but a live search found:\n\n`+res.map(x=>`- **${x.title}:** “${x.snippet}”`).join('\n')+`\n\nThese are passages from the pages, so check them there before relying on them.\n\nSource: `+res.map(x=>`[${x.title}](${x.url})`).join(' · ')+`\n\nFOLLOWUPS: What is The Doon School known for? | Who are the teachers in each department?`;
   if(GEMINI_PROXY_URL) fetch(GEMINI_PROXY_URL,{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{ if(j&&j.ready){ GEMINI_PROXY=GEMINI_PROXY_URL; window.__aiSync&&window.__aiSync(); } }).catch(()=>{});
   const GEM_KEY_LS='doondesk-gemini-key';
   const GEM_MODELS=[
@@ -3202,6 +3221,8 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
       const quickOnly=local.hit && /^(greet|thanks)$/.test(local.hit.id);
       if(!sample && (gemKey||GEMINI_PROXY) && !gemOn() && !quickOnly && Date.now()>(window.__gemNoteAt||0)){ window.__gemNoteAt=Date.now()+5*60000; gemNote=gemErrText({status:429,allBusyUntil:gemDown}); }
       const shared=!gemKey && !!GEMINI_PROXY;
+      const webP=(!sample && !local.hit && !quickOnly && LOOKUP_URL && !/^\s*\S+\s*$/.test(q))?webLookup(q,ctl.signal):Promise.resolve([]);
+      let web=[];
       const useAI=!sample && gemOn() && !quickOnly && !(shared && (local.hit || sharedLeft()<=0));
       if(useAI){
         if(shared) sharedUse();
@@ -3209,14 +3230,17 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
         const rel=res.filter(x=>x.score>.8).slice(0,8);
         const steps=['Searching the school notes', rel.length?`Found related notes: ${rel.slice(0,3).map(x=>'**'+x.e.t+'**').join(', ')}${rel.length>3?' and more':''}`:'No close notes found, so the AI will say what it doesn’t know'];
         b.wrap.classList.add('thinking');
+        if(!local.hit && LOOKUP_URL) steps.push('Searching doonschool.com and Wikipedia');
         finThink=await showThinking(b,steps,ctl.signal,['Asking Gemini to think it through']);
+        web=await webP;
         const aiCtl=new AbortController(); let timedOut=false, gotText=false;
         const onAbort=()=>aiCtl.abort(); ctl.signal.addEventListener('abort',onAbort,{once:true});
         const timer=setTimeout(()=>{ if(!gotText){ timedOut=true; aiCtl.abort(); } },40000);
         try{
           const notes=rel.map(x=>`### ${x.e.t}\n${x.e.a}\n(Source: ${x.e.s.map(k=>SRC[k][0]+(SRC[k][1]?' '+SRC[k][1]:'')).join(' , ')})`).join('\n\n');
           const best=local.hit?`\n\nDOONDESK'S OWN LOOKUP (an exact match from the notes; trust it):\n${local.text.replace(/\nFOLLOWUPS:[\s\S]*$/,'')}`:'';
-          const sys=RULES+`\n- Today's date is ${new Date().toDateString()}.\n- If the notes don't contain the answer, say so honestly instead of guessing.\n\nNOTES:\n${notes||'(No matching notes.)'}${best}\n\nAnswer style: ${m.rule}`;
+          const wx=web.length?`\n\nWEB EXCERPTS (live search; quote only what they say):\n`+web.map(x=>`- ${x.title} (${x.url}): ${x.snippet}`).join('\n'):'';
+          const sys=RULES+`\n- Today's date is ${new Date().toDateString()}.\n- If the notes don't contain the answer, say so honestly instead of guessing.\n\nNOTES:\n${notes||'(No matching notes.)'}${best}${wx}\n\nAnswer style: ${m.rule}`;
           const hist=turns.slice(-10); while(hist.length&&hist[0].role!=='user') hist.shift();
           const contents=hist.map(t=>({role:t.role==='assistant'?'model':'user',parts:[{text:t.content}]}));
           let lastScroll=0;
@@ -3257,7 +3281,8 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
       }
       if(finThink){ finThink(); finThink=null; }
       if(text===null){
-        const ans=local;
+        if(!web.length && !local.hit) web=await webP;
+        const ans=(!local.hit && web.length)?{text:webAnswer(web),think:local.think}:local;
         await wait(reduced?0:(local.think?120:260+Math.random()*200), ctl.signal);
         b.wrap.classList.remove('thinking');
         await typeOut(b,ans.text,ctl.signal);
