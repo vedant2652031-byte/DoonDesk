@@ -993,8 +993,9 @@ Rules:
 - Mainly answer questions about The Doon School. You may also make friendly small talk (greetings, how are you, jokes, thanks) in one or two short sentences, then offer to help with Doon. For other unrelated topics, say briefly that you only cover The Doon School and suggest a related question.
 - Base your answer on the NOTES below, which are drawn from the school's official website (doonschool.com) and its 2025-26 School Profile. Prefer them over anything else you know.
 - If the notes don't cover something, use the WEB EXCERPTS (live search results from doonschool.com and Wikipedia), if there are any, and cite each one you use as "Source: [title](url)".
-- People and history need proof. Only say what a person's job, house, role, dates or achievements were if a note or web excerpt says it about that exact person, by name. Never move a fact from one person to another (for example, a different teacher's house) and never guess. If you can't find the person, say plainly that DoonDesk's notes and doonschool.com don't mention them, and suggest asking the school.
+- People and history need proof. Only say what a person's job, house, role, dates or achievements were if a note or web excerpt says it about that exact person, by name. Never move a fact from one person to another (for example, a different teacher's house) and never guess. Someone with the same surname is not the same person unless the full name or initials match; if an excerpt might be about a different person, say so. If you can't find the person, say plainly that DoonDesk's notes and doonschool.com don't mention them, and suggest asking the school.
 - For general background that isn't about a specific person, number or date, you may use general knowledge, but say so plainly. For details that change year to year (fees, dates, deadlines, seats), suggest confirming with the Admissions Office at admissions@doonschool.com. Never invent numbers, names or dates.
+- Be direct. Answer the exact question in the first sentence (the name, year, number or yes/no), then add only the most useful detail. No preamble, and don't repeat the question.
 - Write in plain English. Use **bold** sparingly and "- " for bullet points. No headings, no tables.
 - After the answer, if you used a note, add a line "Source: [page name](url)" using that note's source URL.
 - Then, on a final line, write exactly "FOLLOWUPS:" followed by two short follow-up questions separated by " | ".`;
@@ -1012,6 +1013,28 @@ Rules:
     houses:['House Life','https://www.doonschool.com/pastoral-care/house-life/'],
     oberoipage:['Oberoi House (doonschool.com)','https://doonschool.com/?p=14044'],
     student:['Shared by a Doon student',''],
+    legacy2025:['Honouring a Legacy of Learning and Leadership (doonschool.com)','https://www.doonschool.com/honouring-a-legacy-of-learning-and-leadership/'],
+    weekly2744:['The Doon School Weekly, Issue 2744 (July 2025)','https://www.doonschool.com/wp-content/uploads/2025/08/Weekly-2744-.pdf'],
+    weekly2645:['The Doon School Weekly, Issue 2645 (May 2022)','https://www.doonschool.com/wp-content/uploads/2022/05/2645.pdf'],
+    weekly2627:['The Doon School Weekly, Issue 2627 (Nov 2021)','https://www.doonschool.com/wp-content/uploads/2022/02/2627.pdf'],
+    weekly2665:['The Doon School Weekly, Issue 2665 (Feb 2023)','https://www.doonschool.com/wp-content/uploads/2023/05/2665.pdf'],
+    pioneervohra:['The Pioneer: A beloved teacher of the Doon School','https://www.dailypioneer.com/2015/state-editions/a-beloved-teacher-of-the-doon-school.html'],
+    garhwal:['Garhwal Post: The Doon School … As I Saw It','https://garhwalpost.in/the-doon-school-as-i-saw-it/'],
+    hyderabadpage:['Hyderabad House (doonschool.com)','https://doonschool.com/?p=14026'],
+    jaipurpage:['Jaipur House (doonschool.com)','https://www.doonschool.com/?p=14031'],
+    kashmirpage:['Kashmir House (doonschool.com)','https://doonschool.com/?p=14036'],
+    tatapage:['Tata House (doonschool.com)','https://doonschool.com/?p=14049'],
+    footpage:['Foot House (doonschool.com)','https://doonschool.com/?p=13992'],
+    martynpage2:['Martyn House (doonschool.com)','https://www.doonschool.com/pastoral-care/house-life/martyn-house/'],
+    adminstaff:['School website: Administrative Staff','https://www.doonschool.com/about-us/administrative-staff/'],
+    wikimount:['Wikipedia: Role of The Doon School in Indian mountaineering','https://en.wikipedia.org/wiki/Role_of_The_Doon_School_in_Indian_mountaineering'],
+    wikimartyn:['Wikipedia: John Martyn','https://en.wikipedia.org/wiki/John_Martyn_%28schoolmaster%29'],
+    wikigibson:['Wikipedia: Jack Gibson','https://en.wikipedia.org/wiki/Jack_Gibson_%28schoolmaster%29'],
+    wikiholdsworth:['Wikipedia: R. L. Holdsworth','https://en.wikipedia.org/wiki/R._L._Holdsworth'],
+    wikigurdial:['Wikipedia: Gurdial Singh','https://en.wikipedia.org/wiki/Gurdial_Singh_%28mountaineer%29'],
+    wikidang:['Wikipedia: Hari Dang','https://en.wikipedia.org/wiki/Hari_Dang'],
+    wikivohra:['Wikipedia: Sheel Vohra','https://en.wikipedia.org/wiki/Sheel_Vohra'],
+    wikiheads:['Wikipedia: headmasters’ biographies','https://en.wikipedia.org/wiki/The_Doon_School#Headmasters'],
     martyn:['Martyn House','https://www.doonschool.com/pastoral-care/house-life/martyn-house/'],
     sports:['Sports','https://www.doonschool.com/academic-life/departments/sports/'],
     sportsyear:['School website: Sports at Doon','https://www.doonschool.com/?p=29669'],
@@ -1436,8 +1459,8 @@ Each of the seven boarding houses also has its own Housemaster and Assistant Hou
 - **Tata House:** Mr Parvinder Kumar (Physics). Assistant: Mr Jitender Tiwari (Physical Education)`,s:['calendar','compendium'],r:['What are the houses at Doon?','What do teachers’ initials stand for?']},
 
 
-  {id:'h-hyderabad',t:'Hyderabad House',k:'hyderabad nizam nizams dark blue',q:['Who is the house captain of Hyderabad House?','Tell me about Hyderabad House','Who is the Dame of Hyderabad House?','Who is the housemaster of Hyderabad House?','Where is Hyderabad House?','What is the motto of Hyderabad House?','What colour is Hyderabad House?'],
-   a:`**Hyderabad House** is one of Doon’s five main boarding houses.
+  {id:'h-hyderabad',t:'Hyderabad House',k:'hyderabad nizam nizams dark blue founded first oldest martyn 1935',q:['Who is the house captain of Hyderabad House?','Tell me about Hyderabad House','Who is the Dame of Hyderabad House?','Who is the housemaster of Hyderabad House?','Where is Hyderabad House?','What is the motto of Hyderabad House?','What colour is Hyderabad House?'],
+   a:`**Hyderabad House** began in 1935 as **Martyn House**, the school’s first house, with Mr J. A. K. Martyn as its first Housemaster. It is one of Doon’s five main boarding houses.
 - **Colour:** dark blue
 - **Motto:** “House of Nizams”
 - **Named after:** the Nizam of Hyderabad’s financial endowment. Its building is where the very first boys reported in 1935, when it was known as Martyn House.
@@ -1453,11 +1476,11 @@ Student leaders (2026–27):
 - **Prefects:** Aaditya Agrawal, Jigmet Urgian and Rafay Habibullah`,s:['leaders','guide','calendar','housepages','houses'],r:['What are the rooms like in Hyderabad House?','What are the houses at Doon?']},
 
 
-  {id:'h-jaipur',t:'Jaipur House',k:'jaipur maharaja thomas eagles eagle green',q:['Who is the house captain of Jaipur House?','Tell me about Jaipur House','Who is the Dame of Jaipur House?','Who is the housemaster of Jaipur House?','Where is Jaipur House?','What is the motto of Jaipur House?','What colour is Jaipur House?'],
+  {id:'h-jaipur',t:'Jaipur House',k:'jaipur maharaja thomas eagles eagle green founded first howell 1936',q:['Who is the house captain of Jaipur House?','Tell me about Jaipur House','Who is the Dame of Jaipur House?','Who is the housemaster of Jaipur House?','Where is Jaipur House?','What is the motto of Jaipur House?','What colour is Jaipur House?'],
    a:`**Jaipur House** is one of the five main boarding houses.
 - **Colour:** green
 - **Motto:** “House of Eagles”
-- **Named after:** the Maharaja of Jaipur, a prominent early donor. It began in 1936 as **Thomas House**, the school’s third house; its building was finished in 1937, when 49 boys moved in.
+- **Named after:** the Maharaja of Jaipur, a prominent early donor. It began in 1936 as **Thomas House**, the school’s third house, under its first Housemaster Mr C. L. Howell-Thomas; its building was finished in 1937, when 49 boys moved in.
 - **Where it is:** near Upper Skinners, the J-House futsal court and the masters’ residences.
 - Jaipur House runs the **Pagal Gymkhana** on Skinner’s Field at Founder’s Day.
 
@@ -1471,10 +1494,11 @@ Student leaders (2026–27):
 - **Prefects:** Aarav Kathuria, Siddham Tater and Zorawar Sandhu`,s:['leaders','guide','calendar','housepages','houses'],r:['What are the rooms like in Jaipur House?','What are the houses at Doon?']},
 
 
-  {id:'h-kashmir',t:'Kashmir House',k:'kashmir jammu princely gentlemen gentleman yellow',q:['Who is the house captain of Kashmir House?','Tell me about Kashmir House','Who is the Dame of Kashmir House?','Who is the housemaster of Kashmir House?','Where is Kashmir House?','What is the motto of Kashmir House?','What colour is Kashmir House?'],
+  {id:'h-kashmir',t:'Kashmir House',k:'kashmir jammu princely gentlemen gentleman founded first gibson 1937 yellow',q:['Who is the house captain of Kashmir House?','Tell me about Kashmir House','Who is the Dame of Kashmir House?','Who is the housemaster of Kashmir House?','Where is Kashmir House?','What is the motto of Kashmir House?','What colour is Kashmir House?'],
    a:`**Kashmir House** is one of the five main boarding houses.
 - **Colour:** yellow
 - **Motto:** “House of Gentlemen”
+- **Founded:** 1937, as **Gibson House**, named after its first Housemaster, Mr Jack Gibson
 - **Named after:** the princely state of Jammu and Kashmir
 - **Where it is:** in front of the Main Field, near the Sports Complex, Skinners, Hyderabad House and the tennis courts.
 
@@ -1488,10 +1512,11 @@ Student leaders (2026–27):
 - **Prefects:** Ruhaan Lakhina, Rushil Agarwal and Udai Singh`,s:['leaders','guide','calendar','housepages','wiki'],r:['What are the rooms like in Kashmir House?','What are the houses at Doon?']},
 
 
-  {id:'h-tata',t:'Tata House',k:'tata dorabji ratanji barrit steel red',q:['Who is the house captain of Tata House?','Tell me about Tata House','Who is the Dame of Tata House?','Who is the housemaster of Tata House?','Where is Tata House?','What is the motto of Tata House?','What colour is Tata House?'],
+  {id:'h-tata',t:'Tata House',k:'tata dorabji ratanji barrit steel red founded first 1935',q:['Who is the house captain of Tata House?','Tell me about Tata House','Who is the Dame of Tata House?','Who is the housemaster of Tata House?','Where is Tata House?','What is the motto of Tata House?','What colour is Tata House?'],
    a:`**Tata House** is one of the five main boarding houses.
 - **Colour:** red
 - **Motto:** “True as Steel”
+- **Founded:** 1935, as **Barrit House**, the school’s second house, under its first Housemaster Mr H. E. Barrit
 - **Named after:** the Tata family and Group for their foundational philanthropy (Sir Dorabji and Sir Ratanji Tata). Its building was ready in 1936, when Mr Barrit moved his boys into it.
 - **Where it is:** behind the Main Building, to the right, near the Kilachand Library, Tata Field, the Tata House futsal court, the Main Gate, the Rubber Tree and the Science Block.
 
@@ -1570,6 +1595,80 @@ House staff:
   {id:'mainbuilding',t:'The Main Building',k:'main building architecture unesco heritage award renaissance 1911 red brick restoration',q:['Tell me about the Main Building','What heritage award did Doon win?'],
    a:`The **Main Building** was completed in **1911** for the Forest Research Institute, before Doon was founded, in a colonial Renaissance style. After careful restoration it received a **UNESCO Asia-Pacific Award for Cultural Heritage Conservation** in **2016**.`,s:['compendium','wiki'],r:['What is the Chandbagh campus like?','What is the Rose Bowl?']},
 
+  {id:'longserving',t:'Long-serving masters and years of service',k:'long serving longest served service years tenure decades retired retire retirement retiring farewell veteran oldest how long length joined',q:['Who is the longest-serving master at Doon?', 'How long have masters served at Doon?', 'Which masters retired in 2025?', 'Who retired recently?'],
+   a:`**Sheel Vohra** (“Bond”), a Mathematics master and former Deputy Headmaster, is remembered as Doon's **longest-serving master**: he taught from **1959 to 1998**, about 39 years. (His Wikipedia page dates his joining to 1961.)
+
+**Masters who retired in 2025**, with their exact service:
+- **Mr Piyush Malaviya** (PMV), History and Political Science: joined **1989**, **35 years 8 months**. Housemaster of Martyn and then Tata House (from 2006), Head of Humanities and Director of Public Relations.
+- **Mr Ashad Qezilbash** (AAQ), English: joined **1994**, **31 years 1 month**. Housemaster of Foot House, Head of English and the school's first Dean of Student Welfare.
+- **Ms Purnima Dutta** (PDT), History and Theory of Knowledge: joined **1994**, **30 years 10 months**. Housemaster in Martyn and Oberoi, twice Head of Humanities, master-in-charge of the Weekly.
+- **Mr Ambikesh Shukla** (AKS), Computer Science: joined **1999**, **25 years 10 months**. Head of IT & Computer Science, Director of Social Service & Activities, Round Square representative.
+
+**Other long careers at Doon:**
+- **John Martyn** spent **31 years** at Doon (1935–1966): Deputy Headmaster, then Headmaster for 18 years, the longest of any Headmaster.
+- **Dr Arvindnabha Shukla** (ASH), Hindi, was the backbone of the school hockey team for about **30 years** before leaving in 2021.
+- **Sudhir Khastgir**, Doon's first art master, joined in **1936** and stayed about **20 years**.
+- **Mr Shadeep Adhikari** (SDA), Accounts and Economics, served from **2004 to 2022**.
+
+DoonDesk doesn't have joining years for most current masters. The school office can confirm those.`,s:['legacy2025', 'weekly2744', 'pioneervohra', 'wikivohra', 'wikimartyn', 'weekly2627', 'weekly2645', 'wiki'],r:['Who were some famous former masters?', 'When was each house founded?']},
+  {id:'formermasters',t:'Famous former masters',k:'former masters teacher teachers famous notable past old early history taught mountaineer mountaineering holdsworth gibson gurdial dang khastgir anand vohra kapoor bhat',q:['Who were some famous former masters?', 'Who were the early masters at Doon?', 'Who was the first Indian housemaster?'],
+   a:`Well-known masters from Doon's past:
+- **John Martyn** (1935–1966): came from Harrow with Arthur Foot; first Housemaster of the original Martyn House (now Hyderabad), Deputy Headmaster, then Headmaster 1948–1966. Martyn House is named after him.
+- **R. L. Holdsworth** (from 1940): Deputy Headmaster; a first-class cricketer and a member of the 1931 Kamet expedition, the highest peak climbed at the time.
+- **Jack Gibson** (1937–1953): Housemaster of Kashmir House (first called Gibson House) and Geography master; later Principal of Mayo College (1953–1969).
+- **Gurdial Singh** (joined 1945): Geography master who led independent India's first mountaineering expedition, to Trisul, in 1951. Padma Shri 1967; he died in 2023 aged 99.
+- **Hari Dang** (1959–1970): Chemistry master and mountaineer who led the first ascent of Jaonli (1965). Padma Shri 1976.
+- **Sheel Vohra** (1959–1998): Mathematics master, Deputy Headmaster and Ranji Trophy cricketer; the longest-serving master.
+- **Sudhir Khastgir** (from 1936): the first art master, for about twenty years.
+- **Chetan Anand** (1940–1944), later a film director, taught at Doon.
+- **Mr V. N. Kapoor** is remembered as Doon's **first Indian Housemaster**.
+- **Dr H. D. Bhat** was Housemaster of Foot House from 1980 to 1983 and set up many of its traditions.
+- **Ashok Roy** headed the Music department (1977–1988).`,s:['wikimartyn', 'wikiholdsworth', 'wikigibson', 'wikigurdial', 'wikidang', 'pioneervohra', 'wiki', 'garhwal', 'footpage'],r:['Who is the longest-serving master at Doon?', 'What is Doon’s link with mountaineering?']},
+  {id:'housefounding',t:'When each house was founded, and its first Housemaster',k:'founded founding founder established start started began first housemaster housemasters original oldest history year years barrit thomas gibson howell martyn bhatia',q:['When was each house founded?', 'Who were the first housemasters?', 'Which is the oldest house?', 'Who was the first housemaster of Jaipur House?', 'Who was the first housemaster of Tata House?', 'Who was the first housemaster of Kashmir House?'],
+   a:`- **1935: Martyn House** (now **Hyderabad House**), the school's first house. Its first Housemaster was **Mr J. A. K. Martyn**.
+- **1935: Barrit House** (now **Tata House**), the second house, under **Mr H. E. Barrit**. He lived in Chandbagh Villa, now the Tata Housemaster's home.
+- **1936: Thomas House** (now **Jaipur House**), under **Mr C. L. Howell-Thomas**, who also started the school's first cross-country race in February 1939.
+- **1937: Gibson House** (now **Kashmir House**), named after **Mr Jack Gibson**, who joined in January 1937 as its Housemaster.
+- In **November 1937** the houses were renamed after the school's early donors.
+- **1991: Oberoi House**, with **Mr S. D. Bhatia** as its founding Housemaster.
+- **Foot House** and the present **Martyn House** are the holding houses for new boys, named after the first two Headmasters. Foot House was rebuilt in 2005; Dr H. D. Bhat was its Housemaster from 1980 to 1983.`,s:['hyderabadpage', 'tatapage', 'jaipurpage', 'kashmirpage', 'oberoipage', 'student', 'footpage', 'martynpage2', 'wikigibson'],r:['Where do the house names come from?', 'Who are the housemasters?']},
+  {id:'mountaineering',t:'Doon and mountaineering',k:'mountaineering mountain mountains mountaineer climb climbing climbed peak peaks expedition expeditions himalaya himalayan everest trisul kamet bandarpunch nanda devi jaonli kalanag mrigthuni hmi',q:['What is Doon’s link with mountaineering?', 'Did Doon masters climb Everest?', 'Who led the Trisul expedition?'],
+   a:`Doon's early masters, **Arthur Foot, R. L. Holdsworth, John Martyn and Jack Gibson**, were keen alpinists who made Himalayan expeditions part of school life, and Doon became a cradle of Indian mountaineering.
+- **1931:** Holdsworth was on the first ascent of **Kamet**, then the highest peak ever climbed.
+- **1937:** Gibson and Martyn climbed on **Bandarpunch** with **Tenzing Norgay**.
+- **1951:** Geography master **Gurdial Singh** led independent India's first mountaineering expedition, to **Trisul**, with former pupil **Nandu Jayal**, who later became the founder principal of the Himalayan Mountaineering Institute.
+- **1955:** Gibson and Doon boys made the first ascent of **Kalanag**.
+- **1958:** Gurdial Singh led the first ascent of **Mrigthuni**.
+- **1965:** Gurdial Singh was on India's first successful **Everest** expedition, and **Hari Dang** led the first ascent of **Jaonli**.
+
+The tradition lives on in **Midterm** treks every term.`,s:['wikimount', 'wikigurdial', 'wikigibson', 'wikiholdsworth', 'wikidang'],r:['What is the Midterm trek tradition?', 'Who were some famous former masters?']},
+  {id:'headbios',t:'The Headmasters’ stories',k:'headmaster headmasters biography background career before after previous came from later alumnus first indian foreign longest tenure served serve',q:['What did each headmaster do before Doon?', 'Who was the first Indian headmaster?', 'Which headmaster served the longest?', 'Who was the first Old Boy to be headmaster?'],
+   a:`- **Arthur Foot** (1935–1948): a science master from **Eton**, the first Headmaster.
+- **John Martyn** (1948–1966): came from **Harrow** in 1935; the **longest-serving Headmaster**, who served **18 years**. OBE 1958, Padma Shri 1983.
+- **C. J. Miller** (1966–1970): a Cambridge scholar, and the last English Headmaster until 2016.
+- **Eric Simeon** (1970–1979): the **first Indian Headmaster**; earlier founder principal of Sainik School, Kunjpura (1961), and head of La Martiniere, Calcutta; later headed Cathedral and John Connon School, Mumbai.
+- **Gulab Ramchandani** (1979–1988): the **first Old Boy** to become Headmaster, after 33 years at Blue Star; he later helped set up about 25 schools.
+- **Shomie Das** (1988–1996): an Old Boy and grandson of the founder, S. R. Das. He had taught at Gordonstoun and headed Mayo College and Lawrence School, Sanawar. **Oberoi House** was added in his time.
+- **John Mason** (1996–2003): formerly of La Martiniere and St James’ School, Kolkata; he introduced parent-teacher meetings at Founder’s and worked to curb bullying.
+- **Kanti Bajpai** (2003–2009): an Old Boy and former Weekly editor; a professor at JNU before, and later at the National University of Singapore.
+- **Peter McLaughlin** (2009–2016): an Irish historian, earlier head of schools in England and Cairo; the first Headmaster from abroad in almost four decades.
+- **Matthew Raggett** (2016–2020): a physicist, earlier Secondary Principal of Leipzig International School; he returned to Germany in January 2020.
+- **Dr Jagpreet Singh** (from April 2020): the 11th and current Headmaster.`,s:['wikiheads', 'wikimartyn', 'wiki', 'weekly2665'],r:['Who have been the headmasters?', 'Who was Arthur Foot?']},
+  {id:'adminstaff',t:'Administrative staff',k:'administrative administration admin office staff admissions head bursar finance accounts registrar hr human resource estate engineer catering kitchen manager it fundraising communications medical officer rmo doctor',q:['Who are the administrative staff?', 'Who is the Head of Admissions?', 'Who is the school doctor?', 'Who runs the school kitchen?'],
+   a:`The school office team:
+- **Bursar:** Gp Capt Sandeep Sethi (Retd.)
+- **Head of Finance:** Mr Amit Gyanchandani
+- **Manager Administration:** Mr Bhalinder Pal Singh
+- **Head of Admissions** and **Head of Fund Raising & Alumni Relations:** Mr Arjun Singh Bartwal
+- **Manager Accounts:** Mr Abhijit Kumar Bagchi
+- **Manager Human Resource:** Mr Ashish Jain
+- **Manager Communications:** Ms Abha Deb
+- **Manager Fund Raising & Communication:** Mr Tapo J. Mandal
+- **Head of Information Technology:** Mr Vikas Singh
+- **Estate Engineer:** Mr Anil Kumar
+- **Manager Catering:** Mr Thakur Kamal Prasad
+- **Resident Medical Officer (the school doctor):** Dr Hrithik Rauthan`,s:['adminstaff'],r:['Who is on the school’s leadership team?', 'How do I contact the school?']},
+
   {id:'staff',t:'Teachers and departments',k:'teacher teachers staff master masters initials short code teaches teach department departments subject faculty list directory rhs jrb nrt srt hgt ptv kbt mpt sas skd rsl vsm arj pkr jtr heads hods head of department',q:['What do teachers’ initials stand for?','Who are the teachers in each department?','Who are the heads of department?','Who are the teachers in each house?'],
    a:`Doon's staff by department, with each Head of Department:
 
@@ -1595,7 +1694,7 @@ Masters are often known by three-letter initials. Ask about any department, a te
   {id:'dept-art',t:'Art teachers',k:'art arts painting drawing visual teacher teachers teaches teach taught staff faculty master masters department hod',q:['Who teaches Art?', 'Who are the Art teachers?'],
    a:`**Art** staff:
 
-- **Mr Arnab Mukherjee**: M.V.A.
+- **Mr Arnab Mukherjee** (ARM): M.V.A.
 - **Ms Nandita Mukherjee**: M.F.A. (Painting)
 - **Mr Madan Singh**: B.F.A., M.F.A., UGC NET, B.Ed.
 - **Mr Srikanta Banerjee**: B.V.A. (Visual Art), M.F.A.
@@ -1603,25 +1702,25 @@ Masters are often known by three-letter initials. Ask about any department, a te
   {id:'dept-ace',t:'Accounts, Commerce and Economics teachers',k:'accounts accountancy commerce economics business teacher teachers teaches teach taught staff faculty master masters department hod',q:['Who teaches Economics?', 'Who teaches Commerce?', 'Who teaches Accounts?'],
    a:`The **Accounts, Commerce and Economics** Department is headed by **Mr Aseem Tripathi**.
 
-- **Mr Aseem Tripathi**: M.Phil., M.A., I.P.G.C.E. · Head of Department
+- **Mr Aseem Tripathi** (AST): M.Phil., M.A., I.P.G.C.E. · Head of Department
 - **Mr Kamal Ahuja**: M.Com., B.Ed., P.G.D.B.A., I.P.G.C.E. · Deputy Headmaster
-- **Mr Mohammed Istemdad Ali**: M.Sc., B.Ed., I.P.G.C.E.
+- **Mr Mohammed Istemdad Ali** (MIA): M.Sc., B.Ed., I.P.G.C.E.
 - **Mr Samik Das** (SKD): M.Com., B.Ed., I.P.G.C.E. · Housemaster of Martyn House
 - **Mr Rajat Sabharwal** (RSL): M.Com., B.Ed., PG Diploma in School Leadership & Management · Assistant Housemaster of Martyn House
-- **Mr H. Prabhu Raj**: M.Com., B.Ed.
+- **Mr H. Prabhu Raj** (HPR): M.Com., B.Ed.
 - **Mr Nagaarjun N**: M.Sc. Applied Economics, B.Tech.
 - **Mr Prateek Sharma**: M.Com., B.Ed.`,s:['stafflist'],r:['Who are the teachers in each department?', 'What do teachers’ initials stand for?']},
   {id:'dept-biology',t:'Biology teachers',k:'biology bio teacher teachers teaches teach taught staff faculty master masters department hod',q:['Who teaches Biology?', 'Who are the Biology teachers?'],
    a:`**Biology** is part of the Sciences Department, headed by **Dr Ashish Dean**.
 
-- **Mr Chit Ranjan Kagdee**: M.Sc., B.Ed., I.P.G.C.E. · ISC Coordinator
+- **Mr Chit Ranjan Kagdee** (CRK): M.Sc., B.Ed., I.P.G.C.E. · ISC Coordinator
 - **Dr Srinivas Swamy** (SSW): M.Sc., B.Ed., Ph.D., I.P.G.C.E.
 - **Ms Ruchi Sahni** (RHS): M.Sc., B.Ed., I.P.G.C.E. · Housemaster of Foot House
 - **Dr Ankur Joshi** (ARJ): B.Sc., Ph.D. · Assistant Housemaster of Oberoi House`,s:['stafflist'],r:['Who are the teachers in each department?', 'What do teachers’ initials stand for?']},
   {id:'dept-chemistry',t:'Chemistry teachers',k:'chemistry chem teacher teachers teaches teach taught staff faculty master masters department hod',q:['Who teaches Chemistry?', 'Who are the Chemistry teachers?'],
    a:`**Chemistry** is part of the Sciences Department, headed by **Dr Ashish Dean**.
 
-- **Mr Anand Kumar Mandhian**: M.Sc., B.Ed., I.P.G.C.E.
+- **Mr Anand Kumar Mandhian** (AKM): M.Sc., B.Ed., I.P.G.C.E.
 - **Mr Manish Kant Pant** (MPT): M.Sc., I.P.G.C.E., B.Ed. · Housemaster of Kashmir House
 - **Mr Soham Roy**: M.Sc. (Chemistry)
 - **Ms Shalini Bhatnagar**: M.Sc., B.Ed.
@@ -1639,7 +1738,7 @@ Masters are often known by three-letter initials. Ask about any department, a te
 
 - **Mr Harshal Gunwant** (HGT): M.Sc., M.Tech. (CSE), Diploma in Software Engg., B.Ed. · Head of Department · Assistant Housemaster of Hyderabad House
 - **Mr Vishal Mohla** (VSM): B.Sc., M.C.A., Dip. in System Mgmt., I.P.G.C.E. · IT Administrator · Housemaster of Oberoi House
-- **Mr Ashutosh Tripathi**: B.Tech. (Electronics & Communication), Diploma in Elementary Education, NIOS · DRAIS Coordinator
+- **Mr Ashutosh Tripathi** (ATI): B.Tech. (Electronics & Communication), Diploma in Elementary Education, NIOS · DRAIS Coordinator
 - **Mr Shubham Sharma** (SHM): B.Tech. (Computer Science)`,s:['stafflist'],r:['Who are the teachers in each department?', 'What do teachers’ initials stand for?']},
   {id:'dept-dt',t:'Design and Technology staff',k:'design technology dt d&t workshop staff team who works',q:['Who teaches Design and Technology?'],
    a:`**Design and Technology** staff:
@@ -1648,15 +1747,15 @@ Masters are often known by three-letter initials. Ask about any department, a te
   {id:'dept-english',t:'English teachers',k:'english literature teacher teachers teaches teach taught staff faculty master masters department hod',q:['Who teaches English?', 'Who are the English teachers?'],
    a:`The **English** Department is headed by **Mr Supratim Basu**.
 
-- **Mr Supratim Basu**: M.A., M.Phil., B.Ed. · Head of Department
+- **Mr Supratim Basu** (SPB): M.A., M.Phil., B.Ed. · Head of Department
 - **Ms Stuti Kuthiala**: B.A., I.P.G.C.E. · Dean Pastoral
-- **Ms Priya Chauhan**: M.A., B.Ed., I.P.G.C.E.
-- **Ms Rageshree Dasgupta**: M.A., M.Phil. · Middle School Coordinator
-- **Mr Sabyasachi Ghosh**: M.A., B.Ed.
-- **Mr Jasmeet Singh Sodhi**: M.A., B.Ed., P.G.D.I.E.
+- **Ms Priya Chauhan** (PRC): M.A., B.Ed., I.P.G.C.E.
+- **Ms Rageshree Dasgupta** (RDG): M.A., M.Phil. · Middle School Coordinator
+- **Mr Sabyasachi Ghosh** (SBG): M.A., B.Ed.
+- **Mr Jasmeet Singh Sodhi** (JAS): M.A., B.Ed., P.G.D.I.E.
 - **Mr Justin Rahul Burrett** (JRB): M.A., B.Ed. · Assistant Housemaster of Foot House
 - **Ms Arpita Chatterjee**: M.A., B.Ed.
-- **Sameer Chopra**: M.A., M.Phil., B.Ed.`,s:['stafflist'],r:['Who are the teachers in each department?', 'What do teachers’ initials stand for?']},
+- **Mr Sameer Chopra** (SRA): M.A., M.Phil., B.Ed.`,s:['stafflist'],r:['Who are the teachers in each department?', 'What do teachers’ initials stand for?']},
   {id:'dept-history',t:'History teachers',k:'history teacher teachers teaches teach taught staff faculty master masters department hod',q:['Who teaches History?', 'Who are the History teachers?', 'Who is the head of Humanities?'],
    a:`**History** is part of the Humanities Department, headed by **Dr Harshita Ahuja Sabharwal**.
 
@@ -1667,34 +1766,34 @@ Masters are often known by three-letter initials. Ask about any department, a te
   {id:'dept-geography',t:'Geography teachers',k:'geography geo teacher teachers teaches teach taught staff faculty master masters department hod',q:['Who teaches Geography?', 'Who are the Geography teachers?'],
    a:`**Geography** is part of the Humanities Department, headed by **Dr Harshita Ahuja Sabharwal**.
 
-- **Mr Arvind Sadashiv Dethe**: M.A., B.Ed., I.P.G.C.E.
-- **Mr Hemant Choudhary**: M.A., M.Phil., B.Ed., I.P.G.C.E. · ICSE Coordinator
+- **Mr Arvind Sadashiv Dethe** (ARD): M.A., B.Ed., I.P.G.C.E.
+- **Mr Hemant Choudhary** (HCY): M.A., M.Phil., B.Ed., I.P.G.C.E. · ICSE Coordinator
 - **Ms Rituparna Chaudhary**: M.Sc.`,s:['stafflist'],r:['Who are the teachers in each department?', 'What do teachers’ initials stand for?']},
   {id:'dept-polsci',t:'Political Science & Legal Studies teachers',k:'political science politics polsci legal studies law teacher teachers teaches teach taught staff faculty master masters department hod',q:['Who teaches Political Science?', 'Who teaches Legal Studies?'],
    a:`**Political Science & Legal Studies** is part of the Humanities Department, headed by **Dr Harshita Ahuja Sabharwal**.
 
-- **Ms Anuradha Singh**: LL.B. (Hons), LL.M. (SOAS)`,s:['stafflist'],r:['Who are the teachers in each department?', 'What do teachers’ initials stand for?']},
+- **Ms Anuradha Singh** (ADS): LL.B. (Hons), LL.M. (SOAS)`,s:['stafflist'],r:['Who are the teachers in each department?', 'What do teachers’ initials stand for?']},
   {id:'dept-psychology',t:'Psychology teachers',k:'psychology teacher teachers teaches teach taught staff faculty master masters department hod',q:['Who teaches Psychology?'],
    a:`**Psychology** is part of the Humanities Department, headed by **Dr Harshita Ahuja Sabharwal**.
 
-- **Dr Harshita Ahuja Sabharwal**: Ph.D., M.A., UGC NET, PG Diploma in Counselling and Family Therapy · Head of Humanities
+- **Dr Harshita Ahuja Sabharwal** (HTA): Ph.D., M.A., UGC NET, PG Diploma in Counselling and Family Therapy · Head of Humanities
 - **Mr Siddharth Bathla**: M.Sc., B.Ed.`,s:['stafflist'],r:['Who are the teachers in each department?', 'What do teachers’ initials stand for?']},
   {id:'dept-hindi',t:'Hindi and Sanskrit teachers',k:'hindi sanskrit teacher teachers teaches teach taught staff faculty master masters department hod',q:['Who teaches Hindi?', 'Who teaches Sanskrit?'],
    a:`The **Hindi and Sanskrit** Department is headed by **Mr Devendra Mishra**.
 
 - **Mr Devendra Mishra**: M.A., B.Ed., P.G.D.T., I.P.G.C.E. · Head of Department
-- **Mr Manoj Pandey**: M.A.
-- **Mr Nagendra Singh**: M.Phil., M.A. (Philosophy), M.A. (English), M.Ed., B.Ed. · IBDP Coordinator
-- **Dr Suruchi Mishra**: Ph.D., M.A. (Hindi), B.Ed.
+- **Mr Manoj Pandey** (MNP): M.A.
+- **Mr Nagendra Singh** (NAS): M.Phil., M.A. (Philosophy), M.A. (English), M.Ed., B.Ed. · IBDP Coordinator
+- **Dr Suruchi Mishra** (SMA): Ph.D., M.A. (Hindi), B.Ed.
 - **Mr Satya Shrava Sharma** (SAS): M.A., B.Ed. · Assistant Housemaster of Kashmir House
-- **Mr Naval Kishor Bahuguna**: M.A., B.Ed.`,s:['stafflist'],r:['Who are the teachers in each department?', 'What do teachers’ initials stand for?']},
+- **Mr Naval Kishor Bahuguna** (NLB): M.A., B.Ed.`,s:['stafflist'],r:['Who are the teachers in each department?', 'What do teachers’ initials stand for?']},
   {id:'dept-maths',t:'Mathematics teachers',k:'mathematics maths math teacher teachers teaches teach taught staff faculty master masters department hod',q:['Who teaches Maths?', 'Who are the Maths teachers?', 'Who teaches Mathematics?'],
    a:`The **Mathematics** Department is headed by **Mr Chandan Singh Ghughtyal**.
 
-- **Mr Chandan Singh Ghughtyal**: M.Sc., M.A., B.Ed., I.P.G.C.E. · Head of Department
+- **Mr Chandan Singh Ghughtyal** (CSG): M.Sc., M.A., B.Ed., I.P.G.C.E. · Head of Department
 - **Mr Anjan Kumar Chaudhary**: M.Sc., B.Ed., I.P.G.C.E. · Dean Academics
-- **Mr Manu Mehrotra**: M.Sc., M.A., B.Ed. · Director of Activities, Community Service & Outdoor Pursuits
-- **Mr Rahul Luther**: M.Sc., M.Ed., I.P.G.C.E. · CAS Coordinator
+- **Mr Manu Mehrotra** (MMR): M.Sc., M.A., B.Ed. · Director of Activities, Community Service & Outdoor Pursuits
+- **Mr Rahul Luther** (RLR): M.Sc., M.Ed., I.P.G.C.E. · CAS Coordinator
 - **Mr Sudhir Thapa** (SRT): M.A., B.Ed. · Housemaster of Hyderabad House
 - **Mr Syed Mohd Hasan Ahtesham** (SHA): B.Tech.
 - **Dr Anshu Dhar Jayal** (ADJ): Ph.D., M.Sc., B.E. (Mechanical)
@@ -1703,9 +1802,9 @@ Masters are often known by three-letter initials. Ask about any department, a te
   {id:'dept-music',t:'Music teachers',k:'music teacher teachers teaches teach taught staff faculty master masters department hod',q:['Who teaches Music?', 'Who are the Music teachers?'],
    a:`The **Music** Department is headed by **Mr Arun Kumar**.
 
-- **Mr Arun Kumar**: M.Com. · Head of Department
-- **Dr Partho Roy Choudhury**: M.A., Ph.D.
-- **Mr Adarsh Saxena**: M.A. (Music)
+- **Mr Arun Kumar** (ARK): M.Com. · Head of Department
+- **Dr Partho Roy Choudhury** (PRY): M.A., Ph.D.
+- **Mr Adarsh Saxena** (ASA): M.A. (Music)
 - **Mr Suman Das**: M.A., Sangeet Nipun, Sangeet Visharad
 - **Mr Guljari Lal Bakshi**: M.Sc.
 - **Mr Varun Dua**: B.A., Grade 8 Piano & Drums (Trinity College London)
@@ -1713,14 +1812,14 @@ Masters are often known by three-letter initials. Ask about any department, a te
   {id:'dept-pe',t:'Physical Education teachers',k:'physical education pe teacher teachers teaches teach taught staff faculty master masters department hod',q:['Who teaches PE?', 'Who are the PE teachers?', 'Who teaches Physical Education?'],
    a:`The **Physical Education** Department is headed by **Mr Deepankar Sirohi**.
 
-- **Mr Deepankar Sirohi**: M.P.Ed., B.P.Ed. · Head of Department
+- **Mr Deepankar Sirohi** (DSI): M.P.Ed., B.P.Ed. · Head of Department
 - **Mr Inderjit Singh**: M.A. (P.E.), NET · Director of Sports
 - **Mr Jitender Tiwari** (JTR): M.P.Ed., M.Phil., B.Ed. · Assistant Housemaster of Tata House`,s:['stafflist'],r:['Who are the teachers in each department?', 'What do teachers’ initials stand for?']},
   {id:'dept-mfl',t:'Modern Foreign Languages teachers (French, German, Spanish)',k:'modern foreign languages mfl french german spanish language languages teacher teachers teaches teach taught staff faculty master masters department hod',q:['Who teaches French?', 'Who teaches German?', 'Who teaches Spanish?'],
    a:`The **Modern Foreign Languages** Department is headed by **Dr Mugdha Pandey**.
 
 **German**
-- **Mr Mohit Ghai**: M.A. (German), B.Ed.
+- **Mr Mohit Ghai** (MTG): M.A. (German), B.Ed.
 
 **French**
 - **Dr Mugdha Pandey**: M.A., Ph.D. · Head of Modern Foreign Languages
@@ -1760,27 +1859,27 @@ Masters are often known by three-letter initials. Ask about any department, a te
    a:`Masters-in-charge this term, by their initials:
 
 **Societies**
-- Adventure Club: MMR, DSI
-- Model United Nations: RDG, MTG, ADS
-- Public Speaking: NAS
+- Adventure Club: MMR (Mr Manu Mehrotra), DSI (Mr Deepankar Sirohi)
+- Model United Nations: RDG (Ms Rageshree Dasgupta), MTG (Mr Mohit Ghai), ADS (Ms Anuradha Singh)
+- Public Speaking: NAS (Mr Nagendra Singh)
 
 **Activities**
-- Art: ARM
+- Art: ARM (Mr Arnab Mukherjee)
 - Computers: VSM (Mr Vishal Mohla), SHM (Mr Shubham Sharma)
-- Music: PRY, ASA, ARK, SDS
-- Robotics: ATI
+- Music: PRY (Dr Partho Roy Choudhury), ASA (Mr Adarsh Saxena), ARK (Mr Arun Kumar), SDS
+- Robotics: ATI (Mr Ashutosh Tripathi)
 
 **Sports**
-- Athletics: IDS, MIA
+- Athletics: IDS, MIA (Mr Mohammed Istemdad Ali)
 - Basketball: JTR (Mr Jitender Tiwari), ADN
-- Cricket: MPT (Mr Manish Kant Pant), PTV (Mr Pratyush Vaishnava), ATI
-- Football: DSI, KBT (Mr Keshav Bhatt)
-- Swimming: RHS (Ms Ruchi Sahni), NLB, SHB
+- Cricket: MPT (Mr Manish Kant Pant), PTV (Mr Pratyush Vaishnava), ATI (Mr Ashutosh Tripathi)
+- Football: DSI (Mr Deepankar Sirohi), KBT (Mr Keshav Bhatt)
+- Swimming: RHS (Ms Ruchi Sahni), NLB (Mr Naval Kishor Bahuguna), SHB
 - Tennis: DKM, ADN
 - Squash: RSL (Mr Rajat Sabharwal), ADJ (Dr Anshu Dhar Jayal)
 - Chess: SHA (Mr Syed Mohd Hasan Ahtesham)
 - Table Tennis: SSW (Dr Srinivas Swamy)
-- Boxing: SRT (Mr Sudhir Thapa)`,s:['calendar'],r:['What do teachers’ initials stand for?','What sports are played at Doon?']},
+- Boxing: SRT (Mr Sudhir Thapa)`,s:['calendar','hyderabadpage','jaipurpage','kashmirpage','footpage'],r:['What do teachers’ initials stand for?','What sports are played at Doon?']},
 
   {id:'calendar',t:'Autumn Term 2026 calendar',k:'calendar dates date schedule term autumn 2026 begin begins start starts end ends vacation vacations holiday holidays winter break leave go going home events event chess tournament young entrepreneurs conference yec admission independence mun conference chuckerbutty memorial debates debate trials midyear pre-board preboard pre board',q:['What are the important dates this term?','When are the exams this term?','When does the Autumn Term begin?','When do winter vacations start?','When is the MUN conference?','When are the Chuckerbutty Debates?','When are the pre-boards?'],
    a:`Important dates for the **Autumn Term 2026**:
@@ -2247,7 +2346,8 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
     if(next.length) out+='**Coming up next:**\n'+next.map(c=>{ const n=Math.round((dOf(c[0])-t)/864e5); return `- **${fmt(c[0],c[1])}:** ${c[2]} (${n===1?'tomorrow':'in '+n+' days'})`; }).join('\n');
     return out+`\n\nSource: Autumn Term 2026 Calendar\n\nFOLLOWUPS: What are the important dates this term? | When do winter vacations start?`;
   }
-  const STAFFI={ADJ:['Dr Anshu Dhar Jayal','teaches Mathematics. Qualifications: Ph.D., M.Sc., B.E. (Mechanical)'],SHA:['Mr Syed Mohd Hasan Ahtesham','teaches Mathematics. Qualifications: B.Tech.'],SSW:['Dr Srinivas Swamy','teaches Biology. Qualifications: M.Sc., B.Ed., Ph.D., I.P.G.C.E.'],RHS:['Ms Ruchi Sahni','teaches Biology and is Housemaster of Foot House. Qualifications: M.Sc., B.Ed., I.P.G.C.E.'],JRB:['Mr Justin Rahul Burrett','teaches English and is Assistant Housemaster of Foot House. Qualifications: M.A., B.Ed.'],NRT:['Ms Neha Rawat','teaches Spanish and is a master in Foot House. Qualifications: B.A., M.A.'],
+  const STAFFI={MMR:['Mr Manu Mehrotra','teaches Mathematics and is the Director of Activities, Community Service & Outdoor Pursuits. Qualifications: M.Sc., M.A., B.Ed.'],AKM:['Mr Anand Kumar Mandhian','teaches Chemistry. Qualifications: M.Sc., B.Ed., I.P.G.C.E.'],MIA:['Mr Mohammed Istemdad Ali','teaches Accounts, Commerce and Economics. Qualifications: M.Sc., B.Ed., I.P.G.C.E.'],PRY:['Dr Partho Roy Choudhury','teaches Music. Qualifications: M.A., Ph.D.'],SPB:['Mr Supratim Basu','teaches English and is Head of the English Department. Qualifications: M.A., M.Phil., B.Ed.'],HPR:['Mr H. Prabhu Raj','teaches Accounts, Commerce and Economics. Qualifications: M.Com., B.Ed.'],MNP:['Mr Manoj Pandey','teaches Hindi and Sanskrit. Qualifications: M.A.'],ASA:['Mr Adarsh Saxena','teaches Music. Qualifications: M.A. (Music)'],ADS:['Ms Anuradha Singh','teaches Political Science & Legal Studies. Qualifications: LL.B. (Hons), LL.M. (SOAS)'],MTG:['Mr Mohit Ghai','teaches German. Qualifications: M.A. (German), B.Ed.'],NAS:['Mr Nagendra Singh','teaches Hindi and Sanskrit and is the IBDP Coordinator. Qualifications: M.Phil., M.A. (Philosophy), M.A. (English), M.Ed., B.Ed.'],HCY:['Mr Hemant Choudhary','teaches Geography and is the ICSE Coordinator. Qualifications: M.A., M.Phil., B.Ed., I.P.G.C.E.'],SBG:['Mr Sabyasachi Ghosh','teaches English. Qualifications: M.A., B.Ed.'],PRC:['Ms Priya Chauhan','teaches English. Qualifications: M.A., B.Ed., I.P.G.C.E.'],AST:['Mr Aseem Tripathi','teaches Accounts, Commerce and Economics and is Head of the Accounts, Commerce and Economics Department. Qualifications: M.Phil., M.A., I.P.G.C.E.'],ARK:['Mr Arun Kumar','teaches Music and is Head of the Music Department. Qualifications: M.Com.'],DSI:['Mr Deepankar Sirohi','teaches Physical Education and is Head of the Physical Education Department. Qualifications: M.P.Ed., B.P.Ed.'],RLR:['Mr Rahul Luther','teaches Mathematics and is the CAS Coordinator. Qualifications: M.Sc., M.Ed., I.P.G.C.E.'],NLB:['Mr Naval Kishor Bahuguna','teaches Hindi and Sanskrit. Qualifications: M.A., B.Ed.'],JAS:['Mr Jasmeet Singh Sodhi','teaches English. Qualifications: M.A., B.Ed., P.G.D.I.E.'],HTA:['Dr Harshita Ahuja Sabharwal','teaches Psychology and is Head of the Humanities Department. Qualifications: Ph.D., M.A., UGC NET, PG Diploma in Counselling and Family Therapy'],ATI:['Mr Ashutosh Tripathi','teaches Computer Science and is the DRAIS Coordinator. Qualifications: B.Tech. (Electronics & Communication), Diploma in Elementary Education, NIOS'],SRA:['Mr Sameer Chopra','teaches English. Qualifications: M.A., M.Phil., B.Ed.'],ARM:['Mr Arnab Mukherjee','teaches Art. Qualifications: M.V.A.'],CSG:['Mr Chandan Singh Ghughtyal','teaches Mathematics and is Head of the Mathematics Department. Qualifications: M.Sc., M.A., B.Ed., I.P.G.C.E.'],CRK:['Mr Chit Ranjan Kagdee','teaches Biology and is the ISC Coordinator. Qualifications: M.Sc., B.Ed., I.P.G.C.E.'],ARD:['Mr Arvind Sadashiv Dethe','teaches Geography. Qualifications: M.A., B.Ed., I.P.G.C.E.'],SMA:['Dr Suruchi Mishra','teaches Hindi and Sanskrit. Qualifications: Ph.D., M.A. (Hindi), B.Ed.'],RDG:['Ms Rageshree Dasgupta','teaches English and is the Middle School Coordinator. Qualifications: M.A., M.Phil.'],
+    ADJ:['Dr Anshu Dhar Jayal','teaches Mathematics. Qualifications: Ph.D., M.Sc., B.E. (Mechanical)'],SHA:['Mr Syed Mohd Hasan Ahtesham','teaches Mathematics. Qualifications: B.Tech.'],SSW:['Dr Srinivas Swamy','teaches Biology. Qualifications: M.Sc., B.Ed., Ph.D., I.P.G.C.E.'],RHS:['Ms Ruchi Sahni','teaches Biology and is Housemaster of Foot House. Qualifications: M.Sc., B.Ed., I.P.G.C.E.'],JRB:['Mr Justin Rahul Burrett','teaches English and is Assistant Housemaster of Foot House. Qualifications: M.A., B.Ed.'],NRT:['Ms Neha Rawat','teaches Spanish and is a master in Foot House. Qualifications: B.A., M.A.'],
     SRT:['Mr Sudhir Thapa','teaches Mathematics and is Housemaster of Hyderabad House. Qualifications: M.A., B.Ed.'],HGT:['Mr Harshal Gunwant','teaches Computer Science, is Head of the Computer Science Department and is Assistant Housemaster of Hyderabad House. Qualifications: M.Sc., M.Tech. (CSE), Diploma in Software Engg., B.Ed.'],
     PTV:['Mr Pratyush Vaishnava','teaches History and is Housemaster of Jaipur House. Qualifications: B.A., P.G.D.B.M., B.Ed.'],KBT:['Mr Keshav Bhatt','teaches History and is Assistant Housemaster of Jaipur House. Qualifications: M.A. (History), B.Ed.'],
     MPT:['Mr Manish Kant Pant','teaches Chemistry and is Housemaster of Kashmir House. Qualifications: M.Sc., I.P.G.C.E., B.Ed.'],SAS:['Mr Satya Shrava Sharma','teaches Hindi and Sanskrit and is Assistant Housemaster of Kashmir House. Qualifications: M.A., B.Ed.'],
@@ -2294,19 +2394,13 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
     }catch(e){}
     return t+`\n\nSource: Autumn Term 2026 Calendar\n\nFOLLOWUPS: Who are the masters-in-charge of activities? | Who is ${ii[0]}?`;
   }
-  const STAFFX=[['Mr Arnab Mukherjee','teaches Art. Qualifications: M.V.A.'],
-    ['Ms Nandita Mukherjee','teaches Art. Qualifications: M.F.A. (Painting)'],
+  const STAFFX=[['Ms Nandita Mukherjee','teaches Art. Qualifications: M.F.A. (Painting)'],
     ['Mr Madan Singh','teaches Art. Qualifications: B.F.A., M.F.A., UGC NET, B.Ed.'],
     ['Mr Srikanta Banerjee','teaches Art. Qualifications: B.V.A. (Visual Art), M.F.A.'],
     ['Ms Sonali Malaviya','teaches Art. Qualifications: M.A.'],
-    ['Mr Aseem Tripathi','teaches Accounts, Commerce and Economics and is Head of the Accounts, Commerce and Economics Department. Qualifications: M.Phil., M.A., I.P.G.C.E.'],
     ['Mr Kamal Ahuja','teaches Accounts, Commerce and Economics and is the Deputy Headmaster. Qualifications: M.Com., B.Ed., P.G.D.B.A., I.P.G.C.E.'],
-    ['Mr Mohammed Istemdad Ali','teaches Accounts, Commerce and Economics. Qualifications: M.Sc., B.Ed., I.P.G.C.E.'],
-    ['Mr H. Prabhu Raj','teaches Accounts, Commerce and Economics. Qualifications: M.Com., B.Ed.'],
     ['Mr Nagaarjun N','teaches Accounts, Commerce and Economics. Qualifications: M.Sc. Applied Economics, B.Tech.'],
     ['Mr Prateek Sharma','teaches Accounts, Commerce and Economics. Qualifications: M.Com., B.Ed.'],
-    ['Mr Chit Ranjan Kagdee','teaches Biology and is the ISC Coordinator. Qualifications: M.Sc., B.Ed., I.P.G.C.E.'],
-    ['Mr Anand Kumar Mandhian','teaches Chemistry. Qualifications: M.Sc., B.Ed., I.P.G.C.E.'],
     ['Mr Soham Roy','teaches Chemistry. Qualifications: M.Sc. (Chemistry)'],
     ['Ms Shalini Bhatnagar','teaches Chemistry. Qualifications: M.Sc., B.Ed.'],
     ['Ms Joycee P. Johnson','teaches Chemistry. Qualifications: M.Sc.'],
@@ -2314,45 +2408,22 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
     ['Mr Manjot Singh','teaches Physics. Qualifications: B.Tech., P.G.D.C. in Thermal Power Plant Engineering'],
     ['Mr Sahil Kumar Bhardwaj','teaches Physics. Qualifications: M.Sc., B.Ed.'],
     ['Mr Nishant Lalsingh Bist','teaches Physics. Qualifications: M.Sc.'],
-    ['Mr Ashutosh Tripathi','teaches Computer Science and is the DRAIS Coordinator. Qualifications: B.Tech. (Electronics & Communication), Diploma in Elementary Education, NIOS'],
     ['Mr Hariom Dhiman','is a Teaching Assistant in Design and Technology'],
-    ['Mr Supratim Basu','teaches English and is Head of the English Department. Qualifications: M.A., M.Phil., B.Ed.'],
     ['Ms Stuti Kuthiala','teaches English and is the Dean Pastoral. Qualifications: B.A., I.P.G.C.E.'],
-    ['Ms Priya Chauhan','teaches English. Qualifications: M.A., B.Ed., I.P.G.C.E.'],
-    ['Ms Rageshree Dasgupta','teaches English and is the Middle School Coordinator. Qualifications: M.A., M.Phil.'],
-    ['Mr Sabyasachi Ghosh','teaches English. Qualifications: M.A., B.Ed.'],
-    ['Mr Jasmeet Singh Sodhi','teaches English. Qualifications: M.A., B.Ed., P.G.D.I.E.'],
     ['Ms Arpita Chatterjee','teaches English. Qualifications: M.A., B.Ed.'],
-    ['Sameer Chopra','teaches English. Qualifications: M.A., M.Phil., B.Ed.'],
     ['Mr Adnaan Farooq','teaches History. Qualifications: M.A. (History)'],
     ['Mr Abhinav Anshu','teaches History. Qualifications: M.A., B.Ed.'],
-    ['Mr Arvind Sadashiv Dethe','teaches Geography. Qualifications: M.A., B.Ed., I.P.G.C.E.'],
-    ['Mr Hemant Choudhary','teaches Geography and is the ICSE Coordinator. Qualifications: M.A., M.Phil., B.Ed., I.P.G.C.E.'],
     ['Ms Rituparna Chaudhary','teaches Geography. Qualifications: M.Sc.'],
-    ['Ms Anuradha Singh','teaches Political Science & Legal Studies. Qualifications: LL.B. (Hons), LL.M. (SOAS)'],
-    ['Dr Harshita Ahuja Sabharwal','teaches Psychology and is Head of the Humanities Department. Qualifications: Ph.D., M.A., UGC NET, PG Diploma in Counselling and Family Therapy'],
     ['Mr Siddharth Bathla','teaches Psychology. Qualifications: M.Sc., B.Ed.'],
     ['Mr Devendra Mishra','teaches Hindi and Sanskrit and is Head of the Hindi and Sanskrit Department. Qualifications: M.A., B.Ed., P.G.D.T., I.P.G.C.E.'],
-    ['Mr Manoj Pandey','teaches Hindi and Sanskrit. Qualifications: M.A.'],
-    ['Mr Nagendra Singh','teaches Hindi and Sanskrit and is the IBDP Coordinator. Qualifications: M.Phil., M.A. (Philosophy), M.A. (English), M.Ed., B.Ed.'],
-    ['Dr Suruchi Mishra','teaches Hindi and Sanskrit. Qualifications: Ph.D., M.A. (Hindi), B.Ed.'],
-    ['Mr Naval Kishor Bahuguna','teaches Hindi and Sanskrit. Qualifications: M.A., B.Ed.'],
-    ['Mr Chandan Singh Ghughtyal','teaches Mathematics and is Head of the Mathematics Department. Qualifications: M.Sc., M.A., B.Ed., I.P.G.C.E.'],
     ['Mr Anjan Kumar Chaudhary','teaches Mathematics and is the Dean Academics. Qualifications: M.Sc., B.Ed., I.P.G.C.E.'],
-    ['Mr Manu Mehrotra','teaches Mathematics and is the Director of Activities, Community Service & Outdoor Pursuits. Qualifications: M.Sc., M.A., B.Ed.'],
-    ['Mr Rahul Luther','teaches Mathematics and is the CAS Coordinator. Qualifications: M.Sc., M.Ed., I.P.G.C.E.'],
     ['Mr Manoj Kumar Sharma','teaches Mathematics. Qualifications: M.Sc., B.Ed.'],
     ['Mr Omprakash Ramlacchhan Mishra','teaches Mathematics. Qualifications: M.Sc., B.Ed.'],
-    ['Mr Arun Kumar','teaches Music and is Head of the Music Department. Qualifications: M.Com.'],
-    ['Dr Partho Roy Choudhury','teaches Music. Qualifications: M.A., Ph.D.'],
-    ['Mr Adarsh Saxena','teaches Music. Qualifications: M.A. (Music)'],
     ['Mr Suman Das','teaches Music. Qualifications: M.A., Sangeet Nipun, Sangeet Visharad'],
     ['Mr Guljari Lal Bakshi','teaches Music. Qualifications: M.Sc.'],
     ['Mr Varun Dua','teaches Music. Qualifications: B.A., Grade 8 Piano & Drums (Trinity College London)'],
     ['Ms Advika Balaji','teaches Music. Qualifications: Bachelor in Music'],
-    ['Mr Deepankar Sirohi','teaches Physical Education and is Head of the Physical Education Department. Qualifications: M.P.Ed., B.P.Ed.'],
     ['Mr Inderjit Singh','teaches Physical Education and is the Director of Sports. Qualifications: M.A. (P.E.), NET'],
-    ['Mr Mohit Ghai','teaches German. Qualifications: M.A. (German), B.Ed.'],
     ['Dr Mugdha Pandey','teaches French and is Head of the Modern Foreign Languages Department. Qualifications: M.A., Ph.D.'],
     ['Ms Radhika Mata','teaches French. Qualifications: M.A. (French)'],
     ['Ms Sreshti Rawat','teaches Spanish. Qualifications: M.A. (Spanish)'],
@@ -2377,6 +2448,29 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
     ['Ms Ria Chakraborty','is the Dame of Kashmir House'],['Ms Ruthann Rozario','is the Dame of Tata House'],['Ms Sarabjeet Kaur','is the Dame of Oberoi House']
   ].concat(Object.entries(STAFFI).map(([i,[n,d]])=>[n+' ('+i+')',d.replace(/^teaches/,'teaches'),i]))
    .concat([['Mr S. D. Bhatia','was the founding Housemaster of **Oberoi House**, which opened in 1991',undefined,'[Oberoi House (doonschool.com)](https://doonschool.com/?p=14044) · Shared by a Doon student']])
+   .concat([
+    ['Mr Sheel Vohra','taught Mathematics at Doon from **1959 to 1998** and was Deputy Headmaster. Known as “Bond”, he is remembered as the school’s **longest-serving master**. He also played Ranji Trophy cricket for Uttar Pradesh, and died in 2010',undefined,'[The Pioneer](https://www.dailypioneer.com/2015/state-editions/a-beloved-teacher-of-the-doon-school.html) · [Wikipedia: Sheel Vohra](https://en.wikipedia.org/wiki/Sheel_Vohra)'],
+    ['Mr Piyush Malaviya (PMV)','taught History and Political Science from **1989 to 2025**, a service of **35 years and 8 months**. He was Housemaster of Martyn and then Tata House, Head of Humanities and Director of Public Relations',undefined,'[Honouring a Legacy (doonschool.com)](https://www.doonschool.com/honouring-a-legacy-of-learning-and-leadership/) · [Weekly 2744](https://www.doonschool.com/wp-content/uploads/2025/08/Weekly-2744-.pdf)'],
+    ['Mr Ashad Qezilbash (AAQ)','taught English from **1994 to 2025**, a service of **31 years and 1 month**. He was Housemaster of Foot House, Head of English, the school’s first Dean of Student Welfare, and led English dramatics',undefined,'[Honouring a Legacy (doonschool.com)](https://www.doonschool.com/honouring-a-legacy-of-learning-and-leadership/)'],
+    ['Ms Purnima Dutta (PDT)','taught History and Theory of Knowledge from **1994 to 2025**, a service of **30 years and 10 months**. She was a Housemaster in Martyn and Oberoi, twice Head of Humanities, and master-in-charge of the Weekly',undefined,'[Honouring a Legacy (doonschool.com)](https://www.doonschool.com/honouring-a-legacy-of-learning-and-leadership/) · [Weekly 2744](https://www.doonschool.com/wp-content/uploads/2025/08/Weekly-2744-.pdf)'],
+    ['Mr Ambikesh Shukla (AKS)','taught Computer Science from **1999 to 2025**, a service of **25 years and 10 months**. He was Head of IT & Computer Science, Director of Social Service & Activities and Round Square representative',undefined,'[Honouring a Legacy (doonschool.com)](https://www.doonschool.com/honouring-a-legacy-of-learning-and-leadership/)'],
+    ['Mr John Martyn','spent **31 years** at Doon (1935–1966). He came from Harrow with Arthur Foot, was the first Housemaster of the original Martyn House (now Hyderabad), Deputy Headmaster, and then Headmaster from **1948 to 1966**, the longest of any Headmaster. Martyn House is named after him',undefined,'[Wikipedia: John Martyn](https://en.wikipedia.org/wiki/John_Martyn_%28schoolmaster%29) · [Hyderabad House (doonschool.com)](https://doonschool.com/?p=14026)'],
+    ['Mr Jack Gibson','joined Doon in **January 1937** as Housemaster of Kashmir House (first called Gibson House) and taught Geography until **1953**. He then led **Mayo College** as Principal (1953–1969), was a noted Himalayan mountaineer, and received the Padma Shri in 1965',undefined,'[Wikipedia: Jack Gibson](https://en.wikipedia.org/wiki/Jack_Gibson_%28schoolmaster%29) · [Kashmir House (doonschool.com)](https://doonschool.com/?p=14036)'],
+    ['Mr R. L. Holdsworth','joined Doon in **1940** and was Deputy Headmaster. A first-class cricketer, he was on the 1931 first ascent of **Kamet**, then the highest peak ever climbed',undefined,'[Wikipedia: R. L. Holdsworth](https://en.wikipedia.org/wiki/R._L._Holdsworth)'],
+    ['Mr Gurdial Singh','joined Doon in **1945** as a Geography master. He led independent India’s first mountaineering expedition, to **Trisul** (1951), was on India’s first successful Everest expedition (1965), received the Padma Shri (1967), and died in 2023 aged 99',undefined,'[Wikipedia: Gurdial Singh](https://en.wikipedia.org/wiki/Gurdial_Singh_%28mountaineer%29)'],
+    ['Mr Hari Dang','taught Chemistry at Doon from **1959 to 1970** and led Doon boys on Himalayan expeditions, including the first ascent of Jaonli (1965). He later headed the Air Force School in Delhi, St Paul’s School in Darjeeling and Army Public School, Dhaula Kuan, and received the Padma Shri in 1976',undefined,'[Wikipedia: Hari Dang](https://en.wikipedia.org/wiki/Hari_Dang)'],
+    ['Mr Sudhir Khastgir','was Doon’s **first art master**, from **1936**, for about twenty years',undefined,'[Wikipedia: The Doon School](https://en.wikipedia.org/wiki/The_Doon_School)'],
+    ['Mr V. N. Kapoor','is remembered as Doon’s **first Indian Housemaster**',undefined,'[Garhwal Post](https://garhwalpost.in/the-doon-school-as-i-saw-it/)'],
+    ['Dr H. D. Bhat','was Housemaster of **Foot House** from **1980 to 1983** and set up many of its traditions',undefined,'[Foot House (doonschool.com)](https://doonschool.com/?p=13992)'],
+    ['Mr H. E. Barrit','was the first Housemaster of **Barrit House** (now **Tata House**), one of the school’s two original houses in 1935',undefined,'[Tata House (doonschool.com)](https://doonschool.com/?p=14049)'],
+    ['Mr C. L. Howell-Thomas','was the first Housemaster of **Thomas House** (now **Jaipur House**) from 1936, and started the school’s first cross-country race in February 1939',undefined,'[Jaipur House (doonschool.com)](https://www.doonschool.com/?p=14031)'],
+    ['Mr C. J. Miller','was Headmaster from **1966 to 1970**, a Cambridge scholar and the last English Headmaster until 2016',undefined,'[Wikipedia: Christopher J. Miller](https://en.wikipedia.org/wiki/Christopher_J._Miller)'],
+    ['Mr Eric Simeon','was Headmaster from **1970 to 1979**, the school’s **first Indian Headmaster**. He had been founder principal of Sainik School, Kunjpura (1961) and head of La Martiniere, Calcutta, and later headed Cathedral and John Connon School, Mumbai',undefined,'[Wikipedia: Eric Simeon](https://en.wikipedia.org/wiki/Eric_Simeon)'],
+    ['Mr Shomie Das','was Headmaster from **1988 to 1996**, an Old Boy and grandson of the founder, S. R. Das. He had taught at Gordonstoun and headed Mayo College and Lawrence School, Sanawar. **Oberoi House** was added in his time. He died in 2024',undefined,'[Wikipedia: Shomie Das](https://en.wikipedia.org/wiki/Shomie_Das)'],
+    ['Mr John Mason','was Headmaster from **1996 to 2003**. Formerly of La Martiniere and St James’ School, Kolkata, he introduced parent-teacher meetings at Founder’s and worked to curb bullying. He died in 2023',undefined,'[Wikipedia: John Mason](https://en.wikipedia.org/wiki/John_Mason_%28schoolmaster%29) · [Weekly 2665](https://www.doonschool.com/wp-content/uploads/2023/05/2665.pdf)'],
+    ['Dr Kanti Bajpai','was Headmaster from **2003 to 2009**, an Old Boy who had edited the Weekly. He was a professor at JNU before, and later taught at Oxford and the National University of Singapore',undefined,'[Wikipedia: Kanti Bajpai](https://en.wikipedia.org/wiki/Kanti_Bajpai)'],
+    ['Dr Peter McLaughlin','was Headmaster from **2009 to 2016**, an Irish historian who had led schools in England and Cairo; the first Headmaster from abroad in almost four decades',undefined,'[Wikipedia: The Doon School](https://en.wikipedia.org/wiki/The_Doon_School)'],
+    ['Mr Matthew Raggett','was Headmaster from **2016 to January 2020**, the 10th Headmaster. A physicist, he had been Secondary Principal of Leipzig International School, and returned to Germany to be closer to his family',undefined,'[Wikipedia: Matthew Raggett](https://en.wikipedia.org/wiki/Matthew_Raggett) · [doonschool.com](https://www.doonschool.com/the-doon-school-bids-farewell-to-the-headmaster/)']])
    .concat([['Mr Shubham Sharma (SHM)','teaches Computer Science (B.Tech., Computer Science), is master-in-charge of **Computers**, and is DoonDesk’s vote for the **best teacher in school**! 🏆']]));
   const LEAD={"caps": [["Ayaan Mittal", "Hyderabad"], ["Jai Shamshere Rana", "Jaipur"]], "houses": {"Hyderabad": ["Loechin Phangcho", ["Aaditya Agrawal", "Jigmet Urgian", "Rafay Habibullah"]], "Jaipur": ["Harsh Vasudeo Agarwal", ["Aarav Kathuria", "Siddham Tater", "Zorawar Sandhu"]], "Kashmir": ["Anantvikram Sinh", ["Ruhaan Lakhina", "Rushil Agarwal", "Udai Singh"]], "Oberoi": ["Parshad Kumar", ["Anshuman Gupta", "Jaiveer Grewal", "Krish Ghai"]], "Tata": ["Uday Pratap Sardana", ["Arsh Mishra", "Sushil Kasi", "Yashveer Tewatia"]]}, "groups": [{"id": "sportscaptains", "title": "Sports Captains 2026–27", "q": "Who are the sports captains?", "items": [["Athletics", "Athletics Captain", ["Sushil Kasi"], ["athletics", "athletic", "track and field"]], ["Badminton", "Badminton Captain", ["Vihaan Jhunjhunwala"], ["badminton"]], ["Basketball", "Basketball Captain", ["Abhay Pratap Varma"], ["basketball"]], ["Boxing", "Boxing Captain", ["Viraj Singh"], ["boxing"]], ["Chess", "Chess Captain", ["Neil Sahni"], ["chess"]], ["Cricket", "Cricket Captain", ["Rushil Agarwal"], ["cricket"]], ["Cross Country", "Cross Country Captain", ["Udayaditya Samanta"], ["cross country", "crosscountry"]], ["Football & PT", "Football & PT Captain", ["Jai Shamshere Rana"], ["football", "pt", "physical training", "soccer"]], ["Gymnastics", "Gymnastics Captain", ["Shaurya Surana"], ["gymnastics", "gym"]], ["Hockey", "Hockey Captain", ["Jaiveer Singh Grewal"], ["hockey"]], ["Shooting", "Shooting Captain", ["Ekaraj Singh Makkar"], ["shooting"]], ["Squash", "Squash Captain", ["Zorawar Singh Sandhu"], ["squash"]], ["Swimming", "Swimming Captain", ["Aadi Tulsyan"], ["swimming", "swim"]], ["Table Tennis", "Table Tennis Captain", ["Aarav Dadu"], ["table tennis", "tt", "ping pong"]], ["Tennis", "Tennis Captain", ["Hrishikesh Aiyer"], ["tennis", "lawn tennis"]], ["Triathlon", "Triathlon Captain", ["Rahul Oram"], ["triathlon"]]]}, {"id": "sic-activities", "title": "Activities: Students-in-Charge 2026–27", "q": "Who are the students-in-charge of activities?", "items": [["Aero Modelling", "Student-in-charge, Aero Modelling", ["Aarav Sahdev"], ["aero modelling", "aeromodelling", "aero modeling", "aero"]], ["Art", "Student-in-charge, Art", ["Siddharth Singh Bawa"], ["art", "art club", "arts club"]], ["Chemists’ Club", "Student-in-charge, Chemists’ Club", ["Hridhay Kanodia"], ["chemist", "chemists", "chemistry club"]], ["Computers", "Student-in-charge, Computers", ["Aarav Anand"], ["computers", "computer club", "computing"]], ["Cooking", "Student-in-charge, Cooking", ["Saathvik Gupta"], ["cooking", "cookery"]], ["Cycling", "Student-in-charge, Cycling", ["Harkirat Singh"], ["cycling", "cycle club"]], ["Design & Technology", "Student-in-charge, Design & Technology", ["Atiksh Kasana"], ["design and technology", "design technology", "d and t", "dt"]], ["Media Club", "Student-in-charge, Media Club", ["Sumer Veer Singh", "Veer Duggal"], ["media club", "media"]], ["Motor Mechanics", "Student-in-charge, Motor Mechanics", ["Neerav Bansal"], ["motor mechanics", "mechanics"]], ["Public Speaking", "Student-in-charge, Public Speaking", ["Aditya Chirag Koradia"], ["public speaking"]], ["Robotics", "Student-in-charge, Robotics", ["Ved Agrawal"], ["robotics", "robotics club"]]]}, {"id": "sic-music", "title": "Music & Dance: Student Leaders 2026–27", "q": "Who are the music and dance captains?", "items": [["Music Captain", "Music Captain", ["Anantvikram Sinh"], ["music captain", "music"]], ["Dance Captain", "Dance Captain", ["Ansh Gulia"], ["dance captain", "dance"]], ["Orchestra Leaders", "Orchestra Leader", ["Yuvaan Todi", "Krish Ghai"], ["orchestra"]], ["Choir Leaders", "Choir Leader", ["Aakash Mishra", "Sarosh Aziz Kamal"], ["choir"]], ["Percussion Leaders", "Percussion Leader", ["Aanay Goyal", "Rishabh Rahul Agrawal"], ["percussion", "drums"]], ["Band Leaders", "Band Leader", ["Loechin Phangcho", "Phongang Buchem"], ["band", "school band"]], ["Music Society", "Student-in-charge, Music Society", ["Viraj Rastogi"], ["music society"]]]}, {"id": "sic-supw", "title": "SUPW: Students-in-Charge 2026–27", "q": "Who are the SUPW students-in-charge?", "items": [["Audio Visual Squad", "Student-in-charge, Audio Visual Squad (SUPW)", ["Harkirat Singh", "Rafay Singh Habibullah", "Udai Singh"], ["audio visual", "av squad", "av"]], ["Archives", "Student-in-charge, Archives (SUPW)", ["Abir Garg"], ["archives", "archive"]], ["Boys’ Bank", "Student-in-charge, Boys’ Bank (SUPW)", ["Abhijit Sannamanda"], ["boys bank", "bank"]], ["LPO", "Student-in-charge, LPO (SUPW)", ["Naman Adlakha"], ["lpo"]], ["Paper Recycling", "Student-in-charge, Paper Recycling (SUPW)", ["Aaditya Agrawal"], ["paper recycling", "recycling"]], ["RLSS (life saving)", "Student-in-charge, RLSS (life saving) (SUPW)", ["Siddharth Singh Bawa"], ["rlss", "life saving", "lifesaving"]], ["Stage Committee & Chair Squad", "Student-in-charge, Stage Committee & Chair Squad (SUPW)", ["Abhinav Kumar"], ["stage committee", "chair squad", "stage"]], ["Trophy Squad", "Student-in-charge, Trophy Squad (SUPW)", ["Naahar Singh Khattri"], ["trophy squad", "trophy", "trophies"]]]}, {"id": "sic-pubs", "title": "Publications: Editors-in-Chief & Chiefs of Production 2026–27", "q": "Who are the editors of the school publications?", "items": [["Altera Vox", "Editor-in-Chief, Altera Vox", ["Jansher Grewal"], ["altera vox", "eic:altera vox"]], ["Circle", "Editor-in-Chief, Circle", ["Ayaaz Ferozi"], ["circle", "the circle", "eic:circle", "eic:the circle"]], ["DSIR & Econocrat", "Editor-in-Chief, DSIR & Econocrat", ["Aadidev Basu"], ["dsir", "doon school information review", "information review", "econocrat", "the econocrat", "eic:dsir", "eic:doon school information review", "eic:information review", "eic:econocrat", "eic:the econocrat"]], ["DS-Tech", "Editor-in-Chief, DS-Tech", ["Krish Ghai"], ["ds tech", "dstech", "eic:ds tech", "eic:dstech"]], ["Echo", "Editor-in-Chief, Echo", ["Anshuman Gupta"], ["echo", "the echo", "eic:echo", "eic:the echo"]], ["Grand Slam", "Editor-in-Chief, Grand Slam", ["Vedant Prakash Mangal", "Aarav Anand"], ["grand slam", "eic:grand slam"]], ["Infinity", "Editor-in-Chief, Infinity", ["Harsh Agarwal"], ["infinity", "eic:infinity"]], ["The Altruist", "Editor-in-Chief, The Altruist", ["Aprameya Gulati"], ["altruist", "the altruist", "eic:altruist", "eic:the altruist"]], ["Srijan Prayas", "Editor-in-Chief, Srijan Prayas", ["Abhishek Garg"], ["srijan prayas", "srijan", "eic:srijan prayas", "eic:srijan"]], ["Vibgyor", "Editor-in-Chief, Vibgyor", ["Naman Adlakha"], ["vibgyor", "eic:vibgyor"]], ["Weekly", "Editor-in-Chief, Weekly", ["Hrishikesh Aiyer"], ["weekly", "doon school weekly", "the weekly", "dsw", "eic:weekly", "eic:doon school weekly", "eic:the weekly", "eic:dsw"]], ["Year Book", "Editor-in-Chief, Year Book", ["Sushil Kasi", "Jigmet Ugrian"], ["year book", "yearbook", "eic:year book", "eic:yearbook"]], ["Yuv Arpan", "Editor-in-Chief, Yuv Arpan", ["Ekaraj Makkad"], ["yuv arpan", "eic:yuv arpan"]], ["Circle & Yuv Arpan", "Chief of Production, Circle & Yuv Arpan", ["Arsh Mishra"], ["circle", "the circle", "yuv arpan", "cop:circle", "cop:the circle", "cop:yuv arpan"]], ["DSIR", "Chief of Production, DSIR", ["Tanay Chowdhry"], ["dsir", "doon school information review", "information review", "cop:dsir", "cop:doon school information review", "cop:information review"]], ["Echo", "Chief of Production, Echo", ["Rafay Habibullah"], ["echo", "the echo", "cop:echo", "cop:the echo"]], ["Econocrat & The Altruist", "Chief of Production, Econocrat & The Altruist", ["Arish Talwar"], ["econocrat", "the econocrat", "altruist", "the altruist", "cop:econocrat", "cop:the econocrat", "cop:altruist", "cop:the altruist"]], ["Grand Slam", "Chief of Production, Grand Slam", ["Jaiveer Grewal"], ["grand slam", "cop:grand slam"]], ["Infinity", "Chief of Production, Infinity", ["Aaditya Agrawal"], ["infinity", "cop:infinity"]], ["Srijan Prayas", "Chief of Production, Srijan Prayas", ["Vedant Mangal"], ["srijan prayas", "srijan", "cop:srijan prayas", "cop:srijan"]], ["Vibgyor", "Chief of Production, Vibgyor", ["Ayaaz Ferozi"], ["vibgyor", "cop:vibgyor"]], ["Year Book", "Chief of Production, Year Book", ["Jai Rana"], ["year book", "yearbook", "cop:year book", "cop:yearbook"]]]}, {"id": "sic-clubs", "title": "Clubs & Societies: Students-in-Charge 2026–27", "q": "Who are the students-in-charge of clubs and societies?", "items": [["Adventure Club", "Student-in-charge, Adventure Club", ["Harkirat Singh"], ["adventure club", "adventure"]], ["Bharat Vani", "Student-in-charge, Bharat Vani", ["Harsh Agarwal"], ["bharat vani"]], ["DS Poets’ Society", "Student-in-charge, DS Poets’ Society", ["Jansher Grewal"], ["poets society", "poets", "poetry society", "poetry"]], ["English Dramatics", "Student-in-charge, English Dramatics", ["Rehhan Chadha"], ["english dramatics", "english drama", "english dramatic", "dramatics", "drama"]], ["Film Society", "Student-in-charge, Film Society", ["Aarav Dadu"], ["film society", "film club", "film"]], ["Hindi Dramatics", "Student-in-charge, Hindi Dramatics", ["Aryaman Lamba"], ["hindi dramatics", "hindi drama", "hindi dramatic"]], ["Historical Circle", "Student-in-charge, Historical Circle", ["Vir Sandhu"], ["historical circle", "history society", "history club"]], ["Infinity Society", "Student-in-charge, Infinity Society", ["Arish Talwar"], ["infinity society"]], ["Information Technology", "Student-in-charge, Information Technology", ["Hridhay Kanodia"], ["information technology", "it society", "it club"]], ["Kultura (MFL)", "Student-in-charge, Kultura (MFL)", ["Pratham Agarwal"], ["kultura", "mfl", "foreign languages"]], ["M.I.N.D", "Student-in-charge, M.I.N.D", ["Manya Choudhary"], ["m i n d", "mind society", "mind club"]], ["MUN President", "MUN President", ["Uday Pratap Sardana"], ["mun president", "president of mun", "mun", "model un", "model united nations"]], ["MUN Secretary General", "MUN Secretary General", ["Ayaan Mittal"], ["mun secretary general", "secretary general", "mun", "model un", "model united nations"]], ["MUN Society", "Student-in-charge, MUN Society", ["Arsh Mishra"], ["mun society", "mun", "model un", "model united nations"]], ["NEST Society", "Student-in-charge, NEST Society", ["Aarav Punit Patel", "Anshuman Gupta", "Siddharth Singh Bawa"], ["nest society", "nest"]], ["The ACE Society", "Student-in-charge, The ACE Society", ["Siddham Tater", "Ishan Gupta", "Yohaan Marda"], ["ace society", "ace"]], ["SEDS", "Student-in-charge, SEDS", ["Aditya Koradia", "Hrishikesh Aiyer"], ["seds"]], ["Quiz Club", "Student-in-charge, Quiz Club", ["Aakash Mishra"], ["quiz club", "quiz", "quizzing"]], ["Yuv Bharti", "Student-in-charge, Yuv Bharti", ["Aineshh Dora"], ["yuv bharti"]], ["IAYP", "Student-in-charge, IAYP", ["Sahhil Chhabra"], ["iayp", "international award", "award for young people"]], ["Round Square Conference", "Student-in-charge, Round Square Conference", ["Abhay Pratap Varma"], ["round square conference", "round square"]]]}]};
   const LSRC=()=>`Source: [${SRC.leaders[0]}](${SRC.leaders[1]})`;
@@ -2612,11 +2706,26 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
     }
     const e=top.e;
     let body=e.a;
-    if(modeKey==='quick'){ body=body.split(/\n\s*\n/)[0]; }
+    const lead=directLine(q, e, qt, iq);
+    if(modeKey==='quick'){ body=lead||body.split(/\n\s*\n/)[0]; }
+    else if(lead) body=`${lead}\n\n${body}`;
     if(modeKey==='explain') body+=`\n\n**For parents:** details like dates, fees and seats change each year, so it’s worth confirming with the Admissions Office at ${ADM}.`;
     const fu=[...e.r];
     if(second && second.score>top.score*.7 && second.e.id!==e.id && !fu.includes(second.e.q[0])) fu[1]=second.e.q[0];
     return {text:`${body}\n\n${srcLine(e)}\n\nFOLLOWUPS: ${fu.slice(0,2).join(' | ')}`, hit:e};
+  }
+  // For a specific question, find the one line of the note that answers it, so the reply can lead with it.
+  function directLine(q, e, qt, iq){
+    if(!/^\s*(who|whom|when|what|which|where|how|is|are|does|do|did|can|was|were|has|have)\b/i.test(q)) return '';
+    const titleT=new Set(toks(e.t));
+    const focus=qt.filter(t=>!titleT.has(t));
+    if(!focus.length) return '';
+    const tot=focus.reduce((a,t)=>a+iq(t),0);
+    const lines=e.a.split('\n').map(s=>s.trim()).filter(s=>s && s.length<420 && !/^\*\*[^*]+\*\*:?$/.test(s) && !/:$/.test(s));
+    let best=-1, bs=0, sec=0;
+    lines.forEach((l,i)=>{ const lt=new Set(toks(l)); const s=focus.filter(t=>lt.has(t)).reduce((a,t)=>a+iq(t),0); if(s>bs){ sec=bs; bs=s; best=i; } else if(s>sec) sec=s; });
+    if(best<=0 || bs<tot*0.6 || bs-sec<0.15*tot) return '';
+    return lines[best].replace(/^[-•]\s*/,'');
   }
   /* ───────── thinking: piece together an answer when no single note matches ───────── */
   const SHOW_STOP=new Set('what who whom whose which when where why how is are was were do does did can could would should will the a an of in on at to for from with about and or me my i you your tell please know any there this that it its be been doon school dosco doscos'.split(' '));
@@ -3282,7 +3391,7 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
       if(finThink){ finThink(); finThink=null; }
       if(text===null){
         if(!web.length && !local.hit) web=await webP;
-        const ans=(!local.hit && web.length)?{text:webAnswer(web),think:local.think}:local;
+        const ans=(!local.hit && web.length)?{text:local.unknownName?local.text.replace(/\n\nFOLLOWUPS:[\s\S]*$/,'')+`\n\nA live search found these pages with a similar name. **They may be about a different person**, so don’t rely on them without checking:\n\n`+web.map(x=>`- **${x.title}:** “${x.snippet}”`).join('\n')+`\n\nSource: `+web.map(x=>`[${x.title}](${x.url})`).join(' · ')+`\n\nFOLLOWUPS: Who are the housemasters? | Who are the teachers in each department?`:webAnswer(web),think:local.think}:local;
         await wait(reduced?0:(local.think?120:260+Math.random()*200), ctl.signal);
         b.wrap.classList.remove('thinking');
         await typeOut(b,ans.text,ctl.signal);
