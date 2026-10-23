@@ -1013,6 +1013,18 @@ Rules:
     houses:['House Life','https://www.doonschool.com/pastoral-care/house-life/'],
     oberoipage:['Oberoi House (doonschool.com)','https://doonschool.com/?p=14044'],
     student:['Shared by a Doon student',''],
+    caps2011:['Third generation of the Khanna family elected School Captain (doonschool.com)','https://www.doonschool.com/third-generation-of-the-khanna-family-elected-school-captain-february-2011/'],
+    caps2015:['School Captain appointment 2015 (doonschool.com)','https://www.doonschool.com/school-captain-appointment-2015/'],
+    caps2016:['Appointments for 2016 (doonschool.com)','https://www.doonschool.com/appointments-for-2016/'],
+    fd82:['82nd Founder’s Day (doonschool.com)','https://www.doonschool.com/82nd-founders-day-at-the-doon-school/'],
+    fd83:['83rd Founder’s Programme (doonschool.com)','https://www.doonschool.com/83rd-founders-programme-celebrated/'],
+    fd84:['84th Founder’s Day (doonschool.com)','https://www.doonschool.com/84th-founders-day/'],
+    fd86:['Garhwal Post: 86th Founder’s Day','https://garhwalpost.in/the-doon-school-celebrates-86th-founders-day/'],
+    fd87:['Garhwal Post: 87th Founder’s Day','https://garhwalpost.in/the-doon-school-celebrates-its-87th-founders-day/'],
+    fd88:['88th Founder’s Celebrations (doonschool.com)','https://www.doonschool.com/the-doon-schools-88th-founders-celebrations/'],
+    fd89:['89th Founder’s Day (doonschool.com)','https://www.doonschool.com/89th-founders-day-at-the-doon-school-a-celebration-of-excellence-and-legacy/'],
+    fd90:['DS90 Founder’s Day (doonschool.com)','https://www.doonschool.com/ds90-founders-day-celebrations/'],
+    tribune2010:['The Tribune, 24 October 2010','https://www.tribuneindia.com/2010/20101024/dplus.htm'],
     legacy2025:['Honouring a Legacy of Learning and Leadership (doonschool.com)','https://www.doonschool.com/honouring-a-legacy-of-learning-and-leadership/'],
     weekly2744:['The Doon School Weekly, Issue 2744 (July 2025)','https://www.doonschool.com/wp-content/uploads/2025/08/Weekly-2744-.pdf'],
     weekly2645:['The Doon School Weekly, Issue 2645 (May 2022)','https://www.doonschool.com/wp-content/uploads/2022/05/2645.pdf'],
@@ -1669,6 +1681,25 @@ The tradition lives on in **Midterm** treks every term.`,s:['wikimount', 'wikigu
 - **Manager Catering:** Mr Thakur Kamal Prasad
 - **Resident Medical Officer (the school doctor):** Dr Hrithik Rauthan`,s:['adminstaff'],r:['Who is on the school’s leadership team?', 'How do I contact the school?']},
 
+  {id:'pastcaptains',t:'Past School Captains',k:'past former previous old earlier history school captain captains head boy year years list',q:['Who were some past School Captains?','Who was the School Captain in 2015?','List of past school captains'],
+   a:`Past School Captains on record:
+
+- **1946:** Zafar Khan, the last School Captain in undivided India; he later moved to Pakistan
+- **about 1980–81:** Ravin Khosla, of the class of 1981, later a Lieutenant-General in the Indian Army
+- **2011:** Vihan Khanna, of Hyderabad House, the third generation of his family to be School Captain
+- **2015:** Sahir Chaudhary, of Jaipur House
+- **2016:** Tushaar Sharma
+- **2017:** Divij Mallick
+- **2018:** Viksit Verma
+- **2019:** Nandil Sharma
+- **2021:** Nairit Pattnaik
+- **2022:** Raghav Mundara
+- **2023:** Tarun Doss
+- **2024:** Arjun Prakash
+- **2025:** Pranay Gupta
+- **2026–27:** Ayaan Mittal (Hyderabad House) and Jai Shamshere Rana (Jaipur House)
+
+Other years, including the 1950s–1970s, aren't in DoonDesk's records. The school's archives can confirm them.`,s:['tribune2010','fd87','caps2011','caps2015','caps2016','fd82','fd88','fd89','fd90'],r:['Who are the School Captains for 2026–27?','Who were some famous former masters?']},
   {id:'staff',t:'Teachers and departments',k:'teacher teachers staff master masters initials short code teaches teach department departments subject faculty list directory rhs jrb nrt srt hgt ptv kbt mpt sas skd rsl vsm arj pkr jtr heads hods head of department',q:['What do teachers’ initials stand for?','Who are the teachers in each department?','Who are the heads of department?','Who are the teachers in each house?'],
    a:`Doon's staff by department, with each Head of Department:
 
@@ -2506,11 +2537,26 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
   function houseLeaders(h){ const [hc,ps]=LEAD.houses[h]; return `- **House Captain:** ${hc}\n- **Prefects:** ${names(ps)}`; }
   function names(l){ return l.length===1?l[0]:l.slice(0,-1).join(', ')+' and '+l[l.length-1]; }
   function rolePhrase(r){ return r.replace(/^Student-in-charge, (.*?)( \(SUPW\))?$/,'student-in-charge of $1').replace(/^Editor-in-Chief, /,'Editor-in-Chief of ').replace(/^Chief of Production, /,'Chief of Production for ').replace(/^(House Captain|Prefect), /,'$1 of '); }
+  const PASTCAPS=[[1946, "Zafar Khan", "the last School Captain in undivided India; he later moved to Pakistan", "tribune2010"], [1981, "Ravin Khosla", "of the class of 1981, later a Lieutenant-General in the Indian Army", "fd87"], [2011, "Vihan Khanna", "of Hyderabad House, the third generation of his family to be School Captain", "caps2011"], [2015, "Sahir Chaudhary", "of Jaipur House", "caps2015"], [2016, "Tushaar Sharma", "", "caps2016"], [2017, "Divij Mallick", "", "fd82"], [2018, "Viksit Verma", "", "fd83"], [2019, "Nandil Sharma", "", "fd84"], [2021, "Nairit Pattnaik", "", "fd86"], [2022, "Raghav Mundara", "", "fd87"], [2023, "Tarun Doss", "", "fd88"], [2024, "Arjun Prakash", "", "fd89"], [2025, "Pranay Gupta", "", "fd90"]];
   function roleAnswer(q){
     const ql=' '+q.toLowerCase().replace(/&/g,' and ').replace(/[^a-z\s]/g,' ').replace(/\s+/g,' ')+' ';
     const hq=HNAMES.find(h=>ql.includes(' '+h+' '));
     const H=hq&&hq[0].toUpperCase()+hq.slice(1);
     const FU=`\n\n${LSRC()}\n\nFOLLOWUPS: `;
+    const yM=String(q).match(/\b(19[3-9]\d|20[0-4]\d)\b/), yr=yM?+yM[1]:0;
+    const pastQ=(yr && yr<2026) || / (past|former|previous|earlier|old) (school )?captains? /.test(ql) || / captains? (in|of|from) the (19|20)\d0s /.test(ql);
+    if(pastQ && / (school captains?|head ?boys?|captains? of (the )?school) /.test(ql)){
+      const src=k=>`[${SRC[k][0]}](${SRC[k][1]})`;
+      const fu=`\n\nFOLLOWUPS: Who were some past School Captains? | Who are the School Captains for 2026–27?`;
+      if(yr){
+        const hit=PASTCAPS.find(([y])=>y===yr) || (yr>=1980&&yr<=1981?PASTCAPS.find(([y])=>y===1981):null);
+        if(hit){ const [y,n,d,k]=hit; return `The School Captain in **${y===1981?'about 1980–81':y}** was **${n}**${d?', '+d:''}.\n\nSource: ${src(k)}`+fu; }
+        const near=PASTCAPS.filter(([y])=>Math.abs(y-yr)<=15).sort((a,b)=>Math.abs(a[0]-yr)-Math.abs(b[0]-yr)).slice(0,2).sort((a,b)=>a[0]-b[0]).map(([y,n])=>`${y===1981?'about 1980–81':y}: ${n}`);
+        return `DoonDesk’s records don’t include the School Captain for **${yr}**, so I won’t guess.${near.length?` The nearest ${near.length>1?'years on record are':'year on record is'} ${near.join('; ')}.`:''}\n\nThe school’s archives (via **doonschool.com**) or the Old Boys’ Society can confirm it.`+fu;
+      }
+      const e=KB.find(x=>x.id==='pastcaptains'); return `${e.a}\n\n${srcLine(e)}`+fu;
+    }
+    if(yr && yr<2026) return `I only have the student leaders for **2026–27**, not for **${yr}**, so I won’t guess.\n\nThe school’s archives (via **doonschool.com**) can tell you about earlier years.\n\nFOLLOWUPS: Who were some past School Captains? | Who are the prefects?`;
     if(/ (school captains?|head ?boys?|captains? of (the )?school) /.test(ql) || (/ school /.test(ql)&&/ captains? /.test(ql)&&!hq&&!/ house /.test(ql)&&!/(sport|game|team)/.test(ql)))
       return `The **School Captains** for 2026–27 are ${LEAD.caps.map(([n,h])=>`**${n}** (${h} House)`).join(' and ')}.`+FU+`Who are the prefects? | Who are the house captains?`;
     if(/ house captains /.test(ql) && !hq)
@@ -2681,7 +2727,7 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
     }
     const hd=headOrder(q); if(hd) return {text:hd, hit:{id:'headord'}};
     const ma=micAnswer(q); if(ma) return {text:ma, hit:{id:'micone'}};
-    const ra=roleAnswer(q); if(ra) return {text:ra, hit:{id:'role'}};
+    const ra=roleAnswer(q); if(ra) return /^(DoonDesk’s records don’t include|I only have the student leaders)/.test(ra)?{text:ra, hit:null, cautious:true, think:['Checking DoonDesk’s record of past student leaders','That year isn’t on record, so I won’t guess']}:{text:ra, hit:{id:'role'}};
     const pa=personAnswer(q); if(pa) return {text:pa, hit:{id:'person'}};
     const ia=initialsAnswer(q); if(ia) return {text:ia, hit:{id:'initials'}};
     const short=toks(q).length===0 || /\b(it|that|this|they|them|those|more|else|also|his|her|their)\b|\b(what|how) about\b|^\s*and\b/i.test(q);
@@ -3434,7 +3480,7 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
       if(text===null){
         // built-in answer: still check the web, but don't make the reader wait more than a couple of seconds
         if(!web.length) web=local.hit?await Promise.race([webP,wait(2500).then(()=>[]).catch(()=>[])]):await webP;
-        const ans=(!local.hit && web.length)?{text:local.unknownName?local.text.replace(/\n\nFOLLOWUPS:[\s\S]*$/,'')+`\n\nA live search found these pages with a similar name. **They may be about a different person**, so don’t rely on them without checking:\n\n`+web.map(x=>`- **${x.title}:** “${x.snippet}”`).join('\n')+`\n\nSource: `+web.map(x=>`[${x.title}](${x.url})`).join(' · ')+`\n\nFOLLOWUPS: Who are the housemasters? | Who are the teachers in each department?`:webAnswer(web),think:local.think}:local;
+        const ans=(!local.hit && web.length)?{text:(local.unknownName||local.cautious)?local.text.replace(/\n\nFOLLOWUPS:[\s\S]*$/,'')+(local.unknownName?`\n\nA live search found these pages with a similar name. **They may be about a different person**, so don’t rely on them without checking:\n\n`:`\n\nA live search found these passages that may help. **Check them before relying on them**:\n\n`)+web.map(x=>`- **${x.title}:** “${x.snippet}”`).join('\n')+`\n\nSource: `+web.map(x=>`[${x.title}](${x.url})`).join(' · ')+`\n\nFOLLOWUPS: Who are the housemasters? | Who are the teachers in each department?`:webAnswer(web),think:local.think}:local;
         await wait(reduced?0:(local.think?120:260+Math.random()*200), ctl.signal);
         b.wrap.classList.remove('thinking');
         await typeOut(b,ans.text,ctl.signal);
