@@ -302,6 +302,9 @@ body.chatting #thread{display:flex}
   -webkit-background-clip:text;background-clip:text;color:transparent;animation:shineMove 1.5s linear infinite;font-weight:500}
 @keyframes shineMove{from{background-position:200% 0}to{background-position:-200% 0}}
 .note{font-size:13px;color:var(--fg-3)}
+.flagq{margin-top:8px;font:inherit;font-size:12px;color:var(--fg-3);background:none;border:0;padding:4px 0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.flagq:hover{color:var(--fg-2,inherit)}
+.flagq[disabled]{text-decoration:none;cursor:default}
 .note.err{color:var(--warn)}
 .follow{display:flex;flex-wrap:wrap;gap:8px}
 .fchip{min-height:38px;padding:8px 14px;border-radius:999px;font-size:14px;font-weight:500;color:var(--fg);text-align:left}
@@ -3306,6 +3309,22 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
     try{ const r=await fetch(LOOKUP_URL+'?q='+encodeURIComponent(String(q).slice(0,150)),{signal:c.signal}); if(!r.ok) return []; const j=await r.json(); return (j.results||[]).filter(x=>x&&x.url&&x.snippet).slice(0,4); }
     catch(e){ return []; } finally{ clearTimeout(t); if(signal) signal.removeEventListener('abort',stop); }
   }
+  // Question log (api/log.mjs): only switches on once a database is connected in Vercel.
+  const LOG_URL=GEMINI_PROXY_URL?GEMINI_PROXY_URL.replace(/gemini$/,'log'):'';
+  let LOG_ON=false;
+  if(LOG_URL) fetch(LOG_URL,{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{ if(j&&j.ready){ LOG_ON=true; const f=document.querySelector('#bar .fine'); if(f && !/saved anonymously/.test(f.textContent)) f.textContent+=' Questions are saved anonymously to help improve DoonDesk.'; } }).catch(()=>{});
+  function logQA(e){
+    if(!LOG_ON) return null;
+    const id=Math.random().toString(36).slice(2,10)+Date.now().toString(36);
+    try{ fetch(LOG_URL,{method:'POST',keepalive:true,headers:{'Content-Type':'application/json'},body:JSON.stringify({...e,id})}).catch(()=>{}); }catch(_){}
+    return id;
+  }
+  function flagButton(b,id,q,said){
+    const btn=document.createElement('button'); btn.type='button'; btn.className='flagq'; btn.textContent='Wrong or missing answer? Tell us';
+    btn.onclick=()=>{ btn.disabled=true; btn.textContent='Thanks, this answer has been flagged for review.';
+      try{ fetch(LOG_URL,{method:'POST',keepalive:true,headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'flag',id,q,said})}).catch(()=>{}); }catch(_){} };
+    b.wrap.appendChild(btn);
+  }
   const webAnswer=(res)=>`My school notes don’t cover this, but a live search found:\n\n`+res.map(x=>`- **${x.title}:** “${x.snippet}”`).join('\n')+`\n\nThese are passages from the pages, so check them there before relying on them.\n\nSource: `+res.map(x=>`[${x.title}](${x.url})`).join(' · ')+`\n\nFOLLOWUPS: What is The Doon School known for? | Who are the teachers in each department?`;
   if(GEMINI_PROXY_URL) fetch(GEMINI_PROXY_URL,{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{ if(j&&j.ready){ GEMINI_PROXY=GEMINI_PROXY_URL; window.__aiSync&&window.__aiSync(); } }).catch(()=>{});
   const GEM_KEY_LS='doondesk-gemini-key';
@@ -3410,7 +3429,7 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
     turns.push({role:'user',content:q});
     const m=MODES[mode];
     ctl=new AbortController(); setBusy(true);
-    let text=null;
+    let text=null, aiModel=null, usedWeb=false;
     try{
       const local=localAnswer(q,prevQ,mode);
       let finThink=null, gemNote='';
@@ -3443,7 +3462,7 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
           let lastScroll=0;
           const onSwitch=(name,err)=>{ const ol=b.wrap.querySelector('.thought ol'); if(!ol) return; ol.querySelectorAll('li').forEach(li=>li.classList.add('done')); const li=document.createElement('li'); li.innerHTML=(err&&err.status===429?'That model’s free limit is used up, so trying ':'That model isn’t available, so trying ')+'<strong>'+esc(name)+'</strong>'; ol.appendChild(li); toBottom(); };
           const r=await geminiStream(sys,contents,aiCtl.signal,txt=>{ if(!gotText&&finThink){ finThink(); finThink=null; b.wrap.classList.remove('thinking'); } gotText=true; setBot(b,txt,false); const now=performance.now(); if(now-lastScroll>400){ lastScroll=now; toBottom(); } },onSwitch);
-          text=r.text; label(b,m.label+' · '+gemName(r.model)+' + school notes'); setBot(b,text,true);
+          text=r.text; aiModel=r.model; label(b,m.label+' · '+gemName(r.model)+' + school notes'); setBot(b,text,true);
           if(r.truncated) note(b,'The answer was cut short. Ask a narrower question for the rest.');
         }catch(e){
           if(ctl.signal.aborted && !timedOut) throw {code:'cancelled'};
@@ -3467,7 +3486,7 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
             cache:false, modelTier:'default', signal:aiCtl.signal,
             onText:({text})=>{ if(!gotText&&finThink){ finThink(); finThink=null; } gotText=true; setBot(b,text,false); const now=performance.now(); if(now-lastScroll>400){ lastScroll=now; toBottom(); } }
           });
-          text=r.text; label(b,m.label+' · AI + school notes');
+          text=r.text; aiModel='claude'; label(b,m.label+' · AI + school notes');
           setBot(b,text,true);
           if(r.truncated) note(b,'The answer was cut short. Ask a narrower question for the rest.');
         }catch(e){
@@ -3480,6 +3499,7 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
       if(text===null){
         // built-in answer: still check the web, but don't make the reader wait more than a couple of seconds
         if(!web.length) web=local.hit?await Promise.race([webP,wait(2500).then(()=>[]).catch(()=>[])]):await webP;
+        usedWeb=!local.hit && web.length>0;
         const ans=(!local.hit && web.length)?{text:(local.unknownName||local.cautious)?local.text.replace(/\n\nFOLLOWUPS:[\s\S]*$/,'')+(local.unknownName?`\n\nA live search found these pages with a similar name. **They may be about a different person**, so don’t rely on them without checking:\n\n`:`\n\nA live search found these passages that may help. **Check them before relying on them**:\n\n`)+web.map(x=>`- **${x.title}:** “${x.snippet}”`).join('\n')+`\n\nSource: `+web.map(x=>`[${x.title}](${x.url})`).join(' · ')+`\n\nFOLLOWUPS: Who are the housemasters? | Who are the teachers in each department?`:webAnswer(web),think:local.think}:local;
         await wait(reduced?0:(local.think?120:260+Math.random()*200), ctl.signal);
         b.wrap.classList.remove('thinking');
@@ -3498,6 +3518,16 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
       if(viz) renderViz(b.wrap,viz);
       toBottom();
       turns.push(viz?{role:'assistant',content:text,viz}:{role:'assistant',content:text});
+      // Save the question for review after Founder's. When DoonDesk didn't know, also save its closest guess.
+      if(!sample && !(local.hit && /^(greet|thanks|chat)$/.test(local.hit.id))){
+        const said=String(text||'').replace(/\n*FOLLOWUPS:[\s\S]*$/,'').trim();
+        const unsure=/(couldn[’']t find|could not find|don[’']t (have|mention|know|say)|doesn[’']t (mention|say|cover)|not (mentioned|covered|in (the|my|DoonDesk)))/i.test(said);
+        const status=aiModel?(unsure?'ai-unsure':(local.hit?'ai':'ai-gap')):local.hit?'notes':usedWeb?'web':/pieced together|closest information|part I do know/i.test(local.text||'')?'partial':'unknown';
+        let guess='';
+        if(status!=='notes' && status!=='ai'){ try{ const {res}=rank(q,prevQ); const t=res[0]; if(t&&t.score>0.5){ guess=`${t.e.t}: `+String(t.e.a).replace(/\*\*/g,'').split(/\n\s*\n/)[0].slice(0,500); } }catch(_){} }
+        const id=logQA({q, said, status, guess, web:web.map(x=>x.title+' — '+x.url), mode, model:aiModel||''});
+        if(id) flagButton(b, id, q, said);
+      }
     }catch(e){
       b.wrap.classList.remove('thinking');
       if(e&&e.text){ setBot(b,e.text,false); turns.push({role:'assistant',content:e.text}); }

@@ -64,3 +64,14 @@ Once that's live, the ✦ button shows **Gemini on** for everyone.
 - Gemini's free tier has limits on requests per minute and per day. If they're reached, DoonDesk quietly uses its built-in answers until they reset.
 - Cloudflare's free plan allows about 100,000 Worker requests a day, far more than DoonDesk needs.
 - To switch the AI off, delete the `GEMINI_KEY` secret or the Worker.
+
+## Question log and review page (5 minutes, free)
+
+DoonDesk can save every question visitors ask, what it answered, and (when it didn't know) the note it would have used, so you can fix gaps later. Visitors can also tap **“Wrong or missing answer? Tell us”** under an answer to flag it. Nothing that identifies a visitor is saved: no IP address, account or device ID. While the log is on, the site says “Questions are saved anonymously to help improve DoonDesk.”
+
+1. In Vercel, open the **doondesk** project → **Storage** → **Create Database** → **Upstash for Redis** (free plan) → **Connect** it to the doondesk project. This adds `KV_REST_API_URL` and `KV_REST_API_TOKEN` automatically.
+2. Open **Settings** → **Environment Variables** → add **`ADMIN_KEY`** with a password only you know.
+3. **Deployments** → **⋯** → **Redeploy**.
+4. Open **doondesk.vercel.app/review.html** and enter that password.
+
+The review page shows **Needs fixing** first: questions DoonDesk didn't know, only partly answered, answered from outside its notes, or that visitors flagged. Each shows what DoonDesk said and its closest guess. Tick **Fixed** as you go, and use **Download (CSV)** to get a spreadsheet you can send for the next update. The log keeps the latest 5,000 questions.

@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>DoonDesk Review</title>
+<link rel="icon" href="favicon.svg">
+<style>
+:root{--bg:#F6F7FB;--card:#FFFFFF;--fg:#14161F;--fg-2:#4A4F63;--fg-3:#7A8094;--line:#E3E6EF;--accent:#1F5BFF;--warn:#B54708;--warn-bg:#FFF4E5;--bad:#B42318;--bad-bg:#FEECEB;--ok:#067647;--ok-bg:#E7F7EE;--chip:#EEF1F8}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0B0D14;--card:#141824;--fg:#F1F3F9;--fg-2:#B9BFD0;--fg-3:#8188A0;--line:#262C3D;--accent:#6D9BFF;--warn:#FDB022;--warn-bg:#2B2213;--bad:#FDA29B;--bad-bg:#2D1618;--ok:#75E0A7;--ok-bg:#12261C;--chip:#1C2131}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:28px 16px 60px}
+h1{font-size:24px;margin:0 0 4px}
+.sub{color:var(--fg-2);margin:0 0 20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+form{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+input[type=password],input[type=search]{flex:1;min-width:200px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--fg);font:inherit}
+button{font:inherit;padding:9px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--fg);cursor:pointer}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button[aria-pressed=true]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.msg{color:var(--bad);margin-top:10px;min-height:1.2em}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:18px 0}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.stat b{display:block;font-size:24px}
+.stat span{color:var(--fg-2);font-size:13px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0 14px}
+.row{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px}
+.row.done{opacity:.55}
+.top{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.q{font-weight:650;font-size:16px;flex:1;min-width:220px}
+.t{color:var(--fg-3);font-size:12px}
+.chip{font-size:12px;padding:2px 8px;border-radius:99px;background:var(--chip);color:var(--fg-2);white-space:nowrap}
+.chip.need{background:var(--warn-bg);color:var(--warn)}
+.chip.flag{background:var(--bad-bg);color:var(--bad)}
+.chip.good{background:var(--ok-bg);color:var(--ok)}
+details{margin-top:8px}
+summary{cursor:pointer;color:var(--fg-2);font-size:13px}
+.box{white-space:pre-wrap;font-size:13.5px;color:var(--fg-2);background:var(--bg);border-radius:8px;padding:10px;margin-top:6px;overflow-wrap:anywhere}
+.lbl{font-size:12px;font-weight:600;color:var(--fg-3);text-transform:uppercase;letter-spacing:.04em;margin-top:10px}
+label.fix{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--fg-2);cursor:pointer}
+.empty{color:var(--fg-2);text-align:center;padding:30px}
+.help{color:var(--fg-2);font-size:13.5px;margin-top:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>DoonDesk Review</h1>
+  <p class="sub">Every question visitors asked, with what DoonDesk answered. “Needs fixing” shows the ones it didn’t know, answered from outside its notes, or that visitors flagged as wrong.</p>
+
+  <div class="card" id="login">
+    <form id="f">
+      <input type="password" id="k" placeholder="Review password (the ADMIN_KEY you set in Vercel)" autocomplete="current-password" required>
+      <button class="primary" type="submit">Open the log</button>
+    </form>
+    <div class="msg" id="m" role="alert"></div>
+    <p class="help">This page reads the log from DoonDesk’s Vercel site. The password is only kept in this browser tab.</p>
+  </div>
+
+  <div id="app" hidden>
+    <div class="stats" id="stats"></div>
+    <div class="bar">
+      <button type="button" data-f="need" aria-pressed="true">Needs fixing</button>
+      <button type="button" data-f="flagged" aria-pressed="false">Flagged by visitors</button>
+      <button type="button" data-f="all" aria-pressed="false">All questions</button>
+      <input type="search" id="s" placeholder="Search questions">
+      <label class="fix"><input type="checkbox" id="hideDone"> Hide ones marked fixed</label>
+    </div>
+    <div class="bar">
+      <button type="button" id="csvNeed">Download “needs fixing” (CSV)</button>
+      <button type="button" id="csvAll">Download everything (CSV)</button>
+      <button type="button" id="reload">Refresh</button>
+    </div>
+    <div id="list"></div>
+  </div>
+</div>
+<script>
+(function(){
+  const API=location.hostname==='doondesk.vercel.app'?'/api/log':'https://doondesk.vercel.app/api/log';
+  const NEED=new Set(['unknown','partial','web','ai-gap','ai-unsure','flagged']);
+  const NAMES={notes:'Answered from notes',ai:'Gemini, with notes','ai-gap':'Gemini, outside notes','ai-unsure':'Gemini wasn’t sure',web:'Only web results',partial:'Partial answer',unknown:'Didn’t know',flagged:'Flagged as wrong'};
+  const $=s=>document.querySelector(s);
+  let key='', rows=[], filter='need';
+  const store={get(k){try{return sessionStorage.getItem(k)}catch(e){return null}},set(k,v){try{sessionStorage.setItem(k,v)}catch(e){}}};
+  let done={}; try{done=JSON.parse(localStorage.getItem('doondesk-review-done')||'{}')||{}}catch(e){}
+  const saveDone=()=>{try{localStorage.setItem('doondesk-review-done',JSON.stringify(done))}catch(e){}};
+  const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const when=t=>{try{return new Date(t).toLocaleString(undefined,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}catch(e){return t}};
+
+  async function load(){
+    $('#m').textContent='';
+    const r=await fetch(API,{headers:{'X-Admin-Key':key},cache:'no-store'}).catch(()=>null);
+    if(!r){ $('#m').textContent='Couldn’t reach DoonDesk. Check your connection.'; return false; }
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok){ $('#m').textContent=j.error||('Error '+r.status); return false; }
+    const flags={}; (j.flags||[]).forEach(f=>{ (flags[f.id]=flags[f.id]||[]).push(f); });
+    rows=(j.entries||[]).map(e=>({...e,flagged:!!flags[e.id]}));
+    // flags whose question wasn't logged (rare) still appear
+    (j.flags||[]).forEach(f=>{ if(!rows.some(r=>r.id===f.id)) rows.push({id:f.id,t:f.t,q:f.q,said:f.said,status:'flagged',flagged:true,guess:'',web:[]}); });
+    rows.sort((a,b)=>String(b.t).localeCompare(String(a.t)));
+    return true;
+  }
+  const needs=r=>r.flagged||NEED.has(r.status);
+  function stats(){
+    const n=rows.length, need=rows.filter(needs).length, fl=rows.filter(r=>r.flagged).length, notes=rows.filter(r=>r.status==='notes'||r.status==='ai').length;
+    $('#stats').innerHTML=[[n,'questions asked'],[need,'need fixing'],[fl,'flagged by visitors'],[notes,'answered from the notes']].map(([v,l])=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`).join('');
+  }
+  function render(){
+    stats();
+    const s=$('#s').value.trim().toLowerCase(), hide=$('#hideDone').checked;
+    const list=rows.filter(r=>filter==='all'||(filter==='flagged'?r.flagged:needs(r))).filter(r=>!s||String(r.q).toLowerCase().includes(s)).filter(r=>!(hide&&done[r.id]));
+    if(!list.length){ $('#list').innerHTML='<div class="empty">Nothing here yet.</div>'; return; }
+    $('#list').innerHTML=list.map(r=>{
+      const cls=r.flagged?'flag':NEED.has(r.status)?'need':'good';
+      return `<div class="row${done[r.id]?' done':''}">
+        <div class="top"><div class="q">${esc(r.q)}</div>
+          <span class="chip ${cls}">${esc(r.flagged&&r.status!=='flagged'?NAMES.flagged+' · '+(NAMES[r.status]||r.status):(NAMES[r.status]||r.status))}</span>
+          <span class="t">${esc(when(r.t))}</span>
+          <label class="fix"><input type="checkbox" data-id="${esc(r.id)}" ${done[r.id]?'checked':''}> Fixed</label></div>
+        <details${NEED.has(r.status)||r.flagged?' open':''}><summary>What DoonDesk said</summary><div class="box">${esc(r.said)}</div>
+        ${r.guess?`<div class="lbl">Its closest guess (the note it would have used)</div><div class="box">${esc(r.guess)}</div>`:''}
+        ${(r.web||[]).length?`<div class="lbl">Web pages it found</div><div class="box">${esc(r.web.join('\n'))}</div>`:''}
+        </details></div>`;
+    }).join('');
+  }
+  function csv(only){
+    const out=[['time','question','status','flagged','what DoonDesk said','closest guess','web pages','fixed']];
+    rows.filter(r=>!only||needs(r)).forEach(r=>out.push([r.t,r.q,NAMES[r.status]||r.status,r.flagged?'yes':'',r.said,r.guess,(r.web||[]).join(' | '),done[r.id]?'yes':'']));
+    const text=out.map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');
+    const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob(['﻿'+text],{type:'text/csv'}));
+    a.download=only?'doondesk-needs-fixing.csv':'doondesk-all-questions.csv'; document.body.appendChild(a); a.click(); a.remove();
+  }
+  $('#f').addEventListener('submit',async e=>{ e.preventDefault(); key=$('#k').value.trim(); if(await load()){ store.set('ddk',key); $('#login').hidden=true; $('#app').hidden=false; render(); } });
+  document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{ filter=b.dataset.f; document.querySelectorAll('[data-f]').forEach(x=>x.setAttribute('aria-pressed',x===b)); render(); });
+  $('#s').addEventListener('input',render); $('#hideDone').addEventListener('change',render);
+  $('#list').addEventListener('change',e=>{ const id=e.target.dataset&&e.target.dataset.id; if(!id) return; if(e.target.checked) done[id]=1; else delete done[id]; saveDone(); render(); });
+  $('#csvNeed').onclick=()=>csv(true); $('#csvAll').onclick=()=>csv(false);
+  $('#reload').onclick=async()=>{ if(await load()) render(); };
+  const saved=store.get('ddk'); if(saved){ key=saved; load().then(ok=>{ if(ok){ $('#login').hidden=true; $('#app').hidden=false; render(); } }); }
+})();
+</script>
+</body>
+</html>
