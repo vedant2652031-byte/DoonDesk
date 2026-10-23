@@ -3228,13 +3228,19 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
   const webAnswer=(res)=>`My school notes don’t cover this, but a live search found:\n\n`+res.map(x=>`- **${x.title}:** “${x.snippet}”`).join('\n')+`\n\nThese are passages from the pages, so check them there before relying on them.\n\nSource: `+res.map(x=>`[${x.title}](${x.url})`).join(' · ')+`\n\nFOLLOWUPS: What is The Doon School known for? | Who are the teachers in each department?`;
   if(GEMINI_PROXY_URL) fetch(GEMINI_PROXY_URL,{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{ if(j&&j.ready){ GEMINI_PROXY=GEMINI_PROXY_URL; window.__aiSync&&window.__aiSync(); } }).catch(()=>{});
   const GEM_KEY_LS='doondesk-gemini-key';
+  // Tried in this order; when one model's free limit runs out, DoonDesk moves to the next.
   const GEM_MODELS=[
+    ['gemini-3.8-flash','Gemini 3.8 Flash'],
+    ['gemini-3.6-flash','Gemini 3.6 Flash'],
     ['gemini-flash-latest','Gemini Flash'],
     ['gemini-3-flash-preview','Gemini 3 Flash'],
     ['gemini-2.5-flash','Gemini 2.5 Flash'],
+    ['gemini-3.5-flash-lite','Gemini 3.5 Flash-Lite'],
     ['gemini-3.1-flash-lite','Gemini 3.1 Flash-Lite'],
     ['gemini-flash-lite-latest','Gemini Flash-Lite'],
-    ['gemini-2.5-flash-lite','Gemini 2.5 Flash-Lite']
+    ['gemini-2.5-flash-lite','Gemini 2.5 Flash-Lite'],
+    ['gemma-4-31b-it','Gemma 4 31B'],
+    ['gemma-4-26b-a4b-it','Gemma 4 26B']
   ];
   const gemName=id=>(GEM_MODELS.find(m=>m[0]===id)||[id,id])[1];
   let gemKey=''; try{ gemKey=localStorage.getItem(GEM_KEY_LS)||''; }catch(e){}
@@ -3289,18 +3295,18 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
             let j=null; try{ j=JSON.parse(line.slice(5)); }catch(e){ continue; }
             if(j.error) throw {status:j.error.code||500,message:j.error.message||'',model};
             const c=j.candidates&&j.candidates[0];
-            if(c){ (c.content&&c.content.parts||[]).forEach(pt=>{ if(pt.text && !pt.thought){ out+=pt.text; onText&&onText(out); } }); if(c.finishReason) finish=c.finishReason; }
+            if(c){ (c.content&&c.content.parts||[]).forEach(pt=>{ if(pt.text && !pt.thought){ out+=pt.text; out=out.replace(/<(think|thought|thinking)>[\s\S]*?<\/\1>\s*/gi,''); if(!/<(think|thought|thinking)>/i.test(out)) onText&&onText(out); } }); if(c.finishReason) finish=c.finishReason; }
           }
         }
       }catch(e){
         if(signal&&signal.aborted) throw e;
         if(!out && e && (e.status===429||e.status===503||e.status===500)){ if(e.status===429){ gemRest[model]=Date.now()+restFor(e); saveRest(); sawLimit=true; } lastErr=e; continue; }
-        if(out) return {text:out,truncated:true,model};
+        if(out) return {text:out.replace(/<(think|thought|thinking)>[\s\S]*?(<\/\1>|$)\s*/gi,'').trim(),truncated:true,model};
         throw e;
       }
       if(!out.trim()){ if(finish==='SAFETY') throw {status:502,message:'blocked',model}; lastErr={status:502,message:'empty',model}; continue; }
       gemModel=model;
-      return {text:out, truncated:finish==='MAX_TOKENS', model};
+      return {text:out.replace(/<(think|thought|thinking)>[\s\S]*?(<\/\1>|$)\s*/gi,'').trim(), truncated:finish==='MAX_TOKENS', model};
     }
     if(sawLimit){ const until=soonestRest(); throw {status:429,message:(lastErr&&lastErr.message)||'',allBusyUntil:isFinite(until)?until:Date.now()+60000}; }
     throw lastErr||{status:404,message:'No Gemini model available'};

@@ -8,7 +8,7 @@ const ALLOWED_ORIGINS = [
   'https://doondesk.vercel.app',
   'https://vedant2652031-byte.github.io',
 ];
-const MODELS = ['gemini-flash-latest', 'gemini-3-flash-preview', 'gemini-2.5-flash', 'gemini-3.1-flash-lite', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite'];
+const MODELS = ['gemini-3.8-flash', 'gemini-3.6-flash', 'gemini-flash-latest', 'gemini-3-flash-preview', 'gemini-2.5-flash', 'gemini-3.5-flash-lite', 'gemini-3.1-flash-lite', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite', 'gemma-4-31b-it', 'gemma-4-26b-a4b-it'];
 const MAX_BODY = 120000;        // characters; stops oversized requests
 const MAX_OUTPUT_TOKENS = 2048;
 // Light per-visitor brake (per server instance): at most 60 AI questions per IP every 10 minutes (high, because a whole venue can share one Wi-Fi address).

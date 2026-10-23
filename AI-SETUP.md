@@ -35,7 +35,7 @@ Google's free limits are **per project**, shared by every visitor, so the shared
 - Questions DoonDesk's notes already answer get the instant built-in answer. Gemini is only asked when the notes don't cover a question.
 - Each device can ask Gemini up to **15** questions a day on the shared connection; after that it uses the built-in answers.
 - When a model's limit runs out, DoonDesk moves to the next free model, then to the built-in answers. Daily limits reset at midnight Pacific time (about 1:30 pm in India).
-- The function only accepts requests from the DoonDesk websites, only for the free Flash and Flash-Lite models, and caps the length of answers.
+- The function only accepts requests from the DoonDesk websites, only for the free Gemini Flash, Flash-Lite and Gemma models, and caps the length of answers.
 
 For a big event, check your limits at [aistudio.google.com/rate-limit](https://aistudio.google.com/rate-limit). Turning on billing for the Google project raises the limits a lot.
 
@@ -59,8 +59,8 @@ Once that's live, the ✦ button shows **Gemini on** for everyone.
 
 ### Good to know
 
-- **Model fallback:** DoonDesk tries Gemini's free models in turn (Gemini Flash, 3 Flash, 2.5 Flash, 3.1 Flash-Lite, Flash-Lite, 2.5 Flash-Lite). Each model has its own free limit, so when one runs out it moves to the next, and remembers to rest the used-up one until its limit resets. Only when all of them are used up does it fall back to the built-in answers.
-- The Worker only accepts requests from the DoonDesk website, and only for Gemini's free Flash and Flash-Lite models. If you set the Worker up before this change, paste in the new `worker.js` again so it allows the newer models.
+- **Model fallback:** DoonDesk tries 11 free models in turn: Gemini 3.8 Flash, 3.6 Flash, Flash (latest), 3 Flash, 2.5 Flash, 3.5 Flash-Lite, 3.1 Flash-Lite, Flash-Lite (latest), 2.5 Flash-Lite, then Google's open Gemma 4 models (31B and 26B). Each model has its own free limit, so when one runs out it moves to the next, and remembers to rest the used-up one until its limit resets. Only when all of them are used up does it fall back to the built-in answers.
+- The Worker only accepts requests from the DoonDesk website, and only for Gemini's free Flash, Flash-Lite and Gemma models. If you set the Worker up before this change, paste in the new `worker.js` again so it allows the newer models.
 - Gemini's free tier has limits on requests per minute and per day. If they're reached, DoonDesk quietly uses its built-in answers until they reset.
 - Cloudflare's free plan allows about 100,000 Worker requests a day, far more than DoonDesk needs.
 - To switch the AI off, delete the `GEMINI_KEY` secret or the Worker.
