@@ -2679,6 +2679,7 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
     if(/\bwhen\b/i.test(q) && /\b(exams?|trials?|pre-?boards?|tests?)\b/i.test(q) && !/entrance|admission|join/i.test(q)){
       const ce=KB.find(x=>x.id==='calendar'); return {text:`${ce.a}\n\n${srcLine(ce)}\n\nFOLLOWUPS: ${ce.r.join(' | ')}`, hit:ce};
     }
+    const hd=headOrder(q); if(hd) return {text:hd, hit:{id:'headord'}};
     const ma=micAnswer(q); if(ma) return {text:ma, hit:{id:'micone'}};
     const ra=roleAnswer(q); if(ra) return {text:ra, hit:{id:'role'}};
     const pa=personAnswer(q); if(pa) return {text:pa, hit:{id:'person'}};
@@ -2697,6 +2698,12 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
       return {text:`I couldn’t find **${nm}** in DoonDesk’s school notes, so I’d rather not guess.\n\nThe school’s own site, **doonschool.com**, or the school office is the best place to ask. If you know who they are, tell the person who runs DoonDesk so it can be added.\n\nFOLLOWUPS: Who are the housemasters? | Who are the teachers in each department?`, hit:null, think:[`Looking for **${nm}** among the staff, students and Old Boys in my notes`,'No one by that name is in my notes, so I won’t guess'], unknownName:true};
     }
     if(!n && /\b(doon|school|chandbagh)\b/i.test(q)){ const ov=KB.find(x=>x.id==='overview'); if(ov) return {text:`${ov.a}\n\n${srcLine(ov)}\n\nFOLLOWUPS: ${ov.r.slice(0,2).join(' | ')}`, hit:ov}; }
+    // "the third housemaster of X": only answer if the note really names that one, not just "third" in another sense
+    const ordM=q.toLowerCase().match(/\b(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|eleventh|twelfth|\d{1,2}(?:st|nd|rd|th))\s+(house ?masters?|assistant house ?masters?|dames?|captains?|house captains?|principals?|bursars?|deans?|prefects?)\b/);
+    if(ordM && n && !new RegExp('\\b'+ordM[1]+'\\s+'+ordM[2].replace(/ /g,'\\s*').replace(/s\?$/,'')+'','i').test(top.e.a)){
+      const what=ordM[0].replace(/\b\w/g,c=>c.toUpperCase());
+      return {text:`My school notes don’t say who the **${what}** was${/house/i.test(q)?'':''}, so I won’t guess. They usually record only the first and the current holder of a role.\n\nThe school office or **doonschool.com** can tell you more.\n\nFOLLOWUPS: When was each house founded? | Who are the housemasters?`, hit:null, think:[`Looking for the **${what}** in the school notes`,'The notes record the first and current holders, not this one, so I won’t guess']};
+    }
     if(!n || (top.score<2.2 && !covered) || weak){
       const alt=res.slice(0,2).filter(x=>x.score>0.6);
       const sug=(alt.length?alt.map(x=>x.e.q[0]):['What is The Doon School known for?','How do I apply for admission?']);
@@ -2726,6 +2733,34 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
     lines.forEach((l,i)=>{ const lt=new Set(toks(l)); const s=focus.filter(t=>lt.has(t)).reduce((a,t)=>a+iq(t),0); if(s>bs){ sec=bs; bs=s; best=i; } else if(s>sec) sec=s; });
     if(best<=0 || bs<tot*0.6 || bs-sec<0.15*tot) return '';
     return lines[best].replace(/^[-•]\s*/,'');
+  }
+  // "Who was the third headmaster?", "headmaster in 1985", "how many headmasters"
+  const HEADS=[['Arthur E. Foot',1935,1948,'a science master from Eton College'],['J. A. K. Martyn',1948,1966,'who came from Harrow in 1935 and is the longest-serving Headmaster (18 years)'],
+    ['C. J. Miller',1966,1970,'a Cambridge scholar, and the last English Headmaster until 2016'],['Eric J. Simeon',1970,1979,'the first Indian Headmaster'],
+    ['Gulab Ramchandani',1979,1988,'the first Old Boy to become Headmaster'],['Shomie R. Das',1988,1996,'an Old Boy and grandson of the founder; Oberoi House was added in his time'],
+    ['John A. Mason',1996,2003,'formerly of La Martiniere and St James’ School, Kolkata'],['Kanti Bajpai',2003,2009,'an Old Boy and former editor of the Weekly'],
+    ['Peter McLaughlin',2009,2016,'an Irish historian'],['Matthew Raggett',2016,2020,'a physicist from Leipzig International School'],['Dr Jagpreet Singh',2020,0,'the current Headmaster']];
+  const ORD=['first','second','third','fourth','fifth','sixth','seventh','eighth','ninth','tenth','eleventh','twelfth'];
+  function headOrder(q){
+    const ql=' '+q.toLowerCase().replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ')+' ';
+    if(!/ (head ?masters?|heads? of (the )?school|principals?) /.test(ql)) return null;
+    if(/ (deputy|house ?masters?|assistant|head of (the )?(department|admissions|finance)|hod) /.test(ql) || / (hyderabad|jaipur|kashmir|tata|oberoi|foot|martyn) house /.test(ql)) return null;
+    const src=`\n\nSource: [Wikipedia: The Doon School](https://en.wikipedia.org/wiki/The_Doon_School) · [Doon School Compendium (V2)](${SRC.compendium[1]})\n\nFOLLOWUPS: Who have been the headmasters? | What did each headmaster do before Doon?`;
+    const yrs=([,a,b])=>b?`${a} to ${b}`:`${a} to the present`;
+    const one=(i,lead)=>{ const [n,,,d]=HEADS[i]; const prev=HEADS[i-1], next=HEADS[i+1];
+      return `${lead} **${n}** (**${yrs(HEADS[i])}**), ${d}.`+(prev||next?`\n\n${prev?`He followed ${prev[0]}`:''}${prev&&next?' and was':''}${next?`${prev?'':'He was'} succeeded by ${next[0]}`:''}.`:''); };
+    if(/ how many /.test(ql)) return `Doon has had **${HEADS.length} Headmasters** since it opened in 1935. The current one, **Dr Jagpreet Singh**, is the ${ORD[HEADS.length-1]}.`+src;
+    const om=ql.match(new RegExp(' ('+ORD.join('|')+'|(\\d{1,2})(?:st|nd|rd|th)) '));
+    if(om){ const i=om[2]?parseInt(om[2],10)-1:ORD.indexOf(om[1]);
+      if(i>=HEADS.length) return `Doon has had only **${HEADS.length} Headmasters** so far; the current one, **Dr Jagpreet Singh**, is the ${ORD[HEADS.length-1]}.`+src;
+      return one(i,`The **${ORD[i]}** Headmaster of The Doon School was`.replace(' was',HEADS[i][2]?' was':' is'))+src; }
+    const ym=ql.match(/ (19[3-9]\d|20[0-4]\d) /);
+    if(ym){ const y=+ym[1]; const hits=HEADS.map((x,i)=>[x,i]).filter(([[,a,b]])=>y>=a&&(!b||y<=b));
+      if(!hits.length) return `The school opened in 1935, so there was no Headmaster in ${y}.`+src;
+      if(hits.length===2) return `In **${y}** the headship changed hands: **${hits[0][0][0]}** (${yrs(hits[0][0])}) handed over to **${hits[1][0][0]}** (${yrs(hits[1][0])}).`+src;
+      return one(hits[0][1],`In **${y}** the Headmaster was`)+src; }
+    if(/ (last|previous|former|before) /.test(ql) && !/ (all|every|list) /.test(ql)) return one(HEADS.length-2,'The previous Headmaster was')+src;
+    return null;
   }
   /* ───────── thinking: piece together an answer when no single note matches ───────── */
   const SHOW_STOP=new Set('what who whom whose which when where why how is are was were do does did can could would should will the a an of in on at to for from with about and or me my i you your tell please know any there this that it its be been doon school dosco doscos'.split(' '));
@@ -3177,7 +3212,7 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
     martynyears:()=>gallery(['nehru1959'],'The Martyn years')
   };
   ['hyderabad','jaipur','kashmir','tata','oberoi','foot','martyn'].forEach(h=>VIZ['house-'+h]=()=>oneHouse(h));
-  const VIZMAP={history:['timeline'],timeline:['timeline'],founder:['timeline'],headmaster:['timeline'],foot:['foot','timeline'],
+  const VIZMAP={history:['timeline'],timeline:['timeline'],founder:['timeline'],headmaster:['timeline'],headord:['timeline'],foot:['foot','timeline'],
     campus:['map','campus'],location:['map'],visit:['map'],contact:['map'],facilities:['campus'],mainbuilding:['mainbuilding'],awards:['mainbuilding'],
     library:['library'],dining:['dining'],fields:['fields'],traditions:['rosebowl'],foundersday:['founders'],midterm:['midterm'],
     houses:['houses'],placement:['houses'],housenames:['houses'],holding:['house-foot','house-martyn'],dames:['houses'],housemasters:['houses'],interhouse:['houses'],cups:['houses'],
@@ -3336,7 +3371,8 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
       const quickOnly=local.hit && /^(greet|thanks)$/.test(local.hit.id);
       if(!sample && (gemKey||GEMINI_PROXY) && !gemOn() && !quickOnly && Date.now()>(window.__gemNoteAt||0)){ window.__gemNoteAt=Date.now()+5*60000; gemNote=gemErrText({status:429,allBusyUntil:gemDown}); }
       const shared=!gemKey && !!GEMINI_PROXY;
-      const webP=(!sample && !local.hit && !quickOnly && LOOKUP_URL && !/^\s*\S+\s*$/.test(q))?webLookup(q,ctl.signal):Promise.resolve([]);
+      const chatty=local.hit && /^(greet|thanks|chat|upcoming)$/.test(local.hit.id);
+      const webP=(!sample && !quickOnly && !chatty && LOOKUP_URL && !/^\s*\S+\s*$/.test(q))?webLookup(q,ctl.signal):Promise.resolve([]);
       let web=[];
       const useAI=!sample && gemOn() && !quickOnly && !(shared && (local.hit || sharedLeft()<=0));
       if(useAI){
@@ -3345,7 +3381,7 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
         const rel=res.filter(x=>x.score>.8).slice(0,8);
         const steps=['Searching the school notes', rel.length?`Found related notes: ${rel.slice(0,3).map(x=>'**'+x.e.t+'**').join(', ')}${rel.length>3?' and more':''}`:'No close notes found, so the AI will say what it doesn’t know'];
         b.wrap.classList.add('thinking');
-        if(!local.hit && LOOKUP_URL) steps.push('Searching doonschool.com and Wikipedia');
+        if(LOOKUP_URL && !chatty) steps.push('Checking the web (Wikipedia) as well');
         finThink=await showThinking(b,steps,ctl.signal,['Asking Gemini to think it through']);
         web=await webP;
         const aiCtl=new AbortController(); let timedOut=false, gotText=false;
@@ -3396,12 +3432,19 @@ The council lists the five main houses. Foot and Martyn are holding houses for f
       }
       if(finThink){ finThink(); finThink=null; }
       if(text===null){
-        if(!web.length && !local.hit) web=await webP;
+        // built-in answer: still check the web, but don't make the reader wait more than a couple of seconds
+        if(!web.length) web=local.hit?await Promise.race([webP,wait(2500).then(()=>[]).catch(()=>[])]):await webP;
         const ans=(!local.hit && web.length)?{text:local.unknownName?local.text.replace(/\n\nFOLLOWUPS:[\s\S]*$/,'')+`\n\nA live search found these pages with a similar name. **They may be about a different person**, so don’t rely on them without checking:\n\n`+web.map(x=>`- **${x.title}:** “${x.snippet}”`).join('\n')+`\n\nSource: `+web.map(x=>`[${x.title}](${x.url})`).join(' · ')+`\n\nFOLLOWUPS: Who are the housemasters? | Who are the teachers in each department?`:webAnswer(web),think:local.think}:local;
         await wait(reduced?0:(local.think?120:260+Math.random()*200), ctl.signal);
         b.wrap.classList.remove('thinking');
         await typeOut(b,ans.text,ctl.signal);
-        text=ans.text; label(b,m.label+(local.think?' · Thought it through':' · School notes'));
+        let shown=ans.text;
+        if(local.hit && web.length){
+          const extra=web.filter(x=>!shown.includes(x.url)).map(x=>`[${x.title}](${x.url})`);
+          if(extra.length) shown=/\n\nSource: [^\n]*/.test(shown)?shown.replace(/(\n\nSource: [^\n]*)/,`$1 · `+extra.join(' · ')):shown.replace(/(\n\nFOLLOWUPS:)/,`\n\nSource: ${extra.join(' · ')}$1`);
+          if(shown!==ans.text){ setBot(b,shown,true); }
+        }
+        text=shown; label(b,m.label+(local.think?' · Thought it through':local.hit&&web.length?' · School notes + web check':' · School notes'));
         setBot(b,text,true);
         if(gemNote) note(b,gemNote,true);
       }
